@@ -38,7 +38,7 @@ const TEST_CARDS = [
   {
     name: "Reaction Time Test",
     description: "Measure your response speed to visual stimuli with precision.",
-    path: "/reaction-time-intro",
+    path: "/reaction-time-test",
     color: "#0BA650", // MyYouthspan Primary Green
     icon: <FaRunning size={36} />,
     implemented: true

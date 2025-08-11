@@ -29,7 +29,7 @@ const Home = () => {
       status: "available",
       theme: "dark-green",
       duration: "2-3 min",
-      path: "/reaction-time-intro"
+      path: "/reaction-time-test"
     },
     {
       id: 2,
