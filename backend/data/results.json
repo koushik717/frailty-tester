@@ -1,0 +1,110 @@
+{
+  "testResults": [
+    {
+      "timestamp": "2025-06-11T19:31:01.574Z",
+      "userAge": 46,
+      "attempts": [
+        {
+          "attempt": 1,
+          "foot": "left",
+          "balanceScore": 0.623
+        },
+        {
+          "attempt": 2,
+          "foot": "left",
+          "balanceScore": 0.693
+        },
+        {
+          "attempt": 3,
+          "foot": "left",
+          "balanceScore": 0.591
+        },
+        {
+          "attempt": 4,
+          "foot": "right",
+          "balanceScore": 0.619
+        },
+        {
+          "attempt": 4,
+          "foot": "right",
+          "balanceScore": 0.051
+        },
+        {
+          "attempt": 5,
+          "foot": "right",
+          "balanceScore": 0.16
+        },
+        {
+          "attempt": 6,
+          "foot": "right",
+          "balanceScore": 0.509
+        }
+      ],
+      "averageBalanceTime": 0.46,
+      "assessment": {
+        "category": "Below Average",
+        "ageGroup": "40-50",
+        "expectedRange": "",
+        "recommendedExercises": []
+      }
+    },
+    {
+      "timestamp": "2025-06-16T05:48:27.875Z",
+      "userAge": 45,
+      "attempts": [
+        {
+          "attempt": 1,
+          "foot": "left",
+          "balanceScore": 0.407
+        },
+        {
+          "attempt": 1,
+          "foot": "left",
+          "balanceScore": 0.592
+        },
+        {
+          "attempt": 2,
+          "foot": "left",
+          "balanceScore": 0.026
+        },
+        {
+          "attempt": 2,
+          "foot": "left",
+          "balanceScore": 0.055
+        },
+        {
+          "attempt": 3,
+          "foot": "left",
+          "balanceScore": 0.428
+        },
+        {
+          "attempt": 4,
+          "foot": "right",
+          "balanceScore": 0.052
+        },
+        {
+          "attempt": 5,
+          "foot": "right",
+          "balanceScore": 1.344
+        },
+        {
+          "attempt": 5,
+          "foot": "right",
+          "balanceScore": 0.643
+        },
+        {
+          "attempt": 6,
+          "foot": "right",
+          "balanceScore": 1.026
+        }
+      ],
+      "averageBalanceTime": 0.51,
+      "assessment": {
+        "category": "Below Average",
+        "ageGroup": "40-50",
+        "expectedRange": "",
+        "recommendedExercises": []
+      }
+    }
+  ]
+}

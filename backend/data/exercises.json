@@ -1,0 +1,164 @@
+{
+  "exercises": {
+    "20-40": {
+      "Below Average": [
+        {
+          "name": "Single-Leg Stand",
+          "description": "Try standing on one leg for 10–20 seconds. Switch legs and repeat 3 times. It's a great way to improve your balance!"
+        },
+        {
+          "name": "Heel-to-Toe Walk",
+          "description": "Walk in a straight line, placing your heel right in front of your toe for 5–10 steps. This helps with coordination and balance."
+        }
+      ],
+      "Average": [
+        {
+          "name": "Single-Leg Stand",
+          "description": "Stand on one leg for 15–30 seconds, then switch legs. Repeat 3 times. This exercise is perfect for enhancing your balance."
+        },
+        {
+          "name": "Heel-to-Toe Walk",
+          "description": "Walk in a straight line, placing your heel right in front of your toe for 10–20 steps. It's a fun way to improve your coordination."
+        },
+        {
+          "name": "Standing March",
+          "description": "March in place, lifting your knees high for 1–2 minutes. It's a great way to get your blood flowing and improve balance."
+        }
+      ],
+      "Above Average": [
+        {
+          "name": "Single-Leg Stand",
+          "description": "Stand on one leg for 30–40 seconds, then switch legs. Repeat 3 times. Challenge yourself and see how long you can balance!"
+        },
+        {
+          "name": "Heel-to-Toe Walk",
+          "description": "Walk in a straight line, placing your heel right in front of your toe for 20–30 steps. It's a great way to test your coordination."
+        },
+        {
+          "name": "Yoga Poses",
+          "description": "Try Tree Pose and Warrior III. These poses are excellent for balance and focus. Enjoy the calm and strength they bring!"
+        }
+      ]
+    },
+    "40-50": {
+      "Below Average": [
+        {
+          "name": "Single-Leg Stand",
+          "description": "Stand on one leg for 10–20 seconds, then switch legs. Repeat 3 times. It's a simple way to work on your balance!"
+        },
+        {
+          "name": "Heel-to-Toe Walk",
+          "description": "Walk in a straight line, placing your heel right in front of your toe for 5–10 steps. This exercise helps with coordination."
+        }
+      ],
+      "Average": [
+        {
+          "name": "Single-Leg Stand",
+          "description": "Stand on one leg for 15–25 seconds, then switch legs. Repeat 3 times. It's a great way to improve your balance."
+        },
+        {
+          "name": "Heel-to-Toe Walk",
+          "description": "Walk in a straight line, placing your heel right in front of your toe for 10–20 steps. It's a fun way to enhance your coordination."
+        },
+        {
+          "name": "Standing March",
+          "description": "March in place, lifting your knees high for 1–2 minutes. It's a great way to get moving and improve balance."
+        }
+      ],
+      "Above Average": [
+        {
+          "name": "Single-Leg Stand",
+          "description": "Stand on one leg for 25–35 seconds, then switch legs. Repeat 3 times. Challenge yourself and see how long you can balance!"
+        },
+        {
+          "name": "Heel-to-Toe Walk",
+          "description": "Walk in a straight line, placing your heel right in front of your toe for 20–30 steps. It's a great way to test your coordination."
+        },
+        {
+          "name": "Yoga Poses",
+          "description": "Try Tree Pose and Warrior III. These poses are excellent for balance and focus. Enjoy the calm and strength they bring!"
+        }
+      ]
+    },
+    "50-60": {
+      "Below Average": [
+        {
+          "name": "Single-Leg Stand",
+          "description": "Stand on one leg for 10–15 seconds, then switch legs. Repeat 3 times. It's a simple way to work on your balance!"
+        },
+        {
+          "name": "Heel-to-Toe Walk",
+          "description": "Walk in a straight line, placing your heel right in front of your toe for 5–10 steps. This exercise helps with coordination."
+        }
+      ],
+      "Average": [
+        {
+          "name": "Single-Leg Stand",
+          "description": "Stand on one leg for 15–20 seconds, then switch legs. Repeat 3 times. It's a great way to improve your balance."
+        },
+        {
+          "name": "Heel-to-Toe Walk",
+          "description": "Walk in a straight line, placing your heel right in front of your toe for 10–15 steps. It's a fun way to enhance your coordination."
+        },
+        {
+          "name": "Standing March",
+          "description": "March in place, lifting your knees high for 1–2 minutes. It's a great way to get moving and improve balance."
+        }
+      ],
+      "Above Average": [
+        {
+          "name": "Single-Leg Stand",
+          "description": "Stand on one leg for 20–30 seconds, then switch legs. Repeat 3 times. Challenge yourself and see how long you can balance!"
+        },
+        {
+          "name": "Heel-to-Toe Walk",
+          "description": "Walk in a straight line, placing your heel right in front of your toe for 15–20 steps. It's a great way to test your coordination."
+        },
+        {
+          "name": "Yoga Poses",
+          "description": "Try Tree Pose and Warrior III. These poses are excellent for balance and focus. Enjoy the calm and strength they bring!"
+        }
+      ]
+    },
+    "60-70": {
+      "Below Average": [
+        {
+          "name": "Single-Leg Stand",
+          "description": "Stand on one leg for 5–10 seconds, then switch legs. Repeat 3 times. It's a simple way to work on your balance!"
+        },
+        {
+          "name": "Heel-to-Toe Walk",
+          "description": "Walk in a straight line, placing your heel right in front of your toe for 5–10 steps. This exercise helps with coordination."
+        }
+      ],
+      "Average": [
+        {
+          "name": "Single-Leg Stand",
+          "description": "Stand on one leg for 10–15 seconds, then switch legs. Repeat 3 times. It's a great way to improve your balance."
+        },
+        {
+          "name": "Heel-to-Toe Walk",
+          "description": "Walk in a straight line, placing your heel right in front of your toe for 10–15 steps. It's a fun way to enhance your coordination."
+        },
+        {
+          "name": "Standing March",
+          "description": "March in place, lifting your knees high for 1–2 minutes. It's a great way to get moving and improve balance."
+        }
+      ],
+      "Above Average": [
+        {
+          "name": "Single-Leg Stand",
+          "description": "Stand on one leg for 15–25 seconds, then switch legs. Repeat 3 times. Challenge yourself and see how long you can balance!"
+        },
+        {
+          "name": "Heel-to-Toe Walk",
+          "description": "Walk in a straight line, placing your heel right in front of your toe for 15–20 steps. It's a great way to test your coordination."
+        },
+        {
+          "name": "Yoga Poses",
+          "description": "Try Tree Pose and Warrior III. These poses are excellent for balance and focus. Enjoy the calm and strength they bring!"
+        }
+      ]
+    }
+  }
+}
