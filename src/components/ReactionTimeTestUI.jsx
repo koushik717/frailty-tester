@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import boyImage from '../assets/tests/reaction-time/boy.png';
 
 // Semantic class constants - METY brand styling
 const containerClasses = "min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6";
@@ -29,31 +30,29 @@ const resultItemClasses = "flex justify-between items-center py-3 border-b borde
 const resultLabelClasses = "font-brandBody text-lg text-brand-neutral";
 const resultValueClasses = "font-brandBody text-xl font-semibold text-brand-primary";
 const practiceModeClasses = "font-brandBody text-lg text-brand-accent font-semibold text-center mt-4";
-const stimulusContainerClasses = "absolute p-3 bg-white rounded-lg shadow-lg border border-gray-200";
-const stimulusImageClasses = "w-32 h-32 object-cover rounded";
+const boyImageClasses = "w-32 h-32 object-cover rounded-lg shadow-md";
 
 const ReactionTimeTestUI = ({
-  start,
-  practice,
-  testComplete,
-  showStimulus,
-  stimulusPosition,
-  trialCount,
-  correctClicks,
-  incorrectClicks,
-  buttonColor,
-  progress,
-  isTestActive,
-  handleResponse,
-  startRealTest,
-  startPracticeTest,
-  resetTest,
+  // Hook state
+  status,
+  countdownNum,
+  trialIndex,
   totalTrials,
-  allowPractice,
-  submittedToday,
+  practiceTrials,
+  showCue,
+  earlyClick,
+  results,
+  
+  // Hook actions
+  start,
+  onClick,
+  reset,
+  summary,
+  
+  // Legacy props for compatibility
   text = {
     title: "Reaction Time Assessment",
-    instructions: "You will be shown a button and series of 20 pictures. When the picture appears, click the button once as quickly as possible. You will be penalized for excess clicks.",
+    instructions: "You will see a boy image appear on screen. Click the button as quickly as possible when you see the boy.",
     start: "Begin Assessment",
     practice: "Practice Run",
     correct: "Correct Clicks",
@@ -64,87 +63,141 @@ const ReactionTimeTestUI = ({
     score: "Score",
     alreadySubmitted: "Assessment already completed today",
     clickHere: "Click Here!",
-    pleaseClick: "Click the button below when you see the stimulus image.",
+    pleaseClick: "Click the button below when you see the boy image.",
     trialProgress: "Trial",
     of: "of"
   },
-  results = null,
-  stimulusImage = "https://iheartcraftythings.com/wp-content/uploads/2021/11/6-48.jpg",
+  results: legacyResults = null,
+  stimulusImage = boyImage,
   customStyles = {},
   theme = 'default'
 }) => {
-  // Test in progress
-  if (isTestActive) {
+  // Countdown state
+  if (status === 'countdown') {
     return (
       <div className={containerClasses}>
         <div className={cardContainerClasses}>
-          
           <div className="text-center">
-            <h2 className={testStatusClasses}>
-              {text.pleaseClick}
-            </h2>
-            
-            <div className="mb-6">
-              <div className="font-brandBody text-lg text-brand-neutral mb-2">
-                <span className="font-semibold">Correct Clicks:</span> {correctClicks}
-              </div>
-              <div className="font-brandBody text-lg text-brand-neutral mb-2">
-                <span className="font-semibold">{text.trialProgress} {trialCount} {text.of} {totalTrials}</span>
-              </div>
+            <div 
+              className="text-8xl font-bold text-brand-primary mb-8"
+              aria-live="polite"
+              aria-label={`Countdown: ${countdownNum}`}
+            >
+              {countdownNum}
             </div>
-
-            {/* Progress bar */}
-            <div className={progressContainerClasses}>
-              <div 
-                className={progressBarClasses}
-                role="progressbar"
-                aria-valuenow={Math.round(progress * 100)}
-                aria-valuemin="0"
-                aria-valuemax="100"
-                aria-label={`Progress: ${Math.round(progress * 100)}% complete`}
-              >
-                <div 
-                  className={progressFillClasses}
-                  style={{ width: `${progress * 100}%` }}
-                />
-              </div>
-            </div>
-
-            <button
-              className={classNames(responseButtonClasses, "bg-brand-primary hover:bg-red-700")}
-              onClick={handleResponse}
-              aria-label={`${text.clickHere} - Click when you see the stimulus image`}
+            <p className="text-xl font-brandBody text-brand-neutral">
+              Get ready...
+            </p>
+            <button 
+              className={disabledButtonClasses}
+              disabled
               type="button"
             >
-              {text.clickHere}
+              Wait for countdown
             </button>
           </div>
+        </div>
+      </div>
+    );
+  }
 
-          {/* Stimulus */}
-          {showStimulus && (
-            <div
-              className={stimulusContainerClasses}
-              style={{
-                top: stimulusPosition.top,
-                left: stimulusPosition.left,
-              }}
-              role="img"
-              aria-label="Stimulus image - Click the button when you see this image"
-            >
-              <img
-                src={stimulusImage}
-                alt="Stimulus image - Click the button when you see this image"
-                className={stimulusImageClasses}
-              />
+  // Test in progress
+  if (status === 'ready' || status === 'clicked') {
+    const isPractice = trialIndex < practiceTrials;
+    const currentTrial = trialIndex + 1;
+    const totalTrialCount = isPractice ? practiceTrials : practiceTrials + totalTrials;
+    const progress = currentTrial / totalTrialCount;
+    
+    return (
+      <div className={containerClasses}>
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
+          {/* Boy Image Card - Left side on desktop, top on mobile */}
+          <div className="w-full lg:w-auto lg:flex-shrink-0">
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 text-center">
+              <h3 className="font-brandHeading text-lg font-semibold text-brand-primary mb-4">
+                {isPractice ? 'Practice Trial' : 'Test Trial'}
+              </h3>
+              
+              {/* Boy Image - Only show when cue is active */}
+              {showCue && (
+                <div className="mb-4">
+                  <img
+                    src={boyImage}
+                    alt="Boy image - Click the button when you see this"
+                    className={boyImageClasses}
+                  />
+                  <p className="text-sm text-brand-neutral mt-2">
+                    Click now!
+                  </p>
+                </div>
+              )}
+              
+              {/* Early Click Warning */}
+              {earlyClick && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                  <p className="text-sm text-yellow-800 font-medium">
+                    ⚠️ Too soon — wait for the boy
+                  </p>
+                </div>
+              )}
+              
+              {/* Trial Progress */}
+              <div className="text-sm text-brand-neutral">
+                <p>Trial {currentTrial} of {totalTrialCount}</p>
+                {isPractice && (
+                  <p className="text-brand-accent font-medium">Practice Mode</p>
+                )}
+              </div>
             </div>
-          )}
+          </div>
+          
+          {/* Main Test Interface */}
+          <div className="flex-1">
+            <div className={cardContainerClasses}>
+              <div className="text-center">
+                <h2 className={testStatusClasses}>
+                  {text.pleaseClick}
+                </h2>
+                
+                {/* Progress Bar */}
+                <div className={progressContainerClasses}>
+                  <div 
+                    className={progressBarClasses}
+                    role="progressbar"
+                    aria-valuenow={Math.round(progress * 100)}
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-label={`Progress: ${Math.round(progress * 100)}% complete`}
+                  >
+                    <div 
+                      className={progressFillClasses}
+                      style={{ width: `${progress * 100}%` }}
+                    />
+                  </div>
+                </div>
+                
+                {/* Response Button */}
+                <button
+                  className={classNames(responseButtonClasses, "bg-brand-primary hover:bg-red-700")}
+                  onClick={onClick}
+                  aria-label={`${text.clickHere} - Click when you see the boy image`}
+                  type="button"
+                >
+                  {text.clickHere}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   // Test complete - show results
-  if (testComplete && results) {
+  if (status === 'done') {
+    const summaryData = summary();
+    const isPractice = trialIndex <= practiceTrials;
+    
     return (
       <div className={containerClasses}>
         <div className={resultsContainerClasses}>
@@ -154,47 +207,52 @@ const ReactionTimeTestUI = ({
           
           <div className="space-y-2">
             <div className={resultItemClasses}>
-              <span className={resultLabelClasses}>✅ {text.correct}</span>
-              <span className={resultValueClasses}>{results.correctClicks}</span>
+              <span className={resultLabelClasses}>✅ Valid Clicks</span>
+              <span className={resultValueClasses}>{summaryData.validCount}</span>
             </div>
             <div className={resultItemClasses}>
-              <span className={resultLabelClasses}>❌ {text.incorrect}</span>
-              <span className={resultValueClasses}>{results.incorrectClicks}</span>
+              <span className={resultLabelClasses}>⏱ Average Time</span>
+              <span className={resultValueClasses}>{summaryData.avg}ms</span>
             </div>
             <div className={resultItemClasses}>
-              <span className={resultLabelClasses}>🚫 {text.misses}</span>
-              <span className={resultValueClasses}>{results.missedClicks}</span>
+              <span className={resultLabelClasses}>🚀 Fastest</span>
+              <span className={resultValueClasses}>{summaryData.fastest}ms</span>
             </div>
             <div className={resultItemClasses}>
-              <span className={resultLabelClasses}>🎯 {text.accuracy}</span>
-              <span className={resultValueClasses}>{results.accuracy}%</span>
-            </div>
-            <div className={resultItemClasses}>
-              <span className={resultLabelClasses}>⏱ {text.avgReactionTime}</span>
-              <span className={resultValueClasses}>{results.averageReactionTime} sec</span>
-            </div>
-            <div className={resultItemClasses}>
-              <span className={resultLabelClasses}>🏆 {text.score}</span>
-              <span className={resultValueClasses}>{results.score}</span>
+              <span className={resultLabelClasses}>🐌 Slowest</span>
+              <span className={resultValueClasses}>{summaryData.slowest}ms</span>
             </div>
           </div>
 
-          {practice && (
+          {isPractice && (
             <>
               <div className={practiceModeClasses}>
-                📝 Practice Mode
+                📝 Practice Mode Complete
               </div>
               <div className="text-center mt-6">
                 <button 
                   className={primaryButtonClasses}
-                  onClick={resetTest}
-                  aria-label="Try practice test again"
+                  onClick={() => start({ practice: false })}
+                  aria-label="Start actual test"
                   type="button"
                 >
-                  Try Again
+                  Start Actual Test
                 </button>
               </div>
             </>
+          )}
+          
+          {!isPractice && (
+            <div className="text-center mt-6">
+              <button 
+                className={primaryButtonClasses}
+                onClick={reset}
+                aria-label="Try test again"
+                type="button"
+              >
+                Try Again
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -214,54 +272,25 @@ const ReactionTimeTestUI = ({
             {text.instructions}
           </p>
 
-          {!submittedToday && (
-            <div className={buttonGroupClasses}>
-              <button 
-                className={primaryButtonClasses}
-                onClick={startRealTest}
-                aria-label={`${text.start} - Begin the actual assessment`}
-                type="button"
-              >
-                {text.start}
-              </button>
-              {allowPractice && (
-                <button 
-                  className={primaryButtonClasses}
-                  onClick={startPracticeTest}
-                  aria-label={`${text.practice} - Try a practice run first`}
-                  type="button"
-                >
-                  {text.practice}
-                </button>
-              )}
-            </div>
-          )}
-
-          {submittedToday && (
-            <div className={buttonGroupClasses}>
-              <button 
-                className={disabledButtonClasses}
-                disabled
-                aria-label={`${text.start} - Already completed today`}
-                type="button"
-              >
-                {text.start}
-              </button>
-              {allowPractice && (
-                <button 
-                  className={primaryButtonClasses}
-                  onClick={startPracticeTest}
-                  aria-label={`${text.practice} - Try a practice run`}
-                  type="button"
-                >
-                  {text.practice}
-                </button>
-              )}
-              <p className="font-brandBody text-lg text-brand-neutral text-center mt-4">
-                {text.alreadySubmitted}
-              </p>
-            </div>
-          )}
+          <div className={buttonGroupClasses}>
+            <button 
+              className={primaryButtonClasses}
+              onClick={() => start({ practice: true })}
+              aria-label={`${text.start} - Begin the assessment`}
+              type="button"
+            >
+              {text.start}
+            </button>
+            
+            <button 
+              className={primaryButtonClasses}
+              onClick={() => start({ practice: false })}
+              aria-label={`${text.practice} - Skip practice and start actual test`}
+              type="button"
+            >
+              Skip Practice
+            </button>
+          </div>
         </div>
       </div>
     </div>

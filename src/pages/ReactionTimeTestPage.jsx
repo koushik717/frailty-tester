@@ -10,7 +10,7 @@ const introInstructions = [
   {
     icon: <FaBolt size={28} className="text-primary" aria-hidden="true" />, 
     title: "Response Speed Assessment",
-    text: "Click as quickly as possible when the visual stimulus appears on screen."
+    text: "Click as quickly as possible when the boy image appears on screen."
   },
   {
     icon: <FaClock size={28} className="text-primary" aria-hidden="true" />, 
@@ -28,10 +28,8 @@ const ReactionTimeTestPage = ({
   userId = "default-user-id",
   testConfig = {
     totalTrials: 20,
-    stimulusDuration: 1000,
-    minInterval: 1500,
-    maxInterval: 2500,
-    totalDuration: 60000
+    practiceTrials: 3,
+    allowPractice: true
   },
   submittedToday = false,
   allowPractice = true,
@@ -47,7 +45,7 @@ const ReactionTimeTestPage = ({
   },
   text = {
     title: "Reaction Time Test",
-    instructions: "You will be shown a button and series of 20 pictures... When the picture pops up, click the button once (you will be penalized for excess clicks). Try to click the button as fast as possible when the picture appears.",
+    instructions: "You will see a boy image appear on screen. When the image appears, click the button as quickly as possible. Try to click the button as fast as possible when you see the boy.",
     start: "Start",
     practice: "Practice",
     correct: "Correct",
@@ -62,7 +60,7 @@ const ReactionTimeTestPage = ({
     trialProgress: "Trial",
     of: "of"
   },
-  stimulusImage = "https://iheartcraftythings.com/wp-content/uploads/2021/11/6-48.jpg",
+  stimulusImage = null,
   customStyles = {},
   theme = 'default',
   showResults = true
@@ -72,42 +70,42 @@ const ReactionTimeTestPage = ({
   const [localSubmittedToday, setLocalSubmittedToday] = useState(submittedToday);
 
   const {
-    start,
-    practice,
-    testComplete,
-    showStimulus,
-    stimulusPosition,
-    trialCount,
-    correctClicks,
-    incorrectClicks,
-    buttonColor,
-    handleResponse,
-    startRealTest,
-    startPracticeTest,
-    calculateResults,
-    resetTest,
+    // Hook state
+    status,
+    countdownNum,
+    trialIndex,
     totalTrials,
-    allowPractice: hookAllowPractice,
-    progress,
-    isTestActive
+    practiceTrials,
+    showCue,
+    earlyClick,
+    results,
+    
+    // Hook actions
+    start,
+    onClick,
+    reset,
+    summary
   } = useReactionTimeTest({
     ...testConfig,
     allowPractice
   });
 
+  // Handle test completion
   useEffect(() => {
-    if (testComplete) {
-      const results = calculateResults();
-      setTestResults(results);
+    if (status === 'done') {
+      const summaryData = summary();
+      const isPractice = trialIndex < practiceTrials;
+      
       if (onTestComplete) {
-        onTestComplete(results);
+        onTestComplete(summaryData);
       }
-      if (!practice && onSubmitResults) {
+      
+      if (!isPractice && onSubmitResults) {
         const testData = {
           userId,
           testId: "reactiontime",
-          score: results.score,
-          metrics: results,
+          score: summaryData.avg,
+          metrics: summaryData,
           metadata: {
             testDate: new Date().toISOString(),
             practice: false,
@@ -120,23 +118,24 @@ const ReactionTimeTestPage = ({
         onSubmitResults(testData);
         setLocalSubmittedToday(true);
       }
-      if (practice && onPracticeComplete) {
-        onPracticeComplete(results);
+      
+      if (isPractice && onPracticeComplete) {
+        onPracticeComplete(summaryData);
       }
     }
-  }, [testComplete, practice, calculateResults, onTestComplete, onSubmitResults, onPracticeComplete, userId, testConfig, theme]);
+  }, [status, trialIndex, practiceTrials, summary, onTestComplete, onSubmitResults, onPracticeComplete, userId, testConfig, theme]);
 
   const handleStartTest = () => {
     setTestStarted(true);
-    startRealTest();
+    start({ practice: true });
   };
 
   const handleStartPracticeTest = () => {
-    startPracticeTest();
+    start({ practice: false });
   };
 
   const handleResetTest = () => {
-    resetTest();
+    reset();
     setTestResults(null);
   };
 
@@ -200,26 +199,23 @@ const ReactionTimeTestPage = ({
         padding="py-16"
       >
         <ReactionTimeTestUI
-          start={start}
-          practice={practice}
-          testComplete={testComplete}
-          showStimulus={showStimulus}
-          stimulusPosition={stimulusPosition}
-          trialCount={trialCount}
-          correctClicks={correctClicks}
-          incorrectClicks={incorrectClicks}
-          buttonColor={buttonColor}
-          progress={progress}
-          isTestActive={isTestActive}
-          handleResponse={handleResponse}
-          startRealTest={handleStartTest}
-          startPracticeTest={handleStartPracticeTest}
-          resetTest={handleResetTest}
+          // Hook state
+          status={status}
+          countdownNum={countdownNum}
+          trialIndex={trialIndex}
           totalTrials={totalTrials}
-          allowPractice={hookAllowPractice}
-          submittedToday={localSubmittedToday}
+          practiceTrials={practiceTrials}
+          showCue={showCue}
+          earlyClick={earlyClick}
+          results={results}
+          
+          // Hook actions
+          start={start}
+          onClick={onClick}
+          reset={reset}
+          summary={summary}
+          
           text={text}
-          results={testResults}
           stimulusImage={stimulusImage}
           customStyles={customStyles}
           theme={theme}
