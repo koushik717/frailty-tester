@@ -43,6 +43,14 @@ const ReactionTimeTestUI = () => {
     let timingArr = Array.from({ length: TOTAL_TRIALS }, () => Math.random() * 1 + 1.5);
     let scale = TOTAL_DURATION / timingArr.reduce((sum, val) => sum + val, 0);
     let scaledTimings = timingArr.map((val) => val * scale);
+    
+    // Log timing verification
+    console.log('Timing verification:', {
+      originalTimings: timingArr.slice(0, 5), // Show first 5
+      scaledTimings: scaledTimings.slice(0, 5),
+      totalDuration: scaledTimings.reduce((sum, val) => sum + val, 0),
+      trials: TOTAL_TRIALS
+    });
 
     setPositions(newPositions);
     setIntervalArray(scaledTimings);
@@ -58,6 +66,7 @@ const ReactionTimeTestUI = () => {
     }
   
     let timer = setTimeout(() => {
+      console.log(`Boy appearing at trial ${boyAppearances + 1}, delay: ${intervalArray[boyAppearances].toFixed(2)}s`);
       setShowBoy(true);
       setBoyPosition(positions[boyAppearances]);
       setStartReaction(Date.now());
@@ -71,7 +80,9 @@ const ReactionTimeTestUI = () => {
   useEffect(() => {
     let timer;
     if (showBoy) {
+      console.log(`Boy visible for ${BOY_DURATION}ms (${BOY_DURATION/1000}s)`);
       timer = setTimeout(() => {
+        console.log('Boy hidden');
         setShowBoy(false);
       }, BOY_DURATION);
     }
@@ -82,13 +93,13 @@ const ReactionTimeTestUI = () => {
   // Button click handler (exact logic from source)
   const onPressButton = () => {
     if (!start || !showBoy || startReaction === null) {
-      console.log("Incorrect Click");
+      console.log("Incorrect Click - Trial NOT advanced, boyAppearances:", boyAppearances);
       setColor("red");
       setIncorrectClicks(prev => prev + 1);
       return;
     }
     const reactionTime = Date.now() - startReaction;
-    console.log("Correct Click");
+    console.log("Correct Click - Trial advanced, boyAppearances:", boyAppearances, "Reaction time:", reactionTime + "ms");
     setColor("green");
     setCorrectClicks(prev => prev + 1);
     setReactionTimes(prev => [...prev, reactionTime]);
