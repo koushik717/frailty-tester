@@ -1,137 +1,180 @@
-import { useState, useRef } from 'react';
-
-const getRandomPosition = () => ({
-  top: Math.floor(Math.random() * 200) + 100,
-  left: Math.floor(Math.random() * 400) + 100,
-});
+import { useState, useRef, useEffect } from 'react';
 
 const useReactionTimeTest = ({
   totalTrials = 20,
-  stimulusDuration = 1000,
-  minInterval = 1500,
-  maxInterval = 2500,
-  allowPractice = true,
-  totalDuration = 60000
+  practiceTrials = 3,
+  allowPractice = true
 } = {}) => {
-  const [isTestActive, setIsTestActive] = useState(false);
-  const [practice, setPractice] = useState(false);
-  const [testComplete, setTestComplete] = useState(false);
-  const [showStimulus, setShowStimulus] = useState(false);
-  const [stimulusPosition, setStimulusPosition] = useState(getRandomPosition());
-  const [trialCount, setTrialCount] = useState(1);
-  const [correctClicks, setCorrectClicks] = useState(0);
-  const [incorrectClicks, setIncorrectClicks] = useState(0);
-  const [missedClicks, setMissedClicks] = useState(0);
-  const [buttonColor, setButtonColor] = useState('#2f4eff');
-  const [progress, setProgress] = useState(0);
-  const [reactionTimes, setReactionTimes] = useState([]);
+  // Core state
+  const [status, setStatus] = useState('idle'); // 'idle' | 'countdown' | 'ready' | 'clicked' | 'done'
+  const [countdownNum, setCountdownNum] = useState(3);
+  const [trialIndex, setTrialIndex] = useState(0);
+  const [showCue, setShowCue] = useState(false);
+  const [earlyClick, setEarlyClick] = useState(false);
   
+  // Results storage
+  const [results, setResults] = useState({
+    practice: [],
+    actual: []
+  });
   
+  // Timing references
+  const [cueShownAt, setCueShownAt] = useState(0);
+  const countdownTimer = useRef(null);
+  const cueTimer = useRef(null);
   
-  const stimulusTimeout = useRef(null);
-  const trialStartTime = useRef(null);
-
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      if (countdownTimer.current) clearTimeout(countdownTimer.current);
+      if (cueTimer.current) clearTimeout(cueTimer.current);
+    };
+  }, []);
+  
+  // Start test with countdown
+  const start = ({ practice = true } = {}) => {
+    // Clear any existing timers
+    if (countdownTimer.current) clearTimeout(countdownTimer.current);
+    if (cueTimer.current) clearTimeout(cueTimer.current);
+    
+    // Reset state
+    setStatus('countdown');
+    setCountdownNum(3);
+    setTrialIndex(0);
+    setShowCue(false);
+    setEarlyClick(false);
+    setResults({ practice: [], actual: [] });
+    
+    // Start countdown
+    const runCountdown = (num) => {
+      if (num > 0) {
+        setCountdownNum(num);
+        countdownTimer.current = setTimeout(() => runCountdown(num - 1), 1000);
+      } else {
+        // Countdown finished, start first trial
+        setStatus('ready');
+        startTrial();
+      }
+    };
+    
+    runCountdown(3);
+  };
+  
+  // Start individual trial with random delay
   const startTrial = () => {
-    setShowStimulus(false);
-    setTimeout(() => {
-      setStimulusPosition(getRandomPosition());
-      setShowStimulus(true);
-      trialStartTime.current = Date.now();
-    }, Math.random() * (maxInterval - minInterval) + minInterval);
-  };
-
-  const startRealTest = () => {
-    setIsTestActive(true);
-    setPractice(false);
-    setTestComplete(false);
-    setTrialCount(1);
-    setCorrectClicks(0);
-    setIncorrectClicks(0);
-    setMissedClicks(0);
-    setProgress(0);
-    setReactionTimes([]);
-    startTrial();
-  };
-
-  const startPracticeTest = () => {
-    setIsTestActive(true);
-    setPractice(true);
-    setTestComplete(false);
-    setTrialCount(1);
-    setCorrectClicks(0);
-    setIncorrectClicks(0);
-    setMissedClicks(0);
-    setProgress(0);
-    setReactionTimes([]);
-    startTrial();
-  };
-
-  const handleResponse = () => {
-    if (!showStimulus) {
-      setIncorrectClicks((c) => c + 1);
+    if (trialIndex >= (allowPractice ? practiceTrials + totalTrials : totalTrials)) {
+      setStatus('done');
       return;
     }
-    setShowStimulus(false);
-    const reactionTime = (Date.now() - trialStartTime.current) / 1000;
-    setReactionTimes((arr) => [...arr, reactionTime]);
-    setCorrectClicks((c) => c + 1);
-    if (trialCount < totalTrials) {
-      setTrialCount((t) => t + 1);
-      setProgress((t + 1) / totalTrials);
+    
+    // Random delay between 800-2000ms
+    const randomDelay = Math.random() * 1200 + 800;
+    
+    cueTimer.current = setTimeout(() => {
+      setShowCue(true);
+      setCueShownAt(performance.now());
+      setStatus('ready');
+    }, randomDelay);
+  };
+  
+  // Handle click response
+  const onClick = () => {
+    if (!showCue) {
+      // Early click - restart trial
+      setEarlyClick(true);
+      if (cueTimer.current) clearTimeout(cueTimer.current);
+      setShowCue(false);
+      setStatus('ready');
       startTrial();
-    } else {
-      setIsTestActive(false);
-      setTestComplete(true);
-      setProgress(1);
+      return;
     }
+    
+    // Valid click - record reaction time
+    const reactionMs = performance.now() - cueShownAt;
+    const isPractice = trialIndex < practiceTrials;
+    
+    // Store result
+    setResults(prev => ({
+      ...prev,
+      [isPractice ? 'practice' : 'actual']: [
+        ...prev[isPractice ? 'practice' : 'actual'],
+        reactionMs
+      ]
+    }));
+    
+    // Clear cue and advance trial
+    setShowCue(false);
+    setTrialIndex(prev => prev + 1);
+    setStatus('clicked');
+    
+    // Start next trial after brief pause
+    setTimeout(() => {
+      if (trialIndex + 1 >= (allowPractice ? practiceTrials + totalTrials : totalTrials)) {
+        setStatus('done');
+      } else {
+        setStatus('ready');
+        startTrial();
+      }
+    }, 500);
   };
-
-  const resetTest = () => {
-    setIsTestActive(false);
-    setPractice(false);
-    setTestComplete(false);
-    setTrialCount(1);
-    setCorrectClicks(0);
-    setIncorrectClicks(0);
-    setMissedClicks(0);
-    setProgress(0);
-    setReactionTimes([]);
-    setShowStimulus(false);
+  
+  // Reset to initial state
+  const reset = () => {
+    // Clear timers
+    if (countdownTimer.current) clearTimeout(countdownTimer.current);
+    if (cueTimer.current) clearTimeout(cueTimer.current);
+    
+    // Reset state
+    setStatus('idle');
+    setCountdownNum(3);
+    setTrialIndex(0);
+    setShowCue(false);
+    setEarlyClick(false);
+    setResults({ practice: [], actual: [] });
+    setCueShownAt(0);
   };
-
-  const calculateResults = () => {
-    const accuracy = totalTrials > 0 ? Math.round((correctClicks / totalTrials) * 100) : 0;
-    const averageReactionTime = reactionTimes.length > 0 ? (reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length).toFixed(3) : 0;
-    const score = Math.max(0, Math.round(1000 - averageReactionTime * 100 - incorrectClicks * 10));
+  
+  // Calculate summary statistics for actual trials only
+  const summary = () => {
+    const actualTrials = results.actual;
+    
+    if (actualTrials.length === 0) {
+      return {
+        avg: 0,
+        fastest: 0,
+        slowest: 0,
+        validCount: 0
+      };
+    }
+    
+    const avg = actualTrials.reduce((sum, time) => sum + time, 0) / actualTrials.length;
+    const fastest = Math.min(...actualTrials);
+    const slowest = Math.max(...actualTrials);
+    
     return {
-      correctClicks,
-      incorrectClicks,
-      missedClicks,
-      accuracy,
-      averageReactionTime,
-      score,
+      avg: Math.round(avg),
+      fastest: Math.round(fastest),
+      slowest: Math.round(slowest),
+      validCount: actualTrials.length
     };
   };
-
+  
   return {
-    start: isTestActive,
-    practice,
-    testComplete,
-    showStimulus,
-    stimulusPosition,
-    trialCount,
-    correctClicks,
-    incorrectClicks,
-    buttonColor,
-    handleResponse,
-    startRealTest,
-    startPracticeTest,
-    calculateResults,
-    resetTest,
+    // State
+    status,
+    countdownNum,
+    trialIndex,
     totalTrials,
-    allowPractice,
-    progress,
-    isTestActive,
+    practiceTrials,
+    showCue,
+    earlyClick,
+    results,
+    
+    // Actions
+    start,
+    onClick,
+    reset,
+    summary
   };
 };
 
