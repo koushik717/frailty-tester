@@ -110,39 +110,43 @@ const ReactionTimeTestUI = ({
     
     return (
       <div className={containerClasses}>
-        <div className="flex flex-col lg:flex-row gap-6 items-start">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[260px,1fr] gap-6 items-start">
           {/* Boy Image Card - Left side on desktop, top on mobile */}
-          <div className="w-full lg:w-auto lg:flex-shrink-0">
-            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 text-center">
-              <h3 className="font-brandHeading text-lg font-semibold text-brand-primary mb-4">
+          <div className="w-full md:w-auto">
+            <div className="bg-white rounded-xl border shadow-sm p-4 md:p-5 text-center">
+              <h3 className="text-brand-primary font-brandHeading text-sm md:text-base font-semibold mb-3">
                 {isPractice ? 'Practice Trial' : 'Test Trial'}
               </h3>
               
               {/* Boy Image - Only show when cue is active */}
               {showCue && (
-                <div className="mb-4">
+                <div className="mb-3">
                   <img
                     src={boyImage}
-                    alt="Boy image - Click the button when you see this"
-                    className={boyImageClasses}
+                    alt="Boy cue"
+                    className="w-28 h-28 md:w-32 md:h-32 object-contain mx-auto"
                   />
-                  <p className="text-sm text-brand-neutral mt-2">
+                  <p className="text-xs text-brand-neutral mt-1">
                     Click now!
                   </p>
+                  {/* Visually hidden live text for accessibility */}
+                  <span className="sr-only" aria-live="polite">
+                    Cue visible — click now!
+                  </span>
                 </div>
               )}
               
               {/* Early Click Warning */}
               {earlyClick && (
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
-                  <p className="text-sm text-yellow-800 font-medium">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2 mb-3">
+                  <p className="text-xs text-yellow-800 font-medium">
                     ⚠️ Too soon — wait for the boy
                   </p>
                 </div>
               )}
               
               {/* Trial Progress */}
-              <div className="text-sm text-brand-neutral">
+              <div className="text-xs text-brand-neutral">
                 <p>Trial {currentTrial} of {totalTrialCount}</p>
                 {isPractice && (
                   <p className="text-brand-accent font-medium">Practice Mode</p>
@@ -152,7 +156,7 @@ const ReactionTimeTestUI = ({
           </div>
           
           {/* Main Test Interface */}
-          <div className="flex-1">
+          <div className="w-full">
             <div className={cardContainerClasses}>
               <div className="text-center">
                 <h2 className={testStatusClasses}>

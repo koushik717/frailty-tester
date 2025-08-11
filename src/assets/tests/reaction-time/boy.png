@@ -1,4 +1,25 @@
-# Placeholder for boy.png
-# This should be a 128x128 pixel image of a boy
-# For now, use a placeholder or download an appropriate image
-# Recommended: Simple, friendly boy illustration suitable for reaction time testing
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simple boy illustration for reaction time testing -->
+  <rect width="128" height="128" fill="#f0f9ff"/>
+  
+  <!-- Head -->
+  <circle cx="64" cy="40" r="20" fill="#fbbf24"/>
+  
+  <!-- Body -->
+  <rect x="54" y="60" width="20" height="30" fill="#3b82f6" rx="10"/>
+  
+  <!-- Arms -->
+  <rect x="35" y="65" width="15" height="8" fill="#3b82f6" rx="4"/>
+  <rect x="78" y="65" width="15" height="8" fill="#3b82f6" rx="4"/>
+  
+  <!-- Legs -->
+  <rect x="54" y="90" width="8" height="20" fill="#1e40af" rx="4"/>
+  <rect x="66" y="90" width="8" height="20" fill="#1e40af" rx="4"/>
+  
+  <!-- Eyes -->
+  <circle cx="58" cy="35" r="3" fill="#1f2937"/>
+  <circle cx="70" cy="35" r="3" fill="#1f2937"/>
+  
+  <!-- Smile -->
+  <path d="M 58 45 Q 64 50 70 45" stroke="#1f2937" stroke-width="2" fill="none"/>
+</svg>
