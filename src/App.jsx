@@ -2,7 +2,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import ReactionTimeTestPage from "./pages/ReactionTimeTestPage";
+import ReactionTimeTestPage from "./pages/tests/reaction-time/ReactionTimeTestPage";
 import BalanceTestIntro from "./pages/screens/BalanceTestIntro";
 import ChairStandIntro from "./pages/screens/ChairStandIntro";
 import ChairStandTest from "./pages/tests/ChairStandTest";
@@ -16,6 +16,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/reaction-time-intro" element={<ReactionTimeTestPage />} />
+        <Route path="/reaction-time-test" element={<ReactionTimeTestPage />} />
         <Route path="/balance-intro" element={<BalanceTestIntro />} />
         <Route path="/chair-stand-intro" element={<ChairStandIntro />} />
         <Route path="/chair-stand-test" element={<ChairStandTest />} />

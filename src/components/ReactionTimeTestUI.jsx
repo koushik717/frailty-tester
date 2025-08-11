@@ -1,300 +1,248 @@
-import React from 'react';
-import classNames from 'classnames';
-import boyImage from '../assets/tests/reaction-time/boy.png';
+import React, { useState, useEffect, useMemo } from 'react';
+import boyImage from '../assets/tests/reaction-time/boy.jpg';
 
-// Semantic class constants - METY brand styling
-const containerClasses = "min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6";
-const cardContainerClasses = "bg-white rounded-xl shadow-lg border border-gray-200 max-w-4xl w-full p-8";
-const titleClasses = "font-brandHeading text-3xl font-bold text-brand-primary mb-6 text-center";
-const instructionClasses = "font-brandBody text-lg text-brand-neutral mb-8 text-center leading-relaxed";
-const buttonGroupClasses = "flex flex-col sm:flex-row gap-4 justify-center mb-8";
-const primaryButtonClasses = classNames(
-  "px-8 py-4 rounded-lg font-semibold text-white text-lg font-brandBody",
-  "bg-brand-primary hover:bg-red-700",
-  "transition-all duration-200 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]",
-  "focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
-);
-const disabledButtonClasses = "px-8 py-4 rounded-lg font-semibold text-white text-lg bg-gray-300 cursor-not-allowed opacity-60 font-brandBody";
-const testStatusClasses = "font-brandHeading text-xl font-semibold text-brand-primary mb-4 text-center";
-const progressContainerClasses = "w-full max-w-md mx-auto mb-6";
-const progressBarClasses = "w-full h-3 bg-gray-200 rounded-full overflow-hidden";
-const progressFillClasses = "h-full bg-brand-primary transition-all duration-300 ease-out";
-const responseButtonClasses = classNames(
-  "px-8 py-4 rounded-lg font-semibold text-white text-xl font-brandBody",
-  "transition-all duration-200 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]",
-  "focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
-);
-const resultsContainerClasses = "bg-white rounded-xl shadow-lg border border-gray-200 max-w-2xl w-full p-8";
-const resultsTitleClasses = "font-brandHeading text-2xl font-bold text-brand-primary mb-6 text-center";
-const resultItemClasses = "flex justify-between items-center py-3 border-b border-gray-200 last:border-b-0";
-const resultLabelClasses = "font-brandBody text-lg text-brand-neutral";
-const resultValueClasses = "font-brandBody text-xl font-semibold text-brand-primary";
-const practiceModeClasses = "font-brandBody text-lg text-brand-accent font-semibold text-center mt-4";
-const boyImageClasses = "w-32 h-32 object-cover rounded-lg shadow-md";
+const ReactionTimeTestUI = () => {
+  // State variables matching the source implementation
+  const [showBoy, setShowBoy] = useState(false);
+  const [start, setStart] = useState(false);
+  const [boyAppearances, setBoyAppearances] = useState(0);
+  const [correctClicks, setCorrectClicks] = useState(0);
+  const [incorrectClicks, setIncorrectClicks] = useState(0);
+  const [reactionTimes, setReactionTimes] = useState([]);
+  const [startReaction, setStartReaction] = useState(null);
+  const [intervalArray, setIntervalArray] = useState([]);
+  const [positions, setPositions] = useState([]);
+  const [boyPosition, setBoyPosition] = useState({ top: 50, left: 50 });
+  const [practice, setPractice] = useState(true);
+  const [color, setColor] = useState("blue");
+  const [submittedToday, setSubmittedToday] = useState(false);
 
-const ReactionTimeTestUI = ({
-  // Hook state
-  status,
-  countdownNum,
-  trialIndex,
-  totalTrials,
-  practiceTrials,
-  showCue,
-  earlyClick,
-  results,
+  // Constants from source
+  const TOTAL_TRIALS = 20;
+  const BOY_DURATION = 1000; // 1 second
+  const TOTAL_DURATION = 60; // 60 seconds total
+
+  // Generate random positions and timing array (exact logic from source)
+  useEffect(() => {
+    let uniquePositions = new Set();
+    let newPositions = [];
   
-  // Hook actions
-  start,
-  onClick,
-  reset,
-  summary,
+    while (newPositions.length < TOTAL_TRIALS) {
+      let newPos = {
+        top: Math.random() * (window.innerHeight - 600),
+        left: Math.random() * (window.innerWidth - 200),
+      };
   
-  // Legacy props for compatibility
-  text = {
-    title: "Reaction Time Assessment",
-    instructions: "You will see a boy image appear on screen. Click the button as quickly as possible when you see the boy.",
-    start: "Begin Assessment",
-    practice: "Practice Run",
-    correct: "Correct Clicks",
-    incorrect: "Incorrect Clicks",
-    misses: "Missed Clicks",
-    accuracy: "Accuracy",
-    avgReactionTime: "Average Reaction Time",
-    score: "Score",
-    alreadySubmitted: "Assessment already completed today",
-    clickHere: "Click Here!",
-    pleaseClick: "Click the button below when you see the boy image.",
-    trialProgress: "Trial",
-    of: "of"
-  },
-  results: legacyResults = null,
-  stimulusImage = boyImage,
-  customStyles = {},
-  theme = 'default'
-}) => {
-  // Countdown state
-  if (status === 'countdown') {
-    return (
-      <div className={containerClasses}>
-        <div className={cardContainerClasses}>
-          <div className="text-center">
-            <div 
-              className="text-8xl font-bold text-brand-primary mb-8"
-              aria-live="polite"
-              aria-label={`Countdown: ${countdownNum}`}
-            >
-              {countdownNum}
-            </div>
-            <p className="text-xl font-brandBody text-brand-neutral">
-              Get ready...
-            </p>
-            <button 
-              className={disabledButtonClasses}
-              disabled
-              type="button"
-            >
-              Wait for countdown
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+      let key = `${Math.floor(newPos.top)}-${Math.floor(newPos.left)}`;
+      if (!uniquePositions.has(key)) {
+        uniquePositions.add(key);
+        newPositions.push(newPos);
+      }
+    }
+
+    let timingArr = Array.from({ length: TOTAL_TRIALS }, () => Math.random() * 1 + 1.5);
+    let scale = TOTAL_DURATION / timingArr.reduce((sum, val) => sum + val, 0);
+    let scaledTimings = timingArr.map((val) => val * scale);
+
+    setPositions(newPositions);
+    setIntervalArray(scaledTimings);
+  }, []);
+
+  // Main test logic (exact from source)
+  useEffect(() => {
+    if (!start) return;
+  
+    if (boyAppearances >= TOTAL_TRIALS) {
+      console.log("test done");
+      return;
+    }
+  
+    let timer = setTimeout(() => {
+      setShowBoy(true);
+      setBoyPosition(positions[boyAppearances]);
+      setStartReaction(Date.now());
+      setBoyAppearances((prev) => prev + 1);
+    }, intervalArray[boyAppearances] * 1000);
+  
+    return () => clearTimeout(timer);
+  }, [start, boyAppearances, intervalArray, positions]);
+
+  // Hide boy after duration (exact from source)
+  useEffect(() => {
+    let timer;
+    if (showBoy) {
+      timer = setTimeout(() => {
+        setShowBoy(false);
+      }, BOY_DURATION);
+    }
+  
+    return () => clearTimeout(timer);
+  }, [showBoy]);
+
+  // Button click handler (exact logic from source)
+  const onPressButton = () => {
+    if (!start || !showBoy || startReaction === null) {
+      console.log("Incorrect Click");
+      setColor("red");
+      setIncorrectClicks(prev => prev + 1);
+      return;
+    }
+    const reactionTime = Date.now() - startReaction;
+    console.log("Correct Click");
+    setColor("green");
+    setCorrectClicks(prev => prev + 1);
+    setReactionTimes(prev => [...prev, reactionTime]);
+    setStartReaction(null);
+  };
+
+  const startTest = () => {
+    setPractice(false);
+    setStart(true);
+  };
+
+  const startPractice = () => {
+    setStart(true);
+  };
+
+  // Score calculations (exact from source)
+  const totalReactionTime = reactionTimes.reduce((total, time) => total + time, 0);
+  const dummy = ((Math.round((totalReactionTime / reactionTimes.length) * 1000) / 1000) / 1000).toFixed(3);
+  const averageReactionTimeInSeconds = isNaN(dummy) ? 0 : dummy;
+  const missedClicks = TOTAL_TRIALS - correctClicks;
+  const totalClicks = correctClicks + incorrectClicks;
+  const accuracy = Math.round((correctClicks / (totalClicks + missedClicks)) * 1000) / 1000;
+  const dummy2 = Math.round((accuracy / averageReactionTimeInSeconds) * 1000) / 1000;
+  const score = isNaN(dummy2) ? 0 : dummy2;
 
   // Test in progress
-  if (status === 'ready' || status === 'clicked') {
-    const isPractice = trialIndex < practiceTrials;
-    const currentTrial = trialIndex + 1;
-    const totalTrialCount = isPractice ? practiceTrials : practiceTrials + totalTrials;
-    const progress = currentTrial / totalTrialCount;
-    
+  if (!start || boyAppearances < TOTAL_TRIALS) {
     return (
-      <div className={containerClasses}>
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[260px,1fr] gap-6 items-start">
-          {/* Boy Image Card - Left side on desktop, top on mobile */}
-          <div className="w-full md:w-auto">
-            <div className="bg-white rounded-xl border shadow-sm p-4 md:p-5 text-center">
-              <h3 className="text-brand-primary font-brandHeading text-sm md:text-base font-semibold mb-3">
-                {isPractice ? 'Practice Trial' : 'Test Trial'}
-              </h3>
-              
-              {/* Boy Image - Only show when cue is active */}
-              {showCue && (
-                <div className="mb-3">
-                  <img
-                    src={boyImage}
-                    alt="Boy cue"
-                    className="w-28 h-28 md:w-32 md:h-32 object-contain mx-auto"
-                  />
-                  <p className="text-xs text-brand-neutral mt-1">
-                    Click now!
-                  </p>
-                  {/* Visually hidden live text for accessibility */}
-                  <span className="sr-only" aria-live="polite">
-                    Cue visible — click now!
-                  </span>
-                </div>
-              )}
-              
-              {/* Early Click Warning */}
-              {earlyClick && (
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-2 mb-3">
-                  <p className="text-xs text-yellow-800 font-medium">
-                    ⚠️ Too soon — wait for the boy
-                  </p>
-                </div>
-              )}
-              
-              {/* Trial Progress */}
-              <div className="text-xs text-brand-neutral">
-                <p>Trial {currentTrial} of {totalTrialCount}</p>
-                {isPractice && (
-                  <p className="text-brand-accent font-medium">Practice Mode</p>
-                )}
-              </div>
-            </div>
-          </div>
-          
-          {/* Main Test Interface */}
-          <div className="w-full">
-            <div className={cardContainerClasses}>
-              <div className="text-center">
-                <h2 className={testStatusClasses}>
-                  {text.pleaseClick}
-                </h2>
-                
-                {/* Progress Bar */}
-                <div className={progressContainerClasses}>
-                  <div 
-                    className={progressBarClasses}
-                    role="progressbar"
-                    aria-valuenow={Math.round(progress * 100)}
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                    aria-label={`Progress: ${Math.round(progress * 100)}% complete`}
-                  >
-                    <div 
-                      className={progressFillClasses}
-                      style={{ width: `${progress * 100}%` }}
-                    />
-                  </div>
-                </div>
-                
-                {/* Response Button */}
-                <button
-                  className={classNames(responseButtonClasses, "bg-brand-primary hover:bg-red-700")}
-                  onClick={onClick}
-                  aria-label={`${text.clickHere} - Click when you see the boy image`}
-                  type="button"
-                >
-                  {text.clickHere}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Test complete - show results
-  if (status === 'done') {
-    const summaryData = summary();
-    const isPractice = trialIndex <= practiceTrials;
-    
-    return (
-      <div className={containerClasses}>
-        <div className={resultsContainerClasses}>
-          <h2 className={resultsTitleClasses}>
-            Assessment Results
-          </h2>
-          
-          <div className="space-y-2">
-            <div className={resultItemClasses}>
-              <span className={resultLabelClasses}>✅ Valid Clicks</span>
-              <span className={resultValueClasses}>{summaryData.validCount}</span>
-            </div>
-            <div className={resultItemClasses}>
-              <span className={resultLabelClasses}>⏱ Average Time</span>
-              <span className={resultValueClasses}>{summaryData.avg}ms</span>
-            </div>
-            <div className={resultItemClasses}>
-              <span className={resultLabelClasses}>🚀 Fastest</span>
-              <span className={resultValueClasses}>{summaryData.fastest}ms</span>
-            </div>
-            <div className={resultItemClasses}>
-              <span className={resultLabelClasses}>🐌 Slowest</span>
-              <span className={resultValueClasses}>{summaryData.slowest}ms</span>
-            </div>
-          </div>
-
-          {isPractice && (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 max-w-4xl w-full p-8">
+          {start && (
             <>
-              <div className={practiceModeClasses}>
-                📝 Practice Mode Complete
+              <div className="text-center mb-6">
+                <p className="text-xl text-gray-700 mb-4">
+                  Please click on the button below when you see the boy.
+                </p>
+                <p className="text-xl text-gray-700 mb-6">
+                  Correct Clicks: {correctClicks}
+                </p>
               </div>
-              <div className="text-center mt-6">
-                <button 
-                  className={primaryButtonClasses}
-                  onClick={() => start({ practice: false })}
-                  aria-label="Start actual test"
-                  type="button"
+              <div className="text-center">
+                <button
+                  className={`px-8 py-4 rounded-lg font-semibold text-white text-xl transition-all duration-200 ${
+                    color === 'blue' ? 'bg-blue-500 hover:bg-blue-600' :
+                    color === 'red' ? 'bg-red-500 hover:bg-red-600' :
+                    'bg-green-500 hover:bg-green-600'
+                  }`}
+                  onClick={onPressButton}
                 >
-                  Start Actual Test
+                  Click Here!
                 </button>
               </div>
             </>
           )}
           
-          {!isPractice && (
-            <div className="text-center mt-6">
-              <button 
-                className={primaryButtonClasses}
-                onClick={reset}
-                aria-label="Try test again"
-                type="button"
-              >
-                Try Again
-              </button>
+          {!start && (
+            <div className="text-center">
+              <h1 className="text-3xl font-bold text-gray-800 mb-6">
+                Reaction Time Test
+              </h1>
+              <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                You will be shown a button and series of 20 pictures... When the picture pops up, click the button once 
+                (you will be penalized for excess clicks). Try to click the button as fast as possible when the picture appears.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  className="px-8 py-4 rounded-lg font-semibold text-white text-lg bg-blue-500 hover:bg-blue-600 transition-all duration-200"
+                  onClick={startTest}
+                >
+                  Start
+                </button>
+                <button
+                  className="px-8 py-4 rounded-lg font-semibold text-white text-lg bg-green-500 hover:bg-green-600 transition-all duration-200"
+                  onClick={startPractice}
+                >
+                  Practice
+                </button>
+              </div>
             </div>
           )}
         </div>
+
+        {/* Boy Image - positioned absolutely like in source */}
+        {showBoy && (
+          <div
+            className="fixed z-50 p-3 bg-white rounded-lg shadow-lg border border-gray-200"
+            style={{
+              top: boyPosition.top,
+              left: boyPosition.left,
+            }}
+          >
+            <img
+              src={boyImage}
+              alt="Boy cue"
+              className="w-36 h-36 object-cover rounded"
+            />
+          </div>
+        )}
       </div>
     );
   }
 
-  // Initial state - show instructions and start buttons
+  // Test complete - show results (exact from source)
   return (
-    <div className={containerClasses}>
-      <div className={cardContainerClasses}>
-        <div className="text-center">
-          <h1 className={titleClasses}>
-            {text.title}
-          </h1>
-          
-          <p className={instructionClasses}>
-            {text.instructions}
-          </p>
-
-          <div className={buttonGroupClasses}>
-            <button 
-              className={primaryButtonClasses}
-              onClick={() => start({ practice: true })}
-              aria-label={`${text.start} - Begin the assessment`}
-              type="button"
-            >
-              {text.start}
-            </button>
-            
-            <button 
-              className={primaryButtonClasses}
-              onClick={() => start({ practice: false })}
-              aria-label={`${text.practice} - Skip practice and start actual test`}
-              type="button"
-            >
-              Skip Practice
-            </button>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
+      <div className="bg-white rounded-xl shadow-lg border border-gray-200 max-w-2xl w-full p-8">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          Test Results
+        </h2>
+        
+        <div className="space-y-4">
+          <div className="flex justify-between items-center py-3 border-b border-gray-200">
+            <span className="text-lg text-gray-700">✅ Correct:</span>
+            <span className="text-xl font-semibold text-blue-600">{correctClicks}</span>
           </div>
+          <div className="flex justify-between items-center py-3 border-b border-gray-200">
+            <span className="text-lg text-gray-700">❌ Incorrect:</span>
+            <span className="text-xl font-semibold text-red-600">{incorrectClicks}</span>
+          </div>
+          <div className="flex justify-between items-center py-3 border-b border-gray-200">
+            <span className="text-lg text-gray-700">🚫 Misses:</span>
+            <span className="text-xl font-semibold text-gray-600">{missedClicks}</span>
+          </div>
+          <div className="flex justify-between items-center py-3 border-b border-gray-200">
+            <span className="text-lg text-gray-700">🎯 Accuracy:</span>
+            <span className="text-xl font-semibold text-blue-600">{accuracy}%</span>
+          </div>
+          <div className="flex justify-between items-center py-3 border-b border-gray-200">
+            <span className="text-lg text-gray-700">⏱ Avg. Reaction Time:</span>
+            <span className="text-xl font-semibold text-blue-600">{averageReactionTimeInSeconds} sec</span>
+          </div>
+          <div className="flex justify-between items-center py-3">
+            <span className="text-lg text-gray-700">🏆 Score:</span>
+            <span className="text-xl font-semibold text-blue-600">{score}</span>
+          </div>
+        </div>
+
+        <div className="text-center mt-8">
+          <button
+            className="px-8 py-4 rounded-lg font-semibold text-white text-lg bg-blue-500 hover:bg-blue-600 transition-all duration-200"
+            onClick={() => {
+              setStart(false);
+              setBoyAppearances(0);
+              setCorrectClicks(0);
+              setIncorrectClicks(0);
+              setReactionTimes([]);
+              setStartReaction(null);
+              setColor("blue");
+              setPractice(true);
+            }}
+          >
+            Try Again
+          </button>
         </div>
       </div>
     </div>
