@@ -70,6 +70,19 @@ FrailtyTester-main/
 
 The following components have been created to replicate the Bootstrap structure from the SOURCE repository using Tailwind CSS and METY brand tokens:
 
+## 🧠 Digit Memory Test
+
+**Digit Memory Test**: migrated from MyEdMasters (testId 'digit'), preserving flow: 3→20 digits, 3 failures, 500ms reveal.
+
+### Test Implementation
+- **Hook**: `useDigitMemoryTest` - Manages game state, timing, and progression
+- **Pages**: 
+  - `MemoryIntro` - Instructions and mode selection (practice/test)
+  - `MemoryTest` - Core game interface with digit display and input
+  - `MemoryResults` - Score display and submission handling
+- **Routes**: `/tests/memory-intro`, `/tests/memory-test`, `/tests/memory-results`
+- **Features**: Practice mode, progressive difficulty, local storage fallback
+
 #### 1. **MetyNavbar** (`src/components/MetyNavbar.jsx`)
 - **Purpose**: Responsive navigation bar with METY branding
 - **Features**: Fixed positioning, scroll effects, mobile menu, brand logo

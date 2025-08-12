@@ -66,10 +66,10 @@ const Home = () => {
       title: "Memory Recall Test",
       description: "Assess your cognitive function and memory",
       icon: Brain,
-      status: "coming-soon",
-      theme: "yellow",
+      status: "available",
+      theme: "dark-green",
       duration: "5-7 min",
-      path: "/memory-recall-intro"
+      path: "/tests/memory-intro"
     },
     {
       id: 6,

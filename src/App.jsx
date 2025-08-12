@@ -8,6 +8,9 @@ import ChairStandIntro from "./pages/screens/ChairStandIntro";
 import ChairStandTest from "./pages/tests/ChairStandTest";
 import ComingSoonPage from "./pages/screens/ComingSoonPage";
 import Header from "./layout/Header";
+import MemoryIntro from "./pages/tests/memory/MemoryIntro";
+import MemoryTest from "./pages/tests/memory/MemoryTest";
+import MemoryResults from "./pages/tests/memory/MemoryResults";
 
 const App = () => {
   return (
@@ -17,11 +20,13 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/reaction-time-intro" element={<ReactionTimeTestPage />} />
         <Route path="/reaction-time-test" element={<ReactionTimeTestPage />} />
+        <Route path="/tests/memory-intro" element={<MemoryIntro />} />
+        <Route path="/tests/memory-test" element={<MemoryTest />} />
+        <Route path="/tests/memory-results" element={<MemoryResults />} />
         <Route path="/balance-intro" element={<BalanceTestIntro />} />
         <Route path="/chair-stand-intro" element={<ChairStandIntro />} />
         <Route path="/chair-stand-test" element={<ChairStandTest />} />
         <Route path="/gait-speed-intro" element={<ComingSoonPage testName="Gait Speed Test" />} />
-        <Route path="/memory-recall-intro" element={<ComingSoonPage testName="Memory Recall Test" />} />
         <Route path="/walking-grip-intro" element={<ComingSoonPage testName="Walking Speed & Grip Strength Test" />} />
         <Route path="/hearing-intro" element={<ComingSoonPage testName="Hearing Test" />} />
         <Route path="/about" element={
