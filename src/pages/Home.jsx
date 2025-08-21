@@ -20,78 +20,153 @@ import AssessmentCard from "../components/AssessmentCard";
 import AssessmentDropdown from "../components/AssessmentDropdown";
 
 const Home = () => {
+  const SHOW_PSQI = true;
   const testCards = [
     {
       id: 1,
-      title: "Reaction Time Test",
-      description: "Measure your cognitive processing speed and reflexes",
-      icon: Timer,
+      title: "Pittsburgh Sleep Quality Index",
+      description: "Comprehensive assessment of sleep quality and patterns",
+      duration: "5–10 min",
       status: "available",
-      theme: "dark-green",
-      duration: "2-3 min",
-      path: "/reaction-time-test"
+      path: "/tests/psqi-intro",
+      icon: Clock,
+      theme: "dark-green"
     },
     {
       id: 2,
-      title: "Balance Test",
-      description: "Assess your postural stability and fall risk",
-      icon: Scale,
+      title: "Digit Memory Test",
+      description: "Assess your cognitive function and memory",
+      duration: "5–7 min",
       status: "available",
-      theme: "dark-green",
-      duration: "3-4 min",
-      path: "/balance-intro"
+      path: "/tests/memory-intro",
+      icon: Brain,
+      theme: "dark-green"
     },
     {
       id: 3,
-      title: "Gait Speed Test",
-      description: "Evaluate your walking speed and mobility",
-      icon: TrendingUp,
-      status: "coming-soon",
-      theme: "yellow",
-      duration: "2-3 min",
-      path: "/gait-speed-intro"
+      title: "Reaction Time Test",
+      description: "Measure your cognitive processing speed and reflexes",
+      duration: "2–3 min",
+      status: "available",
+      path: "/reaction-time-test",
+      icon: Timer,
+      theme: "dark-green"
     },
     {
       id: 4,
-      title: "Chair Stand Test",
-      description: "Test your lower body strength and endurance",
-      icon: Activity,
-      status: "available",
-      theme: "dark-green",
-      duration: "1-2 min",
-      path: "/chair-stand-intro"
+      title: "Perceived Stress Scale",
+      description: "Evaluate your perceived stress over the last month",
+      duration: "3–5 min",
+      status: "coming-soon",
+      path: "",
+      icon: Scale,
+      theme: "yellow"
     },
     {
       id: 5,
-      title: "Memory Recall Test",
-      description: "Assess your cognitive function and memory",
-      icon: Brain,
+      title: "Self Reaction Test",
+      description: "Self-reported assessment of cognitive reactivity",
+      duration: "3–5 min",
       status: "available",
-      theme: "dark-green",
-      duration: "5-7 min",
-      path: "/tests/memory-intro"
+      path: "/tests/self-reaction-intro",
+      icon: Activity,
+      theme: "dark-green"
     },
     {
       id: 6,
-      title: "Walking Speed & Grip Strength",
-      description: "Comprehensive assessment of mobility and upper body strength",
+      title: "General Health Inventory (SF-36)",
+      description: "36-item survey measuring overall health and functioning",
+      duration: "7–12 min",
+      status: "coming-soon",
+      path: "",
       icon: Heart,
-      status: "coming-soon",
-      theme: "green",
-      duration: "2-3 min",
-      path: "/walking-grip-intro"
-    },
-    {
-      id: 7,
-      title: "Hearing Test",
-      description: "Evaluate your auditory processing capabilities",
-      icon: Ear,
-      status: "coming-soon",
-      theme: "dark-green",
-      duration: "3-5 min",
-      path: "/hearing-intro"
-    },
+      theme: "yellow"
+    }
   ];
+
+  // Previously defined cards (commented out to preserve code)
+  /*
+  {
+    id: 1,
+    title: "Reaction Time Test",
+    description: "Measure your cognitive processing speed and reflexes",
+    icon: Timer,
+    status: "available",
+    theme: "dark-green",
+    duration: "2-3 min",
+    path: "/reaction-time-test"
+  },
+  {
+    id: 2,
+    title: "Balance Test",
+    description: "Assess your postural stability and fall risk",
+    icon: Scale,
+    status: "available",
+    theme: "dark-green",
+    duration: "3-4 min",
+    path: "/balance-intro"
+  },
+  {
+    id: 3,
+    title: "Gait Speed Test",
+    description: "Evaluate your walking speed and mobility",
+    icon: TrendingUp,
+    status: "coming-soon",
+    theme: "yellow",
+    duration: "2-3 min",
+    path: "/gait-speed-intro"
+  },
+  {
+    id: 4,
+    title: "Chair Stand Test",
+    description: "Test your lower body strength and endurance",
+    icon: Activity,
+    status: "available",
+    theme: "dark-green",
+    duration: "1-2 min",
+    path: "/chair-stand-intro"
+  },
+  {
+    id: 5,
+    title: "Memory Recall Test",
+    description: "Assess your cognitive function and memory",
+    icon: Brain,
+    status: "available",
+    theme: "dark-green",
+    duration: "5-7 min",
+    path: "/tests/memory-intro"
+  },
+  {
+    id: 6,
+    title: "Pittsburgh Sleep Quality Index",
+    description: "Comprehensive assessment of sleep quality and patterns",
+    icon: Clock,
+    status: "available",
+    theme: "dark-green",
+    duration: "5-10 min",
+    path: "/tests/psqi-intro"
+  },
+  {
+    id: 7,
+    title: "Walking Speed & Grip Strength",
+    description: "Comprehensive assessment of mobility and upper body strength",
+    icon: Heart,
+    status: "coming-soon",
+    theme: "green",
+    duration: "2-3 min",
+    path: "/walking-grip-intro"
+  },
+  {
+    id: 8,
+    title: "Hearing Test",
+    description: "Evaluate your auditory processing capabilities",
+    icon: Ear,
+    status: "coming-soon",
+    theme: "dark-green",
+    duration: "3-5 min",
+    path: "/hearing-intro"
+  }
+  */
 
 
 

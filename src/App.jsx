@@ -11,6 +11,11 @@ import Header from "./layout/Header";
 import MemoryIntro from "./pages/tests/memory/MemoryIntro";
 import MemoryTest from "./pages/tests/memory/MemoryTest";
 import MemoryResults from "./pages/tests/memory/MemoryResults";
+import PSQIIntro from "./pages/tests/psqi/PSQIIntro";
+import PSQITest from "./pages/tests/psqi/PSQITest";
+import PSQIResults from "./pages/tests/psqi/PSQIResults";
+import SelfReactionIntro from "./pages/screens/SelfReactionIntro";
+import SelfReactionTest from "./pages/tests/SelfReactionTest";
 
 const App = () => {
   return (
@@ -23,6 +28,11 @@ const App = () => {
         <Route path="/tests/memory-intro" element={<MemoryIntro />} />
         <Route path="/tests/memory-test" element={<MemoryTest />} />
         <Route path="/tests/memory-results" element={<MemoryResults />} />
+        <Route path="/tests/psqi-intro" element={<PSQIIntro />} />
+        <Route path="/tests/psqi-test" element={<PSQITest />} />
+        <Route path="/tests/psqi-results" element={<PSQIResults />} />
+        <Route path="/tests/self-reaction-intro" element={<SelfReactionIntro />} />
+        <Route path="/tests/self-reaction-test" element={<SelfReactionTest />} />
         <Route path="/balance-intro" element={<BalanceTestIntro />} />
         <Route path="/chair-stand-intro" element={<ChairStandIntro />} />
         <Route path="/chair-stand-test" element={<ChairStandTest />} />
