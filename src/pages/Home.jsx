@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Link } from "react-router-dom";
 import { 
   Activity, 
@@ -20,7 +20,7 @@ import AssessmentCard from "../components/AssessmentCard";
 import AssessmentDropdown from "../components/AssessmentDropdown";
 
 const Home = () => {
-  const SHOW_PSQI = true;
+
   const testCards = [
     {
       id: 1,
@@ -48,7 +48,7 @@ const Home = () => {
       description: "Measure your cognitive processing speed and reflexes",
       duration: "2–3 min",
       status: "available",
-      path: "/reaction-time-test",
+      path: "/tests/reaction-time-intro",
       icon: Timer,
       theme: "dark-green"
     },

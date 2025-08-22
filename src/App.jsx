@@ -1,8 +1,6 @@
 // src/App.jsx
-import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import ReactionTimeTestPage from "./pages/tests/reaction-time/ReactionTimeTestPage";
 import BalanceTestIntro from "./pages/screens/BalanceTestIntro";
 import ChairStandIntro from "./pages/screens/ChairStandIntro";
 import ChairStandTest from "./pages/tests/ChairStandTest";
@@ -23,8 +21,7 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/reaction-time-intro" element={<ReactionTimeTestPage />} />
-        <Route path="/reaction-time-test" element={<ReactionTimeTestPage />} />
+        {/* ReactionTimeTestPage routes removed - component moved to archive */}
         <Route path="/tests/memory-intro" element={<MemoryIntro />} />
         <Route path="/tests/memory-test" element={<MemoryTest />} />
         <Route path="/tests/memory-results" element={<MemoryResults />} />
