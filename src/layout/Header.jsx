@@ -5,7 +5,7 @@ import { returnHome } from "../store/slices/stageSlice";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
 
-// Semantic class constants - MyYouthspan branding
+// Semantic class constants - FrailtyTester branding
 const headerContainerClasses = "sticky top-0 z-50 w-full bg-white shadow-md border-b border-neutral-light";
 const headerContentClasses = "flex justify-between items-center h-24 px-10 max-w-7xl mx-auto";
 const logoLinkClasses = "flex items-center gap-4 cursor-pointer group";
@@ -23,14 +23,12 @@ const Header = () => {
   return (
     <header className={headerContainerClasses}>
       <div className={headerContentClasses}>
-        {/* MyYouthspan Logo/Title */}
+        {/* FrailtyTester Logo/Title */}
         <Link to="/" className={logoLinkClasses} onClick={() => dispatch(returnHome())}>
-          <img 
-            src="/mety_technology_logo.png" 
-            alt="MyYouthspan Technology" 
-            className={logoImageClasses}
-          />
-                          <span className={logoTextClasses}>Frailty Tester</span>
+          <div className="h-12 w-12 bg-red-600 rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-2xl">F</span>
+          </div>
+          <span className={logoTextClasses}>FrailtyTester</span>
         </Link>
         {/* Navigation Menu */}
         <nav className={navigationClasses}>

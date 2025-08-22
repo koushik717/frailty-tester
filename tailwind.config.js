@@ -14,7 +14,7 @@ export default {
       },
 
       colors: {
-        // MyYouthspan Brand Colors
+        // FrailtyTester Brand Colors
         'primary': '#0BA650',    // Primary Green
         'secondary': '#055A30',  // Secondary Green
         'accent': '#FBB31C',     // Accent Yellow
@@ -23,12 +23,12 @@ export default {
           'medium': '#6B7280',   // Neutral Medium
           'light': '#EDEDEB',    // Neutral Light
         },
-        // METY Brand Colors
+        // Brand Colors
         'brand': {
-          'primary': '#e81e1e',    // METY Red
-          'secondary': '#20545c',  // METY Teal
-          'accent': '#ffe46c',     // METY Yellow
-          'neutral': '#6c757d',    // METY Neutral
+          'primary': '#e81e1e',    // FrailtyTester Red
+          'secondary': '#20545c',  // FrailtyTester Teal
+          'accent': '#ffe46c',     // FrailtyTester Yellow
+          'neutral': '#6c757d',   // FrailtyTester Neutral
         },
         // Functional Colors
         'info': '#007AFF',       // Blue

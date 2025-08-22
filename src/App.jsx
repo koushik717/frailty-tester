@@ -39,9 +39,9 @@ const App = () => {
         <Route path="/about" element={
           <div className="p-8 max-w-4xl mx-auto">
             <div className="bg-white rounded-xl shadow-sm border border-neutral-light p-8">
-              <h1 className="font-montserrat text-3xl font-bold text-neutral-dark mb-4">About MyYouthspan Technology</h1>
+              <h1 className="font-montserrat text-3xl font-bold text-neutral-dark mb-4">About FrailtyTester</h1>
               <p className="font-sans text-neutral-medium leading-relaxed">
-                MyYouthspan Technology is dedicated to advancing health assessment through innovative, 
+                FrailtyTester is dedicated to advancing health assessment through innovative, 
                 scientifically-validated digital solutions that empower individuals to understand 
                 and optimize their functional health.
               </p>

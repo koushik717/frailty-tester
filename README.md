@@ -128,9 +128,7 @@ npm run build
 
 ## 📚 Documentation
 
-- [Development Guide](DEVELOPMENT_GUIDE.md) - Technical implementation details
 - [Contributing Guidelines](CONTRIBUTING.md) - How to contribute to the project
-- [Changelog](CHANGELOG.md) - Version history and updates
 
 ## 🤝 Contributing
 
@@ -142,15 +140,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Team
 
-FrailtyTester was developed by the Unforkgitable Capstone Team at Bellevue College.
-
-**Team Members:**
-- **Monica Nguyen** - [GitHub](https://github.com/Monica20030707)
-- **Luke Brandes** - [GitHub](https://github.com/lbrandes3)
-- **Shawn Men** - [GitHub](https://github.com/ZichenMen)
-- **Deshawn Haas** - [GitHub](https://github.com/DeshawnHaas)
-
-Special thanks to Prof. Wentao for guidance and support.
+FrailtyTester is maintained by Jithendra Nara.
 
 ## 📞 Support
 
@@ -159,6 +149,3 @@ For questions, issues, or contributions, please:
 - Contact the development team
 - Review the documentation files
 
----
-
-**Built with ❤️ for better health outcomes**

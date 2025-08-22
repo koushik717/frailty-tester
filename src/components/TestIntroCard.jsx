@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 
-// Semantic class constants - MyYouthspan branding
+// Semantic class constants - FrailtyTester branding
 const containerClasses = "flex flex-col justify-center items-center min-h-[60vh] py-8 px-4 bg-gray-50";
 const cardClasses = "bg-white rounded-xl shadow-sm border border-neutral-light max-w-2xl w-full p-8 transition-all duration-300 hover:shadow-md";
 const headerClasses = "text-center mb-8";
