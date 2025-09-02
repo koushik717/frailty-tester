@@ -80,6 +80,7 @@ FrailtyTester/
 │   ├── store/              # Redux store and slices
 │   ├── services/           # API services
 │   ├── utils/              # Utility functions
+│   ├── constants/          # Assessment items and configurations
 │   └── assets/             # Static assets (images, audio)
 ├── backend/                # Express.js backend
 │   ├── routes/             # API route handlers
@@ -96,9 +97,72 @@ FrailtyTester/
 - ✅ **Pittsburgh Sleep Quality Index (PSQI)** - Sleep quality assessment
 - ✅ **Digit Memory Test** - Cognitive function evaluation
 - ✅ **Self Reaction Test** - Cognitive reactivity assessment
-- ✅ **Balance Test** - AI-powered movement analysis
+- ✅ **Perceived Stress Scale (PSS-10)** - Stress level assessment over the last month
+- ✅ **General Health Inventory (SF-36)** - Comprehensive health-related quality of life assessment
+- ✅ **Balance Test** - AI-powered movement analysis using TensorFlow.js MoveNet
 - ✅ **Chair Stand Test** - Lower body strength assessment
 - 🔄 **Reaction Time Test** - Processing speed measurement (in development)
+
+## 📊 Psychological & Health Assessments
+
+### Perceived Stress Scale (PSS-10)
+A validated 10-item questionnaire that measures the degree to which situations in one's life are appraised as stressful over the last month.
+
+#### Features
+- **10-item Assessment**: Quick stress level evaluation (3-5 minutes)
+- **Reverse Scoring**: Items 4, 5, 7, 8 are reverse-scored for accurate measurement
+- **Category Classification**: Results categorized as Low (0-13), Moderate (14-26), or High (27-40) stress
+- **Progress Tracking**: Real-time completion status and validation
+- **Privacy-First**: Local processing with optional result submission
+
+#### Technical Implementation
+- **React State Management**: Local component state for responses
+- **Form Validation**: Ensures all 10 items are completed before submission
+- **API Integration**: POST to `/api/frailty-tests/pss` endpoint
+- **Responsive Design**: Mobile-friendly interface with Tailwind CSS
+
+### General Health Inventory (SF-36)
+A comprehensive 36-item health survey that measures health-related quality of life across 8 domains.
+
+#### Features
+- **8 Health Domains**: Physical Functioning, Role Physical, Bodily Pain, General Health, Vitality, Social Functioning, Role Emotional, Mental Health
+- **Domain-Based Navigation**: Paginated interface organized by health domains
+- **Global Question Numbering**: Consistent 1-36 numbering across all sections
+- **Duplicate Question Handling**: Shared state for questions appearing in multiple domains
+- **Comprehensive Scoring**: 0-100 scale for each domain with detailed interpretation
+- **Progress Indicators**: Section-by-section progress tracking
+
+#### Technical Implementation
+- **Domain Pagination**: 8 sections with validation per page
+- **Shared State Management**: `responsesById` object for duplicate question handling
+- **Global ID Mapping**: `idToNumber` map for consistent 1-36 numbering
+- **API Integration**: POST to `/api/frailty-tests/sf36` endpoint
+- **Data Validation**: Safeguard assertions for 1-36 unique question IDs
+
+## 🧘‍♀️ Balance Test
+
+The Balance Test is a sophisticated AI-powered assessment that evaluates postural stability and fall risk using computer vision technology.
+
+### Features
+- **Real-time Pose Detection**: Uses TensorFlow.js MoveNet for accurate body keypoint tracking
+- **Automatic Trial Management**: 6 trials (3 per foot) with automatic timing and scoring
+- **Smart Foot Detection**: Automatically detects which foot is lifted and validates correct positioning
+- **Grace Period Logic**: 300ms grace period to prevent false positives from momentary balance loss
+- **Age-adjusted Scoring**: Performance assessment based on age group norms (20-40, 40-50, 50-60, 60+)
+- **Camera Integration**: Seamless webcam access with permission handling and error states
+
+### Technical Implementation
+- **TensorFlow.js**: Lazy-loaded for optimal bundle size
+- **MoveNet Model**: SinglePose Thunder variant for real-time performance
+- **WebGL Backend**: GPU acceleration for smooth pose detection
+- **React Hooks**: Custom `useBalancePose` hook for pose detection logic
+- **Canvas Rendering**: Real-time pose skeleton overlay on video feed
+
+### Requirements
+- Modern browser with WebGL support
+- Camera access permission
+- Good lighting conditions
+- Stable internet connection for model loading
 
 ### 🚧 Features in Development
 - User authentication and profiles

@@ -57,10 +57,10 @@ const Home = () => {
       title: "Perceived Stress Scale",
       description: "Evaluate your perceived stress over the last month",
       duration: "3–5 min",
-      status: "coming-soon",
-      path: "",
+      status: "available",
+      path: "/tests/pss-intro",
       icon: Scale,
-      theme: "yellow"
+      theme: "dark-green"
     },
     {
       id: 5,
@@ -74,13 +74,23 @@ const Home = () => {
     },
     {
       id: 6,
+      title: "Balance Test",
+      description: "Assess your postural stability and fall risk using AI pose detection",
+      duration: "3–4 min",
+      status: "available",
+      path: "/tests/balance-intro",
+      icon: Scale,
+      theme: "dark-green"
+    },
+    {
+      id: 7,
       title: "General Health Inventory (SF-36)",
       description: "36-item survey measuring overall health and functioning",
       duration: "7–12 min",
-      status: "coming-soon",
-      path: "",
+      status: "available",
+      path: "/tests/sf36-intro",
       icon: Heart,
-      theme: "yellow"
+      theme: "dark-green"
     }
   ];
 

@@ -1,7 +1,8 @@
 // src/App.jsx
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import BalanceTestIntro from "./pages/screens/BalanceTestIntro";
+import BalanceIntro from "./pages/screens/BalanceIntro";
+import BalanceTest from "./pages/tests/BalanceTest";
 import ChairStandIntro from "./pages/screens/ChairStandIntro";
 import ChairStandTest from "./pages/tests/ChairStandTest";
 import ComingSoonPage from "./pages/screens/ComingSoonPage";
@@ -12,8 +13,13 @@ import MemoryResults from "./pages/tests/memory/MemoryResults";
 import PSQIIntro from "./pages/tests/psqi/PSQIIntro";
 import PSQITest from "./pages/tests/psqi/PSQITest";
 import PSQIResults from "./pages/tests/psqi/PSQIResults";
+import PSSIntro from "./pages/screens/PSSIntro";
+import PSSTest from "./pages/tests/PSSTest";
+import SF36Intro from "./pages/screens/SF36Intro";
+import SF36Test from "./pages/tests/SF36Test";
 import SelfReactionIntro from "./pages/screens/SelfReactionIntro";
 import SelfReactionTest from "./pages/tests/SelfReactionTest";
+import ReactionTimeTestPage from "./pages/ReactionTimeTestPage";
 
 const App = () => {
   return (
@@ -21,16 +27,22 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* ReactionTimeTestPage routes removed - component moved to archive */}
+        <Route path="/tests/reaction-time-intro" element={<ReactionTimeTestPage />} />
+        <Route path="/tests/reaction-time-test" element={<ReactionTimeTestPage />} />
         <Route path="/tests/memory-intro" element={<MemoryIntro />} />
         <Route path="/tests/memory-test" element={<MemoryTest />} />
         <Route path="/tests/memory-results" element={<MemoryResults />} />
         <Route path="/tests/psqi-intro" element={<PSQIIntro />} />
         <Route path="/tests/psqi-test" element={<PSQITest />} />
         <Route path="/tests/psqi-results" element={<PSQIResults />} />
+        <Route path="/tests/pss-intro" element={<PSSIntro />} />
+        <Route path="/tests/pss-test" element={<PSSTest />} />
+        <Route path="/tests/sf36-intro" element={<SF36Intro />} />
+        <Route path="/tests/sf36-test" element={<SF36Test />} />
         <Route path="/tests/self-reaction-intro" element={<SelfReactionIntro />} />
         <Route path="/tests/self-reaction-test" element={<SelfReactionTest />} />
-        <Route path="/balance-intro" element={<BalanceTestIntro />} />
+        <Route path="/tests/balance-intro" element={<BalanceIntro />} />
+        <Route path="/tests/balance-test" element={<BalanceTest />} />
         <Route path="/chair-stand-intro" element={<ChairStandIntro />} />
         <Route path="/chair-stand-test" element={<ChairStandTest />} />
         <Route path="/gait-speed-intro" element={<ComingSoonPage testName="Gait Speed Test" />} />
