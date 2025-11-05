@@ -69,7 +69,8 @@ const PSSTest = () => {
         endedAt: new Date().toISOString()
       };
 
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || ""}/api/frailty-tests/pss`, {
+      const response = await fetch('http://localhost:3000/api/frailty-tests/pss', {
+
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -9,14 +9,11 @@ const MemoryResults = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
-  // Redirect if no results
   useEffect(() => {
-    if (!results) {
-      navigate('/tests/memory-intro');
-    }
+    if (!results) navigate('/tests/memory-intro');
   }, [results, navigate]);
 
-  // Submit results to backend (PROD mode)
+  // ✅ Updated: Submit results to backend
   const submitResults = async () => {
     if (!results || results.isPractice) return;
 
@@ -24,8 +21,7 @@ const MemoryResults = () => {
     setSubmitStatus('submitting');
 
     try {
-      // Check if backend endpoint is available
-      const response = await fetch('/api/memory-test/results', {
+      const response = await fetch('http://localhost:3000/api/memory-test/results', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,13 +38,8 @@ const MemoryResults = () => {
 
       if (response.ok) {
         setSubmitStatus('success');
-        // Store in localStorage as backup
         const storedResults = JSON.parse(localStorage.getItem('memoryTestResults') || '[]');
-        storedResults.push({
-          ...results,
-          submittedAt: new Date().toISOString(),
-          id: Date.now()
-        });
+        storedResults.push({ ...results, submittedAt: new Date().toISOString(), id: Date.now() });
         localStorage.setItem('memoryTestResults', JSON.stringify(storedResults));
       } else {
         throw new Error('Failed to submit results');
@@ -56,30 +47,19 @@ const MemoryResults = () => {
     } catch (error) {
       console.warn('Backend submission failed, storing locally:', error);
       setSubmitStatus('local');
-      
-      // Store in localStorage (DEV fallback)
       const storedResults = JSON.parse(localStorage.getItem('memoryTestResults') || '[]');
-      storedResults.push({
-        ...results,
-        submittedAt: new Date().toISOString(),
-        id: Date.now()
-      });
+      storedResults.push({ ...results, submittedAt: new Date().toISOString(), id: Date.now() });
       localStorage.setItem('memoryTestResults', JSON.stringify(storedResults));
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Auto-submit results if not practice mode
   useEffect(() => {
-    if (results && !results.isPractice && submitStatus === null) {
-      submitResults();
-    }
+    if (results && !results.isPractice && submitStatus === null) submitResults();
   }, [results, submitStatus]);
 
-  if (!results) {
-    return null;
-  }
+  if (!results) return null;
 
   const getScoreMessage = (score) => {
     if (score >= 18) return "Excellent memory! You're in the top tier.";
@@ -101,34 +81,26 @@ const MemoryResults = () => {
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white shadow-lg rounded-lg p-8">
-          {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Test Complete!
-            </h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Test Complete!</h1>
             <p className="text-xl text-gray-600">
               {results.isPractice ? 'Practice Session Results' : 'Your Memory Test Results'}
             </p>
           </div>
 
-          {/* Results Summary */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 mb-8">
-            <div className="text-center">
-              <div className="mb-4">
-                <span className="text-sm text-gray-600">Final Score</span>
-                <div className={`text-6xl font-bold ${getScoreColor(results.score)}`}>
-                  {results.score}
-                </div>
-                <span className="text-lg text-gray-600">digits remembered</span>
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 mb-8 text-center">
+            <div className="mb-4">
+              <span className="text-sm text-gray-600">Final Score</span>
+              <div className={`text-6xl font-bold ${getScoreColor(results.score)}`}>
+                {results.score}
               </div>
-              
-              <p className={`text-lg font-medium ${getScoreColor(results.score)}`}>
-                {getScoreMessage(results.score)}
-              </p>
+              <span className="text-lg text-gray-600">digits remembered</span>
             </div>
+            <p className={`text-lg font-medium ${getScoreColor(results.score)}`}>
+              {getScoreMessage(results.score)}
+            </p>
           </div>
 
-          {/* Detailed Results */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-gray-50 p-4 rounded-lg text-center">
               <p className="text-sm text-gray-600">Rounds Played</p>
@@ -144,56 +116,33 @@ const MemoryResults = () => {
             </div>
           </div>
 
-          {/* Test Details */}
-          <div className="bg-gray-50 p-4 rounded-lg mb-8">
-            <h3 className="font-semibold text-gray-800 mb-2">Test Details</h3>
-            <div className="space-y-2 text-sm text-gray-600">
-              <p><strong>Started:</strong> {results.startTime ? new Date(results.startTime).toLocaleString() : 'N/A'}</p>
-              <p><strong>Mode:</strong> {results.isPractice ? 'Practice' : 'Test'}</p>
-              <p><strong>Max Failures Allowed:</strong> {results.maxFailures}</p>
-            </div>
-          </div>
-
-          {/* Submission Status */}
           {!results.isPractice && (
             <div className="mb-8">
               {submitStatus === 'submitting' && (
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <p className="text-yellow-800 text-center">
-                    Submitting your results...
-                  </p>
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center text-yellow-800">
+                  Submitting your results...
                 </div>
               )}
-              
               {submitStatus === 'success' && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <p className="text-green-800 text-center">
-                    ✓ Results submitted successfully!
-                  </p>
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center text-green-800">
+                  ✓ Results submitted successfully!
                 </div>
               )}
-              
               {submitStatus === 'local' && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <p className="text-blue-800 text-center">
-                    Results saved locally (backend unavailable)
-                  </p>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center text-blue-800">
+                  Results saved locally (backend unavailable)
                 </div>
               )}
             </div>
           )}
 
-          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
-              onClick={() => navigate('/tests/memory-test', { 
-                state: { mode: results.isPractice ? 'practice' : 'test' } 
-              })}
+              onClick={() => navigate('/tests/memory-test', { state: { mode: results.isPractice ? 'practice' : 'test' } })}
               className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
             >
               Try Again
             </button>
-            
             <button
               onClick={() => navigate('/')}
               className="px-8 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg transition-colors"
@@ -202,12 +151,9 @@ const MemoryResults = () => {
             </button>
           </div>
 
-          {/* Practice Mode Note */}
           {results.isPractice && (
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-500">
-                Practice mode results are not recorded. Start a real test to save your score!
-              </p>
+            <div className="mt-6 text-center text-sm text-gray-500">
+              Practice mode results are not recorded. Start a real test to save your score!
             </div>
           )}
         </div>

@@ -50,8 +50,8 @@ const ReactionTimeTestExample = () => {
     try {
       console.log('Submitting test results:', testData);
       
-      // Example API call to your FrailtyTester backend
-      const response = await fetch('/api/frailty-tests/reaction-time', {
+      // ✅ Fixed API URL for local backend
+      const response = await fetch('http://localhost:3000/api/frailty-tests/reaction-time', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,13 +62,13 @@ const ReactionTimeTestExample = () => {
       
       if (response.ok) {
         const result = await response.json();
-        console.log('Results saved:', result);
+        console.log('✅ Results saved:', result);
         setUserSubmittedToday(true);
       } else {
-        console.error('Failed to submit test results');
+        console.error('❌ Failed to submit test results');
       }
     } catch (error) {
-      console.error('Error submitting test results:', error);
+      console.error('⚠️ Error submitting test results:', error);
     }
   };
 
@@ -85,7 +85,6 @@ const ReactionTimeTestExample = () => {
   // Handle practice completion
   const handlePracticeComplete = (results) => {
     console.log('Practice completed:', results);
-    // You might want to show practice results differently
   };
 
   // Frailty risk assessment logic
@@ -125,33 +124,19 @@ const ReactionTimeTestExample = () => {
           <h2>Cognitive Function Assessment</h2>
           
           <ReactionTimeTestPage
-            // User identification
             userId={currentUser.id}
-            
-            // Test configuration optimized for frailty tester
             testConfig={frailtyTestConfig}
-            
-            // Submission control
             submittedToday={userSubmittedToday}
             allowPractice={true}
-            
-            // Callbacks
             onSubmitResults={handleSubmitResults}
             onTestComplete={handleTestComplete}
             onPracticeComplete={handlePracticeComplete}
-            
-            // Frailty-specific text
             text={frailtyText}
-            
-            // Custom stimulus image (optional)
             stimulusImage="https://your-domain.com/frailty-stimulus-image.jpg"
-            
-            // Show results
             showResults={true}
           />
         </section>
 
-        {/* Display test results if available */}
         {testResults && (
           <section className="results-section">
             <h3>Assessment Results</h3>
@@ -159,8 +144,7 @@ const ReactionTimeTestExample = () => {
               <p><strong>Response Time:</strong> {testResults.averageReactionTime} seconds</p>
               <p><strong>Accuracy:</strong> {testResults.accuracy}%</p>
               <p><strong>Cognitive Score:</strong> {testResults.score}</p>
-              
-              {/* Frailty risk interpretation */}
+
               <div className="risk-assessment">
                 <h4>Frailty Risk Assessment:</h4>
                 {(() => {
@@ -182,4 +166,4 @@ const ReactionTimeTestExample = () => {
   );
 };
 
-export default ReactionTimeTestExample; 
+export default ReactionTimeTestExample;

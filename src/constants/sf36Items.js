@@ -1,31 +1,13 @@
 /**
- * SF-36 Health Survey Items
+ * SF-36 Health Survey Items (Fixed)
  * 
- * A comprehensive 36-item health survey measuring health-related quality of life
- * across 8 domains: Physical Functioning (PF), Role Physical (RP), Bodily Pain (BP),
- * General Health (GH), Vitality (VT), Social Functioning (SF), Role Emotional (RE),
- * and Mental Health (MH).
- * 
- * Key Features:
- * - Global question numbering 1-36 across all domains
- * - Duplicate questions (q20, q22) appear in multiple domains but share state
- * - Domain-based organization for UI pagination
- * - Exact wording and scoring from source implementation
- * 
- * Domain Distribution:
- * - PF: 10 items (Physical Functioning)
- * - RP: 4 items (Role Physical)
- * - BP: 2 items (Bodily Pain)
- * - GH: 6 items (General Health)
- * - VT: 4 items (Vitality)
- * - SF: 2 items (Social Functioning)
- * - RE: 3 items (Role Emotional)
- * - MH: 5 items (Mental Health)
- * 
- * Source: Migrated from MyEdMasters-MML repository with exact question order and domain mapping
+ * Corrected to exactly 36 items (IDs 1–36)
+ * Removes duplicates (GH q20, q22)
+ * Maintains correct SF-36 domain distribution and order
  */
+
 export const SF36_ITEMS = [
-  // General Health (GH) - 6 items in EXACT SOURCE order
+  // --- General Health (GH) ---
   {
     id: 1,
     domain: 'GH',
@@ -51,228 +33,113 @@ export const SF36_ITEMS = [
     ]
   },
   {
-    id: 20,
+    id: 33,
     domain: 'GH',
-    text: "During the past 4 weeks, to what extent has your physical health or emotional problems interfered with your normal social activities with family, friends, neighbors, or groups?",
+    text: "I seem to get sick a little easier than other people.",
     options: [
-      { value: "code41", label: "Not at all", score: 100 },
-      { value: "code42", label: "Slightly", score: 80 },
-      { value: "code43", label: "Moderately", score: 60 },
-      { value: "code44", label: "Quite a bit", score: 40 },
-      { value: "code45", label: "Extremely", score: 20 }
-    ]
-  },
-  {
-    id: 22,
-    domain: 'GH',
-    text: "During the past 4 weeks, how much did pain interfere with your normal work (including both work outside the home and housework)?",
-    options: [
-      { value: "code41", label: "Not at all", score: 100 },
-      { value: "code42", label: "A little bit", score: 80 },
-      { value: "code43", label: "Moderately", score: 60 },
-      { value: "code44", label: "Quite a bit", score: 40 },
-      { value: "code45", label: "Extremely", score: 20 }
+      { value: "code61", label: "Definitely true", score: 0 },
+      { value: "code62", label: "Mostly true", score: 25 },
+      { value: "code63", label: "Don’t know", score: 50 },
+      { value: "code64", label: "Mostly false", score: 75 },
+      { value: "code65", label: "Definitely false", score: 100 }
     ]
   },
   {
     id: 34,
     domain: 'GH',
-    text: "I am as healthy as anybody I know",
+    text: "I am as healthy as anybody I know.",
     options: [
       { value: "code61", label: "Definitely true", score: 100 },
       { value: "code62", label: "Mostly true", score: 75 },
-      { value: "code63", label: "Don't know", score: 50 },
+      { value: "code63", label: "Don’t know", score: 50 },
       { value: "code64", label: "Mostly false", score: 25 },
       { value: "code65", label: "Definitely false", score: 0 }
+    ]
+  },
+  {
+    id: 35,
+    domain: 'GH',
+    text: "I expect my health to get worse.",
+    options: [
+      { value: "code61", label: "Definitely true", score: 0 },
+      { value: "code62", label: "Mostly true", score: 25 },
+      { value: "code63", label: "Don’t know", score: 50 },
+      { value: "code64", label: "Mostly false", score: 75 },
+      { value: "code65", label: "Definitely false", score: 100 }
     ]
   },
   {
     id: 36,
     domain: 'GH',
-    text: "My health is excellent",
+    text: "My health is excellent.",
     options: [
       { value: "code61", label: "Definitely true", score: 100 },
       { value: "code62", label: "Mostly true", score: 75 },
-      { value: "code63", label: "Don't know", score: 50 },
+      { value: "code63", label: "Don’t know", score: 50 },
       { value: "code64", label: "Mostly false", score: 25 },
       { value: "code65", label: "Definitely false", score: 0 }
     ]
   },
 
-  // Physical Functioning (PF) - 10 items in EXACT SOURCE order
-  {
-    id: 3,
+  // --- Physical Functioning (PF) ---
+  ...[
+    "Vigorous activities (running, lifting heavy objects, strenuous sports)",
+    "Moderate activities (moving a table, pushing a vacuum, bowling, golf)",
+    "Lifting or carrying groceries",
+    "Climbing several flights of stairs",
+    "Climbing one flight of stairs",
+    "Bending, kneeling, or stooping",
+    "Walking more than a mile",
+    "Walking several blocks",
+    "Walking one block",
+    "Bathing or dressing yourself"
+  ].map((q, i) => ({
+    id: 3 + i,
     domain: 'PF',
-    text: "Vigorous activities, such as running, lifting heavy objects, participating in strenuous sports",
+    text: q,
     options: [
       { value: "code21", label: "Yes, limited a lot", score: 0 },
       { value: "code22", label: "Yes, limited a little", score: 50 },
       { value: "code23", label: "No, not limited at all", score: 100 }
     ]
-  },
-  {
-    id: 4,
-    domain: 'PF',
-    text: "Moderate activities, such as moving a table, pushing a vacuum cleaner, bowling, or playing golf",
-    options: [
-      { value: "code21", label: "Yes, limited a lot", score: 0 },
-      { value: "code22", label: "Yes, limited a little", score: 50 },
-      { value: "code23", label: "No, not limited at all", score: 100 }
-    ]
-  },
-  {
-    id: 5,
-    domain: 'PF',
-    text: "Lifting or carrying groceries",
-    options: [
-      { value: "code21", label: "Yes, limited a lot", score: 0 },
-      { value: "code22", label: "Yes, limited a little", score: 50 },
-      { value: "code23", label: "No, not limited at all", score: 100 }
-    ]
-  },
-  {
-    id: 6,
-    domain: 'PF',
-    text: "Climbing several flights of stairs",
-    options: [
-      { value: "code21", label: "Yes, limited a lot", score: 0 },
-      { value: "code22", label: "Yes, limited a little", score: 50 },
-      { value: "code23", label: "No, not limited at all", score: 100 }
-    ]
-  },
-  {
-    id: 7,
-    domain: 'PF',
-    text: "Climbing one flight of stairs",
-    options: [
-      { value: "code21", label: "Yes, limited a lot", score: 0 },
-      { value: "code22", label: "Yes, limited a little", score: 50 },
-      { value: "code23", label: "No, not limited at all", score: 100 }
-    ]
-  },
-  {
-    id: 8,
-    domain: 'PF',
-    text: "Bending, kneeling, or stooping",
-    options: [
-      { value: "code21", label: "Yes, limited a lot", score: 0 },
-      { value: "code22", label: "Yes, limited a little", score: 50 },
-      { value: "code23", label: "No, not limited at all", score: 100 }
-    ]
-  },
-  {
-    id: 9,
-    domain: 'PF',
-    text: "Walking more than a mile",
-    options: [
-      { value: "code21", label: "Yes, limited a lot", score: 0 },
-      { value: "code22", label: "Yes, limited a little", score: 50 },
-      { value: "code23", label: "No, not limited at all", score: 100 }
-    ]
-  },
-  {
-    id: 10,
-    domain: 'PF',
-    text: "Walking several blocks",
-    options: [
-      { value: "code21", label: "Yes, limited a lot", score: 0 },
-      { value: "code22", label: "Yes, limited a little", score: 50 },
-      { value: "code23", label: "No, not limited at all", score: 100 }
-    ]
-  },
-  {
-    id: 11,
-    domain: 'PF',
-    text: "Walking one block",
-    options: [
-      { value: "code21", label: "Yes, limited a lot", score: 0 },
-      { value: "code22", label: "Yes, limited a little", score: 50 },
-      { value: "code23", label: "No, not limited at all", score: 100 }
-    ]
-  },
-  {
-    id: 12,
-    domain: 'PF',
-    text: "Bathing or dressing yourself",
-    options: [
-      { value: "code21", label: "Yes, limited a lot", score: 0 },
-      { value: "code22", label: "Yes, limited a little", score: 50 },
-      { value: "code23", label: "No, not limited at all", score: 100 }
-    ]
-  },
+  })),
 
-  // Role Physical (RP) - 4 items in EXACT SOURCE order
-  {
-    id: 13,
+  // --- Role Physical (RP) ---
+  ...[
+    "Cut down the amount of time you spent on work or other activities",
+    "Accomplished less than you would like",
+    "Were limited in the kind of work or other activities",
+    "Had difficulty performing the work or other activities (for example, it took extra effort)"
+  ].map((q, i) => ({
+    id: 13 + i,
     domain: 'RP',
-    text: "Cut down the amount of time you spent on work or other activities",
+    text: q,
     options: [
       { value: "code31", label: "Yes", score: 0 },
       { value: "code32", label: "No", score: 100 }
     ]
-  },
-  {
-    id: 14,
-    domain: 'RP',
-    text: "Accomplished less than you would like",
-    options: [
-      { value: "code31", label: "Yes", score: 0 },
-      { value: "code32", label: "No", score: 100 }
-    ]
-  },
-  {
-    id: 15,
-    domain: 'RP',
-    text: "Were limited in the kind of work or other activities",
-    options: [
-      { value: "code31", label: "Yes", score: 0 },
-      { value: "code32", label: "No", score: 100 }
-    ]
-  },
-  {
-    id: 16,
-    domain: 'RP',
-    text: "Had difficulty performing the work or other activities (for example, it took extra effort)",
-    options: [
-      { value: "code31", label: "Yes", score: 0 },
-      { value: "code32", label: "No", score: 100 }
-    ]
-  },
+  })),
 
-  // Role Emotional (RE) - 3 items in EXACT SOURCE order
-  {
-    id: 17,
+  // --- Role Emotional (RE) ---
+  ...[
+    "Cut down the amount of time you spent on work or other activities due to emotional problems",
+    "Accomplished less than you would like due to emotional problems",
+    "Didn’t do work or other activities as carefully as usual due to emotional problems"
+  ].map((q, i) => ({
+    id: 17 + i,
     domain: 'RE',
-    text: "Cut down the amount of time you spent on work or other activities",
+    text: q,
     options: [
       { value: "code31", label: "Yes", score: 0 },
       { value: "code32", label: "No", score: 100 }
     ]
-  },
-  {
-    id: 18,
-    domain: 'RE',
-    text: "Accomplished less than you would like",
-    options: [
-      { value: "code31", label: "Yes", score: 0 },
-      { value: "code32", label: "No", score: 100 }
-    ]
-  },
-  {
-    id: 19,
-    domain: 'RE',
-    text: "Didn't do work or other activities as carefully as usual",
-    options: [
-      { value: "code31", label: "Yes", score: 0 },
-      { value: "code32", label: "No", score: 100 }
-    ]
-  },
+  })),
 
-  // Social Functioning (SF) - 2 items in EXACT SOURCE order (including q20 which is also in GH)
+  // --- Social Functioning (SF) ---
   {
     id: 20,
     domain: 'SF',
-    text: "During the past 4 weeks, to what extent has your physical health or emotional problems interfered with your normal social activities with family, friends, neighbors, or groups?",
+    text: "During the past 4 weeks, to what extent has your physical health or emotional problems interfered with your social activities?",
     options: [
       { value: "code41", label: "Not at all", score: 100 },
       { value: "code42", label: "Slightly", score: 80 },
@@ -284,7 +151,7 @@ export const SF36_ITEMS = [
   {
     id: 32,
     domain: 'SF',
-    text: "During the past 4 weeks, how much of the time has your physical health or emotional problems interfered with your social activities (like visiting with friends, relatives, etc.)?",
+    text: "During the past 4 weeks, how much of the time has your physical health or emotional problems interfered with your social activities?",
     options: [
       { value: "code41", label: "All of the time", score: 0 },
       { value: "code42", label: "Most of the time", score: 20 },
@@ -295,7 +162,7 @@ export const SF36_ITEMS = [
     ]
   },
 
-  // Pain (BP) - 2 items in EXACT SOURCE order (including q22 which is also in GH)
+  // --- Bodily Pain (BP) ---
   {
     id: 21,
     domain: 'BP',
@@ -322,7 +189,7 @@ export const SF36_ITEMS = [
     ]
   },
 
-  // Energy/Vitality (VT) - 4 items in EXACT SOURCE order
+  // --- Vitality (VT) ---
   {
     id: 23,
     domain: 'VT',
@@ -376,7 +243,7 @@ export const SF36_ITEMS = [
     ]
   },
 
-  // Mental Health (MH) - 5 items in EXACT SOURCE order
+  // --- Mental Health (MH) ---
   {
     id: 24,
     domain: 'MH',
@@ -441,46 +308,20 @@ export const SF36_ITEMS = [
       { value: "code45", label: "A little of the time", score: 20 },
       { value: "code46", label: "None of the time", score: 0 }
     ]
-  },
-
-  // Missing questions to complete the 36 items (based on SOURCE analysis)
-  {
-    id: 33,
-    domain: 'GH',
-    text: "I seem to get sick a little easier than other people",
-    options: [
-      { value: "code61", label: "Definitely true", score: 0 },
-      { value: "code62", label: "Mostly true", score: 25 },
-      { value: "code63", label: "Don't know", score: 50 },
-      { value: "code64", label: "Mostly false", score: 75 },
-      { value: "code65", label: "Definitely false", score: 100 }
-    ]
-  },
-  {
-    id: 35,
-    domain: 'GH',
-    text: "I expect my health to get worse",
-    options: [
-      { value: "code61", label: "Definitely true", score: 0 },
-      { value: "code62", label: "Mostly true", score: 25 },
-      { value: "code63", label: "Don't know", score: 50 },
-      { value: "code64", label: "Mostly false", score: 75 },
-      { value: "code65", label: "Definitely false", score: 100 }
-    ]
   }
 ];
 
-// Domain section order based on SOURCE (corrected for proper SF-36 structure)
+// ✅ Domain section order
 export const SF36_SECTION_ORDER = ['GH', 'PF', 'RP', 'RE', 'SF', 'BP', 'VT', 'MH'];
 
-// Domain information for display
+// ✅ Domain information
 export const SF36_DOMAINS = {
   PF: { name: 'Physical Functioning', description: 'Ability to perform physical activities' },
-  RP: { name: 'Role Physical', description: 'Limitations in work or daily activities due to physical health' },
+  RP: { name: 'Role Physical', description: 'Limitations due to physical health' },
   BP: { name: 'Bodily Pain', description: 'Pain and its interference with work' },
   GH: { name: 'General Health', description: 'Overall health perception' },
   VT: { name: 'Vitality', description: 'Energy and fatigue levels' },
-  SF: { name: 'Social Functioning', description: 'Impact of health on social activities' },
-  RE: { name: 'Role Emotional', description: 'Limitations in work or daily activities due to emotional problems' },
-  MH: { name: 'Mental Health', description: 'Psychological distress and well-being' }
+  SF: { name: 'Social Functioning', description: 'Impact on social activities' },
+  RE: { name: 'Role Emotional', description: 'Limitations due to emotional problems' },
+  MH: { name: 'Mental Health', description: 'Psychological well-being' }
 };

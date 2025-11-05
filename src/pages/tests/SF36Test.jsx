@@ -5,15 +5,14 @@ import MetyButton from '../../components/MetyButton';
 import { SF36_ITEMS, SF36_SECTION_ORDER, SF36_DOMAINS } from '../../constants/sf36Items';
 import { scoreSF36, getDomainInfo, getScoreInterpretation } from '../../utils/sf36Scoring';
 
+console.log("Backend URL →", import.meta.env.VITE_API_BASE_URL);
+
 const SF36Test = () => {
   const navigate = useNavigate();
-  
-  // 1) Create global id->number map from the master list (36 unique)
+
+  // Map question id -> 1..36 numbering
   const idToNumber = useMemo(() => new Map(SF36_ITEMS.map((it, idx) => [it.id, idx + 1])), []);
-  
-  // Dev assert: console.debug("[sf36] unique ids", new Set(SF36_ITEMS.map(i=>i.id)).size); // should be 36
-  
-  // 2) Use a single shared responses state keyed by question id (object, not array)
+
   const [responsesById, setResponsesById] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
@@ -25,12 +24,10 @@ const SF36Test = () => {
 
   useEffect(() => {
     setStartedAt(new Date().toISOString());
-    
-    // Dev assert: console.debug("[sf36] unique ids", new Set(SF36_ITEMS.map(i=>i.id)).size); // should be 36
-    console.debug("[sf36] unique ids", new Set(SF36_ITEMS.map(i=>i.id)).size); // should be 36
+    console.debug("[sf36] unique ids", new Set(SF36_ITEMS.map(i => i.id)).size); // should be 36
   }, []);
 
-  // Group items by domain for pagination using SOURCE order
+  // Group questions by domain
   const itemsByDomain = useMemo(() => {
     const map = SF36_SECTION_ORDER.map(key => [key, []]);
     const buckets = Object.fromEntries(map);
@@ -40,29 +37,19 @@ const SF36Test = () => {
     return buckets;
   }, []);
 
-  // 2) Use a single shared responses state keyed by question id (object, not array)
+  // Update responses
   const setAnswer = (qid, value) => setResponsesById(prev => ({ ...prev, [qid]: value }));
-
-  const handleResponseChange = (qid, value) => {
-    setAnswer(qid, value);
-    setError(''); // Clear any previous errors
-  };
 
   const isCurrentPageValid = () => {
     const currentDomain = SF36_SECTION_ORDER[currentPage];
     const currentItems = itemsByDomain[currentDomain];
-    // 4) Page validation must require all UNIQUE ids on the page
-    // If q20 appears again in another domain later, it should already be true when previously answered.
     return currentItems.every(q => responsesById[q.id] != null);
   };
 
-  const isFormValid = () => {
-    return Object.keys(responsesById).length === 36;
-  };
+  const isFormValid = () => Object.keys(responsesById).length === 36;
 
-  const getProgressPercentage = () => {
-    return Math.round((Object.keys(responsesById).length / 36) * 100);
-  };
+  const getProgressPercentage = () =>
+    Math.round((Object.keys(responsesById).length / 36) * 100);
 
   const handleNext = () => {
     if (isCurrentPageValid()) {
@@ -75,14 +62,13 @@ const SF36Test = () => {
   };
 
   const handlePrevious = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
+    if (currentPage > 0) setCurrentPage(currentPage - 1);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+    console.log("Answered:", Object.keys(responsesById).length);
     if (!isFormValid()) {
       setError('Please answer all 36 questions before submitting.');
       return;
@@ -92,21 +78,18 @@ const SF36Test = () => {
     setError('');
 
     try {
-      // 5) Submit payload MUST be in exact global order (1..36)
-      const orderedResponses = SF36_ITEMS.map(it => ({ 
-        itemId: it.id, 
-        value: responsesById[it.id] ?? null 
+      const orderedResponses = SF36_ITEMS.map(it => ({
+        itemId: it.id,
+        value: responsesById[it.id] ?? null
       }));
-      
-      // Dev: console.debug("[sf36] submit ids:", orderedResponses.map(r => r.itemId)); // 1..36 only
-      console.debug("[sf36] submit ids:", orderedResponses.map(r => r.itemId)); // 1..36 only
 
-      // Calculate scores
+      console.debug("[sf36] submit ids:", orderedResponses.map(r => r.itemId));
+      console.debug("Sample responses:", Object.values(responsesById).slice(0, 5));
+
       const result = scoreSF36(orderedResponses);
       setScore(result);
       setEndedAt(new Date().toISOString());
 
-      // Submit to API
       const testData = {
         test: "sf36",
         responses: orderedResponses,
@@ -124,17 +107,13 @@ const SF36Test = () => {
         endedAt: new Date().toISOString()
       };
 
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || ""}/api/frailty-tests/sf36`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/frailty-tests/sf36`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(testData)
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to submit test results');
-      }
+      if (!response.ok) throw new Error('Failed to submit test results');
 
       setSubmitted(true);
     } catch (err) {
@@ -155,10 +134,9 @@ const SF36Test = () => {
     setCurrentPage(0);
   };
 
-  const handleGoHome = () => {
-    navigate('/');
-  };
+  const handleGoHome = () => navigate('/');
 
+  // --- RESULT VIEW ---
   if (submitted && score) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
@@ -167,8 +145,10 @@ const SF36Test = () => {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
               <CheckCircle className="w-8 h-8 text-green-600" />
             </div>
-            <h1 className="text-3xl font-bold text-neutral-dark mb-6">SF-36 Assessment Complete!</h1>
-            
+            <h1 className="text-3xl font-bold text-neutral-dark mb-6">
+              SF-36 Assessment Complete!
+            </h1>
+
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
               <h2 className="text-2xl font-semibold text-blue-800 mb-2">Your Overall Score</h2>
               <div className="text-4xl font-bold text-blue-600 mb-2">{score.overall}/100</div>
@@ -178,34 +158,28 @@ const SF36Test = () => {
             <div className="bg-gray-50 rounded-lg p-6 mb-6 text-left">
               <h3 className="text-lg font-semibold text-neutral-dark mb-4">Domain Scores</h3>
               <div className="grid md:grid-cols-2 gap-4">
-                {Object.entries(score).filter(([key]) => key !== 'overall' && key !== 'rawScores').map(([domain, scoreValue]) => (
-                  <div key={domain} className="flex justify-between items-center p-3 bg-white rounded border">
-                    <div>
-                      <span className="font-medium text-neutral-dark">{getDomainInfo(domain).name}</span>
-                      <p className="text-sm text-neutral-medium">{getDomainInfo(domain).description}</p>
+                {Object.entries(score)
+                  .filter(([key]) => key !== 'overall' && key !== 'rawScores')
+                  .map(([domain, scoreValue]) => (
+                    <div key={domain} className="flex justify-between items-center p-3 bg-white rounded border">
+                      <div>
+                        <span className="font-medium text-neutral-dark">{getDomainInfo(domain).name}</span>
+                        <p className="text-sm text-neutral-medium">{getDomainInfo(domain).description}</p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xl font-bold text-blue-600">{scoreValue}/100</div>
+                        <div className="text-sm text-neutral-medium">{getScoreInterpretation(scoreValue)}</div>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-xl font-bold text-blue-600">{scoreValue}/100</div>
-                      <div className="text-sm text-neutral-medium">{getScoreInterpretation(scoreValue)}</div>
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
 
             <div className="space-x-4">
-              <MetyButton
-                onClick={handleRetake}
-                variant="secondary"
-                size="lg"
-              >
+              <MetyButton onClick={handleRetake} variant="secondary" size="lg">
                 Retake Test
               </MetyButton>
-              <MetyButton
-                onClick={handleGoHome}
-                variant="primary"
-                size="lg"
-              >
+              <MetyButton onClick={handleGoHome} variant="primary" size="lg">
                 Return Home
               </MetyButton>
             </div>
@@ -215,6 +189,7 @@ const SF36Test = () => {
     );
   }
 
+  // --- TEST VIEW ---
   const currentDomain = SF36_SECTION_ORDER[currentPage];
   const pageItems = itemsByDomain[currentDomain];
 
@@ -244,14 +219,14 @@ const SF36Test = () => {
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
+              <div
                 className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${getProgressPercentage()}%` }}
               ></div>
             </div>
           </div>
 
-          {/* Page Navigation */}
+          {/* Section Info */}
           <div className="mb-6 text-center">
             <div className="inline-flex items-center space-x-2 bg-gray-100 rounded-lg px-4 py-2">
               <BarChart3 className="w-4 h-4 text-gray-600" />
@@ -268,21 +243,16 @@ const SF36Test = () => {
             </div>
           )}
 
-          {/* Test Form */}
+          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-6">
               {pageItems.map((q) => {
-                // 3) When deriving items for the current page (domain), DO NOT create per-page indices for numbering.
-                // For each rendered question `q`:
                 const qNumber = idToNumber.get(q.id) ?? "?";
-                
-                // Radios share the same state no matter the domain:
                 const currentVal = responsesById[q.id] ?? null;
-                
+
                 return (
                   <div key={q.id} className="border border-gray-200 rounded-lg p-6">
                     <div className="mb-4">
-                      {/* Heading: */}
                       <h3 className="text-lg font-medium text-neutral-dark mb-2">
                         Question {qNumber}
                       </h3>

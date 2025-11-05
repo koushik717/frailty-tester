@@ -1,0 +1,17 @@
+./src/pages/tests/memory/MemoryResults.jsx:    if (!results) navigate('/tests/memory-intro');
+./src/pages/tests/memory/MemoryResults.jsx:              onClick={() => navigate('/tests/memory-test', { state: { mode: results.isPractice ? 'practice' : 'test' } })}
+./src/pages/tests/memory/MemoryTest.jsx:          navigate('/tests/memory-results', { 
+./src/pages/tests/memory/MemoryTest.jsx:          navigate('/tests/memory-results', { 
+./src/pages/tests/memory/MemoryTest.jsx:    navigate('/tests/memory-results', { 
+./src/pages/tests/memory/MemoryIntro.jsx:    navigate('/tests/memory-test', { state: { mode: 'practice' } });
+./src/pages/tests/memory/MemoryIntro.jsx:    navigate('/tests/memory-test', { state: { mode: 'test' } });
+./src/pages/tests/BalanceTest.jsx:            onClick={() => navigate('/tests/balance-intro')}
+./src/pages/tests/BalanceTest.jsx:                  onClick={() => navigate('/tests/balance-intro')}
+./src/pages/tests/psqi/PSQITest.jsx:    navigate('/tests/psqi-results');
+./src/pages/tests/psqi/PSQIResults.jsx:    navigate('/tests/psqi-test');
+./src/pages/tests/psqi/PSQIIntro.jsx:    navigate('/tests/psqi-test');
+./src/pages/screens/SF36Intro.jsx:    navigate('/tests/sf36-test');
+./src/pages/screens/BalanceIntro.jsx:    navigate('/tests/balance-test');
+./src/pages/screens/PSSIntro.jsx:    navigate('/tests/pss-test');
+./src/pages/screens/SelfReactionIntro.jsx:    navigate('/tests/self-reaction-test', { state: { mode: 'practice' } });
+./src/pages/screens/SelfReactionIntro.jsx:    navigate('/tests/self-reaction-test', { state: { mode: 'test' } });
