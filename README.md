@@ -213,3 +213,4 @@ For questions, issues, or contributions, please:
 - Contact the development team
 - Review the documentation files
 
+Updated project setup by Koushik Nakka
