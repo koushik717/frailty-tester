@@ -20,6 +20,7 @@ import SelfReactionIntro from "./pages/screens/SelfReactionIntro";
 import SelfReactionTest from "./pages/tests/SelfReactionTest";
 import ReactionTimeTestPage from "./pages/ReactionTimeTestPage";
 import ComingSoonPage from "./pages/screens/ComingSoonPage";
+import ProfilePage from "./pages/ProfilePage";
 
 const App = () => {
   return (
@@ -45,6 +46,7 @@ const App = () => {
         <Route path="/tests/selfreaction-test" element={<SelfReactionTest />} />
         <Route path="/tests/reactiontime" element={<ReactionTimeTestPage />} />
         <Route path="*" element={<ComingSoonPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </div>
   );

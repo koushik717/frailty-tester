@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import boyImage from '../assets/tests/reaction-time/boy.jpg';
 
 const ReactionTimeTestUI = () => {
@@ -16,6 +17,9 @@ const ReactionTimeTestUI = () => {
   const [practice, setPractice] = useState(true);
   const [color, setColor] = useState("blue");
   const [submittedToday, setSubmittedToday] = useState(false);
+
+  // NEW: track whether we've already saved this run's summary
+  const [hasSavedSummary, setHasSavedSummary] = useState(false);
 
   // Constants from source
   const TOTAL_TRIALS = 20;
@@ -110,6 +114,73 @@ const ReactionTimeTestUI = () => {
   const accuracy = Math.round((correctClicks / (totalClicks + missedClicks)) * 1000) / 1000;
   const dummy2 = Math.round((accuracy / averageReactionTimeInSeconds) * 1000) / 1000;
   const score = isNaN(dummy2) ? 0 : dummy2;
+
+  // 🔁 NEW EFFECT: when test is finished, save summary to /api/frailty-tests/results
+  useEffect(() => {
+    // "Finished" when test has started AND we've shown all 20 boys
+    if (!start || boyAppearances < TOTAL_TRIALS) return;
+    if (hasSavedSummary) return; // avoid double-saving
+
+    const overallScore = parseFloat(averageReactionTimeInSeconds); // seconds
+
+    let category = "Average";
+    if (!isNaN(overallScore)) {
+      if (overallScore < 0.4) category = "Fast";
+      else if (overallScore > 0.8) category = "Slow";
+    }
+
+    const payload = {
+      testName: "Reaction Time Test",
+      testKey: "reaction_time",
+      overallScore,
+      assessment: {
+        category,
+        unit: "sec",
+        trialsCompleted: TOTAL_TRIALS,
+        accuracy,
+        correctClicks,
+        incorrectClicks,
+        missedClicks,
+        score,
+      },
+      timestamp: new Date().toISOString(),
+      rawMetrics: {
+        reactionTimes,
+        totalReactionTime,
+        averageReactionTimeInSeconds,
+        accuracy,
+        score,
+        correctClicks,
+        incorrectClicks,
+        missedClicks,
+      },
+    };
+
+    const saveResult = async () => {
+      try {
+        console.log("🔄 Saving Reaction Time summary to /api/frailty-tests/results", payload);
+        await axios.post("/api/frailty-tests/results", payload);
+        console.log("✅ Reaction Time summary saved");
+        setHasSavedSummary(true);
+      } catch (err) {
+        console.error("❌ Error saving Reaction Time summary:", err);
+      }
+    };
+
+    saveResult();
+  }, [
+    start,
+    boyAppearances,
+    hasSavedSummary,
+    averageReactionTimeInSeconds,
+    accuracy,
+    correctClicks,
+    incorrectClicks,
+    missedClicks,
+    reactionTimes,
+    totalReactionTime,
+    score,
+  ]);
 
   // Test in progress
   if (!start || boyAppearances < TOTAL_TRIALS) {
@@ -236,6 +307,7 @@ const ReactionTimeTestUI = () => {
               setStartReaction(null);
               setColor("blue");
               setPractice(true);
+              setHasSavedSummary(false); // allow saving on next run
             }}
           >
             Try Again
@@ -246,4 +318,4 @@ const ReactionTimeTestUI = () => {
   );
 };
 
-export default ReactionTimeTestUI; 
+export default ReactionTimeTestUI;

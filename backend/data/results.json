@@ -2,6 +2,7 @@
   "testResults": [
     {
       "timestamp": "2025-06-11T19:31:01.574Z",
+      "testName": "Single-Leg Balance Test",
       "userAge": 46,
       "attempts": [
         {
@@ -25,11 +26,6 @@
           "balanceScore": 0.619
         },
         {
-          "attempt": 4,
-          "foot": "right",
-          "balanceScore": 0.051
-        },
-        {
           "attempt": 5,
           "foot": "right",
           "balanceScore": 0.16
@@ -41,6 +37,7 @@
         }
       ],
       "averageBalanceTime": 0.46,
+      "overallScore": 0.46,
       "assessment": {
         "category": "Below Average",
         "ageGroup": "40-50",
@@ -50,22 +47,13 @@
     },
     {
       "timestamp": "2025-06-16T05:48:27.875Z",
+      "testName": "Single-Leg Balance Test",
       "userAge": 45,
       "attempts": [
         {
           "attempt": 1,
           "foot": "left",
           "balanceScore": 0.407
-        },
-        {
-          "attempt": 1,
-          "foot": "left",
-          "balanceScore": 0.592
-        },
-        {
-          "attempt": 2,
-          "foot": "left",
-          "balanceScore": 0.026
         },
         {
           "attempt": 2,
@@ -88,20 +76,153 @@
           "balanceScore": 1.344
         },
         {
-          "attempt": 5,
-          "foot": "right",
-          "balanceScore": 0.643
-        },
-        {
           "attempt": 6,
           "foot": "right",
           "balanceScore": 1.026
         }
       ],
       "averageBalanceTime": 0.51,
+      "overallScore": 0.51,
       "assessment": {
         "category": "Below Average",
         "ageGroup": "40-50",
+        "expectedRange": "",
+        "recommendedExercises": []
+      }
+    },
+    {
+      "timestamp": "2025-11-07T19:45:18.451Z",
+      "testName": "PSS-10 Stress Test",
+      "overallScore": 19,
+      "assessment": {
+        "category": "Moderate",
+        "expectedRange": "",
+        "recommendedExercises": []
+      }
+    },
+    {
+      "timestamp": "2025-11-07T19:51:18.901Z",
+      "testName": "PSS-10 Stress Test",
+      "overallScore": 11,
+      "assessment": {
+        "category": "Low",
+        "expectedRange": "",
+        "recommendedExercises": []
+      }
+    },
+    {
+      "timestamp": "2025-11-07T19:56:48.501Z",
+      "testName": "SF-36 Health Survey",
+      "overallScore": 72,
+      "assessment": {
+        "category": "Good",
+        "expectedRange": "",
+        "recommendedExercises": []
+      }
+    },
+    {
+      "timestamp": "2025-11-14T19:41:48.127Z",
+      "testName": "PSS-10 Stress Test",
+      "testKey": "pss10",
+      "overallScore": 10,
+      "domainScores": null,
+      "startedAt": null,
+      "endedAt": null,
+      "assessment": {
+        "category": "low",
+        "ageGroup": "",
+        "expectedRange": "",
+        "recommendedExercises": []
+      }
+    },
+    {
+      "timestamp": "2025-11-14T19:43:12.267Z",
+      "testName": "SF-36 Health Survey",
+      "testKey": "sf36",
+      "overallScore": 33,
+      "domainScores": {
+        "PF": 10,
+        "RP": 0,
+        "BP": 60,
+        "GH": 78,
+        "VT": 35,
+        "SF": 50,
+        "RE": 0,
+        "MH": 52
+      },
+      "startedAt": "2025-11-14T19:42:13.224Z",
+      "endedAt": "2025-11-14T19:43:12.249Z",
+      "assessment": {
+        "category": "Poor",
+        "ageGroup": "",
+        "expectedRange": "",
+        "recommendedExercises": []
+      }
+    },
+    {
+      "timestamp": "2025-11-14T19:43:45.486Z",
+      "testName": "Self Reaction Test",
+      "testKey": null,
+      "overallScore": 15,
+      "domainScores": null,
+      "startedAt": null,
+      "endedAt": null,
+      "assessment": {
+        "category": "Good",
+        "ageGroup": "",
+        "expectedRange": "",
+        "recommendedExercises": []
+      }
+    },
+    {
+      "timestamp": "2025-11-18T04:34:06.569Z",
+      "testName": "Reaction Time Test",
+      "testKey": "reaction_time",
+      "overallScore": 0.371,
+      "domainScores": null,
+      "startedAt": null,
+      "endedAt": null,
+      "assessment": {
+        "category": "Fast",
+        "ageGroup": "",
+        "expectedRange": "",
+        "recommendedExercises": []
+      }
+    },
+    {
+      "timestamp": "2025-11-19T02:52:57.064Z",
+      "testName": "Pittsburgh Sleep Quality Index",
+      "testKey": "psqi",
+      "overallScore": 1,
+      "domainScores": {
+        "comp1": 0,
+        "comp2": 1,
+        "comp3": 0,
+        "comp4": 0,
+        "comp5": 0,
+        "comp6": 0,
+        "comp7": 0
+      },
+      "startedAt": null,
+      "endedAt": null,
+      "assessment": {
+        "category": "Good Sleep Quality",
+        "ageGroup": "",
+        "expectedRange": "",
+        "recommendedExercises": []
+      }
+    },
+    {
+      "timestamp": "2025-11-19T03:00:20.600Z",
+      "testName": "Digit Memory Test",
+      "testKey": "digit-memory",
+      "overallScore": 4,
+      "domainScores": null,
+      "startedAt": null,
+      "endedAt": null,
+      "assessment": {
+        "category": "Needs Improvement",
+        "ageGroup": "",
         "expectedRange": "",
         "recommendedExercises": []
       }

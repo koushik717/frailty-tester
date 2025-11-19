@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import useReactionTimeTest from '../hooks/useReactionTimeTest';
 import ReactionTimeTestUI from '../components/ReactionTimeTestUI';
 import TestIntroCard from '../components/TestIntroCard';
 import MetyNavbar from '../components/MetyNavbar';
 import MetyPageSection from '../components/MetyPageSection';
 import { FaBolt, FaClock, FaBrain } from 'react-icons/fa';
+import axios from 'axios';
 
 const introInstructions = [
   {
@@ -90,16 +91,25 @@ const ReactionTimeTestPage = ({
     allowPractice
   });
 
-  // Handle test completion
+  // make sure we only save once per completed test
+  const hasSavedSummaryRef = useRef(false);
+
+  // When test reaches a "finished" status, save summary to backend
   useEffect(() => {
-    if (status === 'done') {
-      const summaryData = summary();
-      const isPractice = trialIndex < practiceTrials;
-      
-      if (onTestComplete) {
-        onTestComplete(summaryData);
-      }
-      
+    const finishedStatuses = ["done", "finished", "results", "completed", "complete"];
+
+    if (!finishedStatuses.includes(status)) return;
+    if (hasSavedSummaryRef.current) return;
+
+    const summaryData = summary();
+    const isPractice = trialIndex < practiceTrials || summaryData?.isPractice;
+
+    if (onTestComplete) {
+      onTestComplete(summaryData);
+    }
+
+    const runSave = async () => {
+      // 1) Existing external submit (Mety API) if provided and not practice
       if (!isPractice && onSubmitResults) {
         const testData = {
           userId,
@@ -118,12 +128,65 @@ const ReactionTimeTestPage = ({
         onSubmitResults(testData);
         setLocalSubmittedToday(true);
       }
-      
+
+      // 2) Save FrailtyTester summary to /api/frailty-tests/results for Profile page
+      if (!isPractice) {
+        const overallScore =
+          summaryData.avg ??
+          summaryData.averageReactionTime ??
+          summaryData.mean;
+
+        // avg is in seconds (e.g. 0.538 sec)
+        let category = "Average";
+        if (overallScore && overallScore < 0.4) category = "Fast";
+        else if (overallScore && overallScore > 0.8) category = "Slow";
+
+        try {
+          console.log("Saving Reaction Time summary to /api/frailty-tests/results", {
+            overallScore,
+            category,
+          });
+
+          await axios.post("/api/frailty-tests/results", {
+            testName: "Reaction Time Test",
+            testKey: "reaction_time",
+            overallScore,
+            assessment: {
+              category,
+              unit: "sec",
+              trialsCompleted:
+                summaryData.totalTrials || summaryData.trials || totalTrials
+            },
+            timestamp: new Date().toISOString(),
+            rawMetrics: summaryData
+          });
+
+          hasSavedSummaryRef.current = true;
+          console.log("✅ Reaction Time summary saved");
+        } catch (error) {
+          console.error("❌ Error saving Reaction Time summary:", error);
+        }
+      }
+
       if (isPractice && onPracticeComplete) {
         onPracticeComplete(summaryData);
       }
-    }
-  }, [status, trialIndex, practiceTrials, summary, onTestComplete, onSubmitResults, onPracticeComplete, userId, testConfig, theme]);
+    };
+
+    runSave();
+  }, [
+    status,
+    trialIndex,
+    practiceTrials,
+    summary,
+    onTestComplete,
+    onSubmitResults,
+    onPracticeComplete,
+    userId,
+    testConfig,
+    theme,
+    totalTrials
+  ]);
 
   const handleStartTest = () => {
     setTestStarted(true);
@@ -137,6 +200,7 @@ const ReactionTimeTestPage = ({
   const handleResetTest = () => {
     reset();
     setTestResults(null);
+    hasSavedSummaryRef.current = false;
   };
 
   if (!testStarted) {
@@ -212,7 +276,7 @@ const ReactionTimeTestPage = ({
           // Hook actions
           start={start}
           onClick={onClick}
-          reset={reset}
+          reset={handleResetTest}
           summary={summary}
           
           text={text}
@@ -225,4 +289,4 @@ const ReactionTimeTestPage = ({
   );
 };
 
-export default ReactionTimeTestPage; 
+export default ReactionTimeTestPage;

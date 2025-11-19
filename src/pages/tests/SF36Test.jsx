@@ -88,8 +88,11 @@ const SF36Test = () => {
 
       const result = scoreSF36(orderedResponses);
       setScore(result);
-      setEndedAt(new Date().toISOString());
 
+      const endTime = new Date().toISOString();
+      setEndedAt(endTime);
+
+      // ---- 1) Save to dedicated SF-36 backend endpoint (existing behavior) ----
       const testData = {
         test: "sf36",
         responses: orderedResponses,
@@ -104,16 +107,48 @@ const SF36Test = () => {
           MH: result.MH
         },
         startedAt,
-        endedAt: new Date().toISOString()
+        endedAt: endTime
       };
 
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/frailty-tests/sf36`, {
+      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
+      const response = await fetch(`${apiBase}/api/frailty-tests/sf36`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(testData)
       });
 
       if (!response.ok) throw new Error('Failed to submit test results');
+
+      // ---- 2) ALSO save a summary entry for the Profile page ----
+      try {
+        await fetch(`${apiBase}/api/frailty-tests/results`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            test: "sf36",
+            testName: "SF-36 Health Survey",
+            overallScore: result.overall,
+            domainScores: {
+              PF: result.PF,
+              RP: result.RP,
+              BP: result.BP,
+              GH: result.GH,
+              VT: result.VT,
+              SF: result.SF,
+              RE: result.RE,
+              MH: result.MH
+            },
+            assessment: {
+              category: getScoreInterpretation(result.overall)
+            },
+            startedAt,
+            endedAt: endTime
+          })
+        });
+      } catch (err2) {
+        console.error("Failed to save SF-36 to profile results:", err2);
+      }
 
       setSubmitted(true);
     } catch (err) {

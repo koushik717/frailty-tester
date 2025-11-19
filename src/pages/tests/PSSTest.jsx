@@ -4,6 +4,7 @@ import { Scale, CheckCircle, AlertCircle } from 'lucide-react';
 import MetyButton from '../../components/MetyButton';
 import { PSS_ITEMS, PSS_RESPONSE_OPTIONS } from '../../constants/pssItems';
 import { scorePSS, getCategoryDescription, getCategoryColor } from '../../utils/pssScoring';
+import axios from "axios";
 
 const PSSTest = () => {
   const navigate = useNavigate();
@@ -24,12 +25,12 @@ const PSSTest = () => {
       ...prev,
       [itemId]: value
     }));
-    setError(''); // Clear any previous errors
+    setError('');
   };
 
   const isFormValid = () => {
-    return Object.keys(responses).length === 10 && 
-           Object.values(responses).every(value => value !== undefined && value !== null);
+    return Object.keys(responses).length === 10 &&
+      Object.values(responses).every(value => value !== undefined && value !== null);
   };
 
   const getProgressPercentage = () => {
@@ -38,7 +39,7 @@ const PSSTest = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!isFormValid()) {
       setError('Please answer all 10 questions before submitting.');
       return;
@@ -57,20 +58,20 @@ const PSSTest = () => {
       // Calculate score
       const result = scorePSS(formattedResponses);
       setScore(result);
-      setEndedAt(new Date().toISOString());
+      const ended = new Date().toISOString();
+      setEndedAt(ended);
 
-      // Submit to API
+      // Submit to backend PSS endpoint (existing behaviour)
       const testData = {
         test: "pss10",
         responses: formattedResponses,
         total: result.total,
         category: result.category,
         startedAt,
-        endedAt: new Date().toISOString()
+        endedAt: ended
       };
 
       const response = await fetch('http://localhost:3000/api/frailty-tests/pss', {
-
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -82,7 +83,21 @@ const PSSTest = () => {
         throw new Error('Failed to submit test results');
       }
 
+      // ✅ Save result to Profile page results file (generic results route)
+      await axios.post("http://localhost:3000/api/frailty-tests/results", {
+        test: "pss10",
+        testName: "PSS-10 Stress Test",
+        overallScore: result.total,
+        assessment: {
+          category: result.category,
+          startedAt,
+          endedAt: ended
+        }
+      });
+
+      console.log("✅ PSS result saved to profile results!");
       setSubmitted(true);
+
     } catch (err) {
       console.error('Error submitting PSS test:', err);
       setError('Failed to submit test results. Please try again.');
@@ -112,8 +127,10 @@ const PSSTest = () => {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
               <CheckCircle className="w-8 h-8 text-green-600" />
             </div>
-            <h1 className="text-3xl font-bold text-neutral-dark mb-6">PSS Assessment Complete!</h1>
-            
+            <h1 className="text-3xl font-bold text-neutral-dark mb-6">
+              PSS Assessment Complete!
+            </h1>
+
             <div className={`border rounded-lg p-6 mb-6 ${getCategoryColor(score.category)}`}>
               <h2 className="text-2xl font-semibold mb-2">Your Stress Level</h2>
               <div className="text-4xl font-bold mb-2">{score.total}/{score.maxScore}</div>
@@ -130,18 +147,10 @@ const PSSTest = () => {
             </div>
 
             <div className="space-x-4">
-              <MetyButton
-                onClick={handleRetake}
-                variant="secondary"
-                size="lg"
-              >
+              <MetyButton onClick={handleRetake} variant="secondary" size="lg">
                 Retake Test
               </MetyButton>
-              <MetyButton
-                onClick={handleGoHome}
-                variant="primary"
-                size="lg"
-              >
+              <MetyButton onClick={handleGoHome} variant="primary" size="lg">
                 Return Home
               </MetyButton>
             </div>
@@ -177,7 +186,7 @@ const PSSTest = () => {
               </span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
+              <div
                 className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                 style={{ width: `${getProgressPercentage()}%` }}
               ></div>
@@ -239,7 +248,7 @@ const PSSTest = () => {
               >
                 {isSubmitting ? 'Submitting...' : 'Submit Assessment'}
               </MetyButton>
-              
+
               {!isFormValid() && (
                 <p className="text-sm text-neutral-medium mt-2">
                   Please answer all questions to continue
@@ -254,4 +263,3 @@ const PSSTest = () => {
 };
 
 export default PSSTest;
-

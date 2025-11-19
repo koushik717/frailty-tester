@@ -34,7 +34,6 @@ const SelfReactionTest = () => {
 
   useEffect(() => {
     // In a real implementation, you would check if the user has already submitted today
-    // For now, we'll set it to false
     setSubmittedToday(false);
   }, []);
 
@@ -48,7 +47,7 @@ const SelfReactionTest = () => {
   const calculateTotalScore = () => {
     let score = 0;
     let unansweredQ = false;
-    
+
     selectedValues.forEach((selectedValue) => {
       const category = categories.find((cat) => cat.name === selectedValue);
       if (category) {
@@ -65,20 +64,43 @@ const SelfReactionTest = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const score = calculateTotalScore();
-    
+
     if (score === -1) {
       alert('Please answer all questions before submitting.');
       return;
-    } 
+    }
 
     setTotalScore(score);
     setShowScore(true);
 
     if (mode === 'test') {
-      // In a real implementation, you would submit the score to your backend
       console.log('Test submitted with score:', score);
+
+      // Map score -> simple category text for the profile page
+      let category;
+      if (score <= 10) {
+        category = 'Excellent';
+      } else if (score <= 20) {
+        category = 'Good';
+      } else {
+        category = 'May benefit from strategies';
+      }
+
+      try {
+        await fetch('http://localhost:3000/api/frailty-tests/results', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            testName: 'Self Reaction Test',
+            overallScore: score,
+            assessment: { category },
+          }),
+        });
+      } catch (err) {
+        console.error('Failed to save Self Reaction result:', err);
+      }
     }
   };
 
@@ -97,7 +119,7 @@ const SelfReactionTest = () => {
           <p className="text-gray-600 text-center mb-4">
             Read the items below and click on the answer choice that best describes how true this statement is for you.
           </p>
-          
+
           {/* Category Headers */}
           <div className="grid grid-cols-4 gap-4 mb-4">
             {categories.map((category, categoryIndex) => (
@@ -122,11 +144,13 @@ const SelfReactionTest = () => {
               <div className="flex flex-col lg:flex-row lg:items-center gap-4">
                 {/* Question Text */}
                 <div className="flex-1">
-                  <p className={`text-gray-800 leading-relaxed ${
-                    highlightedQuestionIndex === questionIndex 
-                      ? 'font-semibold text-green-700' 
-                      : ''
-                  }`}>
+                  <p
+                    className={`text-gray-800 leading-relaxed ${
+                      highlightedQuestionIndex === questionIndex
+                        ? 'font-semibold text-green-700'
+                        : ''
+                    }`}
+                  >
                     {question}
                   </p>
                 </div>
@@ -167,7 +191,7 @@ const SelfReactionTest = () => {
               Submit Test
             </button>
           )}
-          
+
           {(showScore || submittedToday) && (
             <div className="space-y-4">
               <div className="text-lg font-medium text-gray-700">

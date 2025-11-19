@@ -1,15 +1,11 @@
-
-import { Link } from "react-router-dom";
+// src/pages/Home.jsx
 import { 
   Activity, 
   Brain, 
   Clock, 
-  Ear, 
   Heart, 
   Scale, 
   Timer, 
-  TrendingUp, 
-  ArrowRight, 
   Shield, 
   Award, 
   Users, 
@@ -20,7 +16,6 @@ import AssessmentCard from "../components/AssessmentCard";
 import AssessmentDropdown from "../components/AssessmentDropdown";
 
 const Home = () => {
-
   const testCards = [
     {
       id: 1,
@@ -30,7 +25,7 @@ const Home = () => {
       status: "available",
       path: "/tests/psqi-intro",
       icon: Clock,
-      theme: "dark-green"
+      theme: "dark-green",
     },
     {
       id: 2,
@@ -40,7 +35,7 @@ const Home = () => {
       status: "available",
       path: "/tests/memory-intro",
       icon: Brain,
-      theme: "dark-green"
+      theme: "dark-green",
     },
     {
       id: 3,
@@ -48,9 +43,10 @@ const Home = () => {
       description: "Measure your cognitive processing speed and reflexes",
       duration: "2–3 min",
       status: "available",
-      path: "/tests/reaction-time-intro",
+      // ✅ this is the route you actually have in App.jsx
+      path: "/tests/reactiontime",
       icon: Timer,
-      theme: "dark-green"
+      theme: "dark-green",
     },
     {
       id: 4,
@@ -60,7 +56,7 @@ const Home = () => {
       status: "available",
       path: "/tests/pss-intro",
       icon: Scale,
-      theme: "dark-green"
+      theme: "dark-green",
     },
     {
       id: 5,
@@ -68,19 +64,21 @@ const Home = () => {
       description: "Self-reported assessment of cognitive reactivity",
       duration: "3–5 min",
       status: "available",
-      path: "/tests/self-reaction-intro",
+      // ✅ match App.jsx: /tests/selfreaction-test
+      path: "/tests/selfreaction-test",
       icon: Activity,
-      theme: "dark-green"
+      theme: "dark-green",
     },
     {
       id: 6,
       title: "Balance Test",
-      description: "Assess your postural stability and fall risk using AI pose detection",
+      description:
+        "Assess your postural stability and fall risk using AI pose detection",
       duration: "3–4 min",
       status: "available",
       path: "/tests/balance-intro",
       icon: Scale,
-      theme: "dark-green"
+      theme: "dark-green",
     },
     {
       id: 7,
@@ -90,102 +88,16 @@ const Home = () => {
       status: "available",
       path: "/tests/sf36-intro",
       icon: Heart,
-      theme: "dark-green"
-    }
+      theme: "dark-green",
+    },
   ];
-
-  // Previously defined cards (commented out to preserve code)
-  /*
-  {
-    id: 1,
-    title: "Reaction Time Test",
-    description: "Measure your cognitive processing speed and reflexes",
-    icon: Timer,
-    status: "available",
-    theme: "dark-green",
-    duration: "2-3 min",
-    path: "/reaction-time-test"
-  },
-  {
-    id: 2,
-    title: "Balance Test",
-    description: "Assess your postural stability and fall risk",
-    icon: Scale,
-    status: "available",
-    theme: "dark-green",
-    duration: "3-4 min",
-    path: "/balance-intro"
-  },
-  {
-    id: 3,
-    title: "Gait Speed Test",
-    description: "Evaluate your walking speed and mobility",
-    icon: TrendingUp,
-    status: "coming-soon",
-    theme: "yellow",
-    duration: "2-3 min",
-    path: "/gait-speed-intro"
-  },
-  {
-    id: 4,
-    title: "Chair Stand Test",
-    description: "Test your lower body strength and endurance",
-    icon: Activity,
-    status: "available",
-    theme: "dark-green",
-    duration: "1-2 min",
-    path: "/chair-stand-intro"
-  },
-  {
-    id: 5,
-    title: "Memory Recall Test",
-    description: "Assess your cognitive function and memory",
-    icon: Brain,
-    status: "available",
-    theme: "dark-green",
-    duration: "5-7 min",
-    path: "/tests/memory-intro"
-  },
-  {
-    id: 6,
-    title: "Pittsburgh Sleep Quality Index",
-    description: "Comprehensive assessment of sleep quality and patterns",
-    icon: Clock,
-    status: "available",
-    theme: "dark-green",
-    duration: "5-10 min",
-    path: "/tests/psqi-intro"
-  },
-  {
-    id: 7,
-    title: "Walking Speed & Grip Strength",
-    description: "Comprehensive assessment of mobility and upper body strength",
-    icon: Heart,
-    status: "coming-soon",
-    theme: "green",
-    duration: "2-3 min",
-    path: "/walking-grip-intro"
-  },
-  {
-    id: 8,
-    title: "Hearing Test",
-    description: "Evaluate your auditory processing capabilities",
-    icon: Ear,
-    status: "coming-soon",
-    theme: "dark-green",
-    duration: "3-5 min",
-    path: "/hearing-intro"
-  }
-  */
-
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-emerald-50/50">
       {/* Hero Section */}
       <PageSection className="relative py-20 lg:py-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 via-emerald-500/5 to-green-400/10"></div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
             <div className="flex justify-center mb-8">
@@ -208,10 +120,7 @@ const Home = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-              <AssessmentDropdown 
-                assessments={testCards}
-                buttonText="Start Assessment"
-              />
+              <AssessmentDropdown assessments={testCards} buttonText="Start Assessment" />
               <button className="border-2 border-green-600 text-green-600 hover:bg-green-50 px-8 py-4 text-lg font-semibold rounded-xl bg-transparent transition-all duration-300">
                 Learn More
               </button>
@@ -296,7 +205,7 @@ const Home = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-            <AssessmentDropdown 
+            <AssessmentDropdown
               assessments={testCards}
               buttonText="Start Full Assessment"
               buttonClassName="bg-white text-green-600 hover:bg-gray-50"
@@ -326,4 +235,4 @@ const Home = () => {
   );
 };
 
-export default Home; 
+export default Home;

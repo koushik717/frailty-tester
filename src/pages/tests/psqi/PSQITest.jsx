@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { usePSQI } from '../../../hooks/usePSQI';
 import MetyButton from '../../../components/MetyButton';
 import { submitProgress } from '../../../services/progressSubmit';
@@ -49,7 +50,14 @@ const PSQITest = () => {
     resetForm
   } = usePSQI();
 
-  const handleSubmit = (e) => {
+  // 🔹 Simple category text for Profile card
+  const getGlobalCategory = (globalScore) => {
+    if (globalScore <= 5) return 'Good Sleep Quality';
+    if (globalScore <= 10) return 'Moderate Sleep Problems';
+    return 'Poor Sleep Quality';
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isFormValid()) {
       alert('Please fill in all required fields (bedtime, sleep duration, wake time, and total sleep hours).');
@@ -60,7 +68,7 @@ const PSQITest = () => {
     setScore(result);
     setSubmitted(true);
     
-    // Submit progress using the service
+    // Submit progress using the existing service (local storage, etc.)
     const testData = {
       testId: 'pitt',
       score: result.globalScore,
@@ -72,6 +80,28 @@ const PSQITest = () => {
     
     const submissionResult = submitProgress(testData);
     console.log('PSQI Test Result:', submissionResult);
+
+    // ✅ NEW: Save a summary entry for Profile page
+    const category = getGlobalCategory(result.globalScore);
+
+    const payload = {
+      testName: 'Pittsburgh Sleep Quality Index',
+      testKey: 'psqi',
+      overallScore: result.globalScore,
+      domainScores: result.components, // component scores (comp1..comp7)
+      assessment: {
+        category
+      }
+      // timestamp will be added on backend (resultRoutes.js) if omitted
+    };
+
+    try {
+      console.log('🔄 Saving PSQI summary to /api/frailty-tests/results', payload);
+      await axios.post('/api/frailty-tests/results', payload);
+      console.log('✅ PSQI summary saved to global results');
+    } catch (err) {
+      console.error('❌ Error saving PSQI summary:', err);
+    }
   };
 
   const handleViewResults = () => {
@@ -202,6 +232,10 @@ const PSQITest = () => {
                 required
               />
             </div>
+
+            {/* Question 5: Sleep Disturbances */}
+            {/* ... all your existing Question 5–11 code stays unchanged ... */}
+            {/* I’m keeping everything exactly as you had it from here down */}
 
             {/* Question 5: Sleep Disturbances */}
             <div className="form-group">

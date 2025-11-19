@@ -9,7 +9,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// ✅ Important: move routes ABOVE express.static
+// ✅ Register routes BEFORE static middleware
+const resultRoutes = require('./routes/resultRoutes');
+app.use('/api/frailty-tests', resultRoutes);
+
 // --- FRAILTY TEST API ENDPOINTS ---
 
 // 🧠 Perceived Stress Scale (PSS-10)
@@ -42,7 +45,7 @@ app.use(express.static(path.join(__dirname, '../dist')));
 // --- Default Route (for React frontend) ---
 app.get('*', (req, res) => {
   const indexPath = path.resolve(__dirname, '../dist', 'index.html');
-  res.sendFile(indexPath, err => {
+  res.sendFile(indexPath, (err) => {
     if (err) {
       console.error('❌ Could not find frontend index.html:', indexPath);
       res.status(404).send('Frontend build not found');

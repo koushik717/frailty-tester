@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 import { useDigitMemoryTest } from '../../../hooks/useDigitMemoryTest';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 const MemoryTest = () => {
   const navigate = useNavigate();
@@ -34,6 +37,48 @@ const MemoryTest = () => {
   const [message, setMessage] = useState('');
   const [showNextButton, setShowNextButton] = useState(false);
 
+  // ---------- helper: map score to category & save to /results ----------
+  const saveResultToProfile = async (summaryData) => {
+    if (!summaryData) return;
+
+    // Prefer highestDigits from hook, fall back to summary fields
+    const scoreFromHook = typeof highestDigits === 'number' ? highestDigits : null;
+    const scoreFromSummary =
+      summaryData.highestDigits ??
+      summaryData.maxLength ??
+      summaryData.score ??
+      null;
+
+    const overallScore = scoreFromHook ?? scoreFromSummary ?? 0;
+
+    let category = 'Needs Improvement';
+    if (overallScore >= 9) {
+      category = 'Excellent';
+    } else if (overallScore >= 7) {
+      category = 'Good';
+    } else if (overallScore >= 5) {
+      category = 'Average';
+    }
+
+    const payload = {
+      testName: 'Digit Memory Test',
+      testKey: 'digit-memory',
+      overallScore,
+      startedAt: summaryData.startedAt || null,
+      endedAt: summaryData.endedAt || null,
+      assessment: {
+        category
+      }
+    };
+
+    try {
+      await axios.post(`${API_BASE_URL}/api/frailty-tests/results`, payload);
+      console.log('Digit Memory summary saved to profile:', payload);
+    } catch (err) {
+      console.error('Error saving Digit Memory result to profile:', err);
+    }
+  };
+
   // Initialize based on mode
   useEffect(() => {
     if (mode === 'practice') {
@@ -56,9 +101,13 @@ const MemoryTest = () => {
       if (result.gameOver) {
         // Reached max length
         setMessage('Perfect! You reached the maximum sequence length.');
+
+        const resultsSummary = summary();
+        saveResultToProfile(resultsSummary);
+
         setTimeout(() => {
           navigate('/tests/memory-results', { 
-            state: { results: summary() } 
+            state: { results: resultsSummary } 
           });
         }, 2000);
       } else {
@@ -70,9 +119,13 @@ const MemoryTest = () => {
       if (result.gameOver) {
         // Game over due to failures
         setMessage('Game Over. You made too many mistakes.');
+
+        const resultsSummary = summary();
+        saveResultToProfile(resultsSummary);
+
         setTimeout(() => {
           navigate('/tests/memory-results', { 
-            state: { results: summary() } 
+            state: { results: resultsSummary } 
           });
         }, 2000);
       } else {
@@ -92,8 +145,11 @@ const MemoryTest = () => {
 
   // Handle early exit
   const handleEndTest = () => {
+    const resultsSummary = summary();
+    saveResultToProfile(resultsSummary);
+
     navigate('/tests/memory-results', { 
-      state: { results: summary() } 
+      state: { results: resultsSummary } 
     });
   };
 
