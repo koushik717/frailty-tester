@@ -1,17 +1,40 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const passport = require('passport');
+const session = require('express-session');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // --- Middleware ---
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
+
+// Session configuration
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false } // Set to true in production with HTTPS
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // ✅ Register routes BEFORE static middleware
 const resultRoutes = require('./routes/resultRoutes');
+const authRoutes = require('./routes/authRoutes');
+const googleAuthRoutes = require('./routes/googleAuth');
+
 app.use('/api/frailty-tests', resultRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/auth', googleAuthRoutes);
 
 // --- FRAILTY TEST API ENDPOINTS ---
 

@@ -59,11 +59,11 @@ const ProfilePage = () => {
   const lastTestDate =
     totalTests > 0
       ? formatDate(
-          results
-            .map((r) => r.timestamp || r.date)
-            .filter(Boolean)
-            .sort((a, b) => new Date(b) - new Date(a))[0]
-        )
+        results
+          .map((r) => r.timestamp || r.date)
+          .filter(Boolean)
+          .sort((a, b) => new Date(b) - new Date(a))[0]
+      )
       : "No tests yet";
 
   const headerCategory =
@@ -111,6 +111,74 @@ const ProfilePage = () => {
               <p className="text-xs opacity-80">Recent Category</p>
               <p className="text-lg font-semibold">{headerCategory}</p>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Available Tests Section */}
+      <div className="px-4 sm:px-8 mb-8">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <BarChart2 className="w-6 h-6 text-green-600" />
+            Available Tests
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            <a
+              href="/tests/psqi-intro"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
+            >
+              <span className="text-2xl">💤</span>
+              <span className="text-sm font-medium text-gray-700 text-center">Sleep Quality</span>
+            </a>
+            <a
+              href="/tests/memory-intro"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
+            >
+              <span className="text-2xl">🧠</span>
+              <span className="text-sm font-medium text-gray-700 text-center">Memory Test</span>
+            </a>
+            <a
+              href="/tests/reactiontime"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
+            >
+              <span className="text-2xl">⚡</span>
+              <span className="text-sm font-medium text-gray-700 text-center">Reaction Time</span>
+            </a>
+            <a
+              href="/tests/pss-intro"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
+            >
+              <span className="text-2xl">😰</span>
+              <span className="text-sm font-medium text-gray-700 text-center">Stress Scale</span>
+            </a>
+            <a
+              href="/tests/selfreaction-test"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
+            >
+              <span className="text-2xl">🎯</span>
+              <span className="text-sm font-medium text-gray-700 text-center">Self Reaction</span>
+            </a>
+            <a
+              href="/tests/balance-intro"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
+            >
+              <span className="text-2xl">⚖️</span>
+              <span className="text-sm font-medium text-gray-700 text-center">Balance Test</span>
+            </a>
+            <a
+              href="/tests/sf36-intro"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
+            >
+              <span className="text-2xl">❤️</span>
+              <span className="text-sm font-medium text-gray-700 text-center">SF-36 Health</span>
+            </a>
+            <a
+              href="/tests/hearing-intro"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
+            >
+              <span className="text-2xl">🎧</span>
+              <span className="text-sm font-medium text-gray-700 text-center">Hearing Test</span>
+            </a>
           </div>
         </div>
       </div>

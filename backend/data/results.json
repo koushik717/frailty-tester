@@ -226,6 +226,21 @@
         "expectedRange": "",
         "recommendedExercises": []
       }
+    },
+    {
+      "timestamp": "2025-11-22T21:20:16.726Z",
+      "testName": "PSS-10 Stress Test",
+      "testKey": "pss10",
+      "overallScore": 21,
+      "domainScores": null,
+      "startedAt": null,
+      "endedAt": null,
+      "assessment": {
+        "category": "moderate",
+        "ageGroup": "",
+        "expectedRange": "",
+        "recommendedExercises": []
+      }
     }
   ]
 }

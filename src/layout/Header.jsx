@@ -1,9 +1,11 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { openSettings } from "../store/slices/settingsSlice";
 import { returnHome } from "../store/slices/stageSlice";
-import { Link } from "react-router-dom";
+import { logoutUser, loadUserFromStorage } from "../store/slices/userSlice";
+import { Link, useNavigate } from "react-router-dom";
 import classNames from "classnames";
+import { LogOut } from "lucide-react";
 
 // Semantic class constants - FrailtyTester branding
 const headerContainerClasses = "sticky top-0 z-50 w-full bg-white shadow-md border-b border-neutral-light";
@@ -20,6 +22,19 @@ const navLinkClasses = classNames(
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+
+  // Load user from localStorage on mount
+  useEffect(() => {
+    dispatch(loadUserFromStorage());
+  }, [dispatch]);
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    navigate('/');
+  };
+
   return (
     <header className={headerContainerClasses}>
       <div className={headerContentClasses}>
@@ -45,18 +60,38 @@ const Header = () => {
           >
             About
           </Link>
-          <Link
-            to="/settings"
-            className={navLinkClasses}
-          >
-            Settings
-          </Link>
-          <Link
-            to="/profile"
-            className={navLinkClasses}
-          >
-            Profile
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link
+                to="/profile"
+                className={navLinkClasses}
+              >
+                {user?.name || 'Profile'}
+              </Link>
+              <button
+                onClick={handleLogout}
+                className={classNames(navLinkClasses, "flex items-center gap-2")}
+              >
+                <LogOut className="h-4 w-4" />
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className={navLinkClasses}
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className={classNames(navLinkClasses, "bg-primary text-white hover:bg-primary-dark hover:text-white px-8 shadow-md hover:shadow-lg")}
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </nav>
       </div>
     </header>

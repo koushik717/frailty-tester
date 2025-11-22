@@ -6,6 +6,7 @@ import positionReducer from "./slices/positionSlice";
 import settingsReducer from "./slices/settingsSlice";
 import webcamReducer from "./slices/webcamSlice";
 import resultsReducer from "./slices/resultSlice";
+import userReducer from "./slices/userSlice";
 
 import { resultApi } from '../services/resultAPI';
 import { exercisesApi } from '../services/exercisesAPI';
@@ -21,6 +22,7 @@ export const store = configureStore({
     settings: settingsReducer,  // For opening/closing SettingsModal
     webcam: webcamReducer,      // For webcam device & resolution
     results: resultsReducer,
+    user: userReducer,           // For user authentication state
 
     [resultApi.reducerPath]: resultApi.reducer,
     [exercisesApi.reducerPath]: exercisesApi.reducer,

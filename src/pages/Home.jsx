@@ -1,15 +1,16 @@
 // src/pages/Home.jsx
-import { 
-  Activity, 
-  Brain, 
-  Clock, 
-  Heart, 
-  Scale, 
-  Timer, 
-  Shield, 
-  Award, 
-  Users, 
-  BarChart3 
+import {
+  Activity,
+  Brain,
+  Clock,
+  Heart,
+  Scale,
+  Timer,
+  Shield,
+  Award,
+  Users,
+  BarChart3,
+  Ear
 } from "lucide-react";
 import PageSection from "../components/PageSection";
 import AssessmentCard from "../components/AssessmentCard";
@@ -88,6 +89,16 @@ const Home = () => {
       status: "available",
       path: "/tests/sf36-intro",
       icon: Heart,
+      theme: "dark-green",
+    },
+    {
+      id: 8,
+      title: "Hearing Test Suite",
+      description: "Comprehensive hearing assessment with calibrated tests",
+      duration: "10–15 min",
+      status: "available",
+      path: "/tests/hearing-intro",
+      icon: Ear,
       theme: "dark-green",
     },
   ];

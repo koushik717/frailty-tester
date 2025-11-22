@@ -21,6 +21,11 @@ import SelfReactionTest from "./pages/tests/SelfReactionTest";
 import ReactionTimeTestPage from "./pages/ReactionTimeTestPage";
 import ComingSoonPage from "./pages/screens/ComingSoonPage";
 import ProfilePage from "./pages/ProfilePage";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import AuthSuccess from "./pages/AuthSuccess";
+import HearingTestIntro from "./pages/screens/HearingTestIntro";
+import HearingTest from "./pages/tests/HearingTest";
 
 const App = () => {
   return (
@@ -45,6 +50,11 @@ const App = () => {
         <Route path="/tests/selfreaction-intro" element={<SelfReactionIntro />} />
         <Route path="/tests/selfreaction-test" element={<SelfReactionTest />} />
         <Route path="/tests/reactiontime" element={<ReactionTimeTestPage />} />
+        <Route path="/tests/hearing-intro" element={<HearingTestIntro />} />
+        <Route path="/tests/hearing-test" element={<HearingTest />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/auth-success" element={<AuthSuccess />} />
         <Route path="*" element={<ComingSoonPage />} />
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>
@@ -53,3 +63,4 @@ const App = () => {
 };
 
 export default App;
+
