@@ -8,7 +8,17 @@ import {
   AlertCircle,
   X,
   User as UserIcon,
+  ChevronRight,
+  Clock,
+  Activity,
+  Brain,
+  Scale,
+  Heart,
+  Ear,
+  TrendingUp,
+  History
 } from "lucide-react";
+import HealthChart from "../components/HealthChart";
 
 const ProfilePage = () => {
   const [results, setResults] = useState([]);
@@ -79,238 +89,269 @@ const ProfilePage = () => {
     return acc;
   }, {});
 
+  const availableTests = [
+    { title: "Sleep Quality", icon: Clock, path: "/tests/psqi-intro", color: "text-blue-600", bg: "bg-blue-50" },
+    { title: "Memory Test", icon: Brain, path: "/tests/memory-intro", color: "text-purple-600", bg: "bg-purple-50" },
+    { title: "Reaction Time", icon: Activity, path: "/tests/reactiontime", color: "text-orange-600", bg: "bg-orange-50" },
+    { title: "Stress Scale", icon: Scale, path: "/tests/pss-intro", color: "text-red-600", bg: "bg-red-50" },
+    { title: "Self Reaction", icon: TrendingUp, path: "/tests/selfreaction-test", color: "text-indigo-600", bg: "bg-indigo-50" },
+    { title: "Balance Test", icon: Scale, path: "/tests/balance-intro", color: "text-teal-600", bg: "bg-teal-50" },
+    { title: "SF-36 Health", icon: Heart, path: "/tests/sf36-intro", color: "text-rose-600", bg: "bg-rose-50" },
+    { title: "Hearing Test", icon: Ear, path: "/tests/hearing-intro", color: "text-green-600", bg: "bg-green-50" },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 pb-10">
-      {/* top summary header */}
-      <div className="bg-gradient-to-r from-green-600 to-green-500 text-white px-4 sm:px-8 pt-6 pb-20 rounded-b-3xl shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          {/* left: avatar + name */}
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center">
-              <UserIcon className="w-7 h-7 text-white" />
-            </div>
-            <div>
-              <p className="text-sm opacity-80">Welcome back</p>
-              <h1 className="text-2xl font-semibold leading-tight">
-                Welcome, User
-              </h1>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gray-50/50 pb-20 font-sans">
+      {/* Top Header Section */}
+      <div className="relative bg-gradient-to-br from-green-700 via-emerald-600 to-teal-700 text-white pb-32 pt-10 px-6 rounded-b-[3rem] shadow-xl overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
+          <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
+          <div className="absolute top-1/2 right-0 w-64 h-64 rounded-full bg-teal-300 blur-3xl"></div>
+        </div>
 
-          {/* right: quick stats */}
-          <div className="flex gap-3 flex-wrap">
-            <div className="bg-white/10 rounded-2xl px-4 py-2">
-              <p className="text-xs opacity-80">Total Tests</p>
-              <p className="text-lg font-semibold">{totalTests}</p>
+        <div className="relative max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
+            {/* User Welcome */}
+            <div className="flex items-center gap-5">
+              <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center shadow-inner">
+                <UserIcon className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <p className="text-green-100 font-medium mb-1">Welcome back,</p>
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight">User Profile</h1>
+              </div>
             </div>
-            <div className="bg-white/10 rounded-2xl px-4 py-2">
-              <p className="text-xs opacity-80">Last Test</p>
-              <p className="text-lg font-semibold">{lastTestDate}</p>
-            </div>
-            <div className="bg-white/10 rounded-2xl px-4 py-2">
-              <p className="text-xs opacity-80">Recent Category</p>
-              <p className="text-lg font-semibold">{headerCategory}</p>
+
+            {/* Quick Stats Cards */}
+            <div className="flex gap-4 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+              <div className="min-w-[140px] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col justify-between hover:bg-white/15 transition-colors cursor-default">
+                <div className="flex items-center gap-2 text-green-100 mb-2">
+                  <Activity className="w-4 h-4" />
+                  <span className="text-xs font-medium uppercase tracking-wider">Total Tests</span>
+                </div>
+                <p className="text-2xl font-bold">{totalTests}</p>
+              </div>
+
+              <div className="min-w-[140px] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col justify-between hover:bg-white/15 transition-colors cursor-default">
+                <div className="flex items-center gap-2 text-green-100 mb-2">
+                  <CalendarDays className="w-4 h-4" />
+                  <span className="text-xs font-medium uppercase tracking-wider">Last Activity</span>
+                </div>
+                <p className="text-lg font-semibold truncate">{lastTestDate}</p>
+              </div>
+
+              <div className="min-w-[140px] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col justify-between hover:bg-white/15 transition-colors cursor-default">
+                <div className="flex items-center gap-2 text-green-100 mb-2">
+                  <TrendingUp className="w-4 h-4" />
+                  <span className="text-xs font-medium uppercase tracking-wider">Status</span>
+                </div>
+                <p className="text-lg font-semibold truncate">{headerCategory}</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Available Tests Section */}
-      <div className="px-4 sm:px-8 mb-8">
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-            <BarChart2 className="w-6 h-6 text-green-600" />
-            Available Tests
+      <div className="max-w-7xl mx-auto px-6 -mt-24 relative z-10 space-y-12">
+
+        {/* Health Trends Chart Section */}
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+              <span className="w-1 h-6 bg-green-500 rounded-full block"></span>
+              Health Insights
+            </h2>
+          </div>
+          <HealthChart />
+        </section>
+
+        {/* Available Tests Section */}
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+              <span className="w-1 h-6 bg-green-500 rounded-full block"></span>
+              Available Assessments
+            </h2>
+            <span className="text-sm text-gray-500 font-medium">{availableTests.length} tests available</span>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {availableTests.map((test, idx) => (
+              <a
+                key={idx}
+                href={test.path}
+                className="group bg-white p-5 rounded-2xl shadow-sm hover:shadow-md border border-gray-100 hover:border-green-200 transition-all duration-300 flex flex-col items-center text-center gap-3 relative overflow-hidden"
+              >
+                <div className={`w-12 h-12 rounded-full ${test.bg} flex items-center justify-center mb-1 group-hover:scale-110 transition-transform duration-300`}>
+                  <test.icon className={`w-6 h-6 ${test.color}`} />
+                </div>
+                <h3 className="font-semibold text-gray-800 text-sm">{test.title}</h3>
+                <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
+                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* Recent Results Section */}
+        <section>
+          <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-6">
+            <span className="w-1 h-6 bg-green-500 rounded-full block"></span>
+            Recent Results
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            <a
-              href="/tests/psqi-intro"
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
-            >
-              <span className="text-2xl">💤</span>
-              <span className="text-sm font-medium text-gray-700 text-center">Sleep Quality</span>
-            </a>
-            <a
-              href="/tests/memory-intro"
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
-            >
-              <span className="text-2xl">🧠</span>
-              <span className="text-sm font-medium text-gray-700 text-center">Memory Test</span>
-            </a>
-            <a
-              href="/tests/reactiontime"
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
-            >
-              <span className="text-2xl">⚡</span>
-              <span className="text-sm font-medium text-gray-700 text-center">Reaction Time</span>
-            </a>
-            <a
-              href="/tests/pss-intro"
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
-            >
-              <span className="text-2xl">😰</span>
-              <span className="text-sm font-medium text-gray-700 text-center">Stress Scale</span>
-            </a>
-            <a
-              href="/tests/selfreaction-test"
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
-            >
-              <span className="text-2xl">🎯</span>
-              <span className="text-sm font-medium text-gray-700 text-center">Self Reaction</span>
-            </a>
-            <a
-              href="/tests/balance-intro"
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
-            >
-              <span className="text-2xl">⚖️</span>
-              <span className="text-sm font-medium text-gray-700 text-center">Balance Test</span>
-            </a>
-            <a
-              href="/tests/sf36-intro"
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
-            >
-              <span className="text-2xl">❤️</span>
-              <span className="text-sm font-medium text-gray-700 text-center">SF-36 Health</span>
-            </a>
-            <a
-              href="/tests/hearing-intro"
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-green-50 hover:bg-green-100 transition-colors border border-green-200"
-            >
-              <span className="text-2xl">🎧</span>
-              <span className="text-sm font-medium text-gray-700 text-center">Hearing Test</span>
-            </a>
-          </div>
-        </div>
-      </div>
 
-      {/* main content (cards) */}
-      <div className="-mt-12 px-4 sm:px-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-          My Test Results
-        </h2>
-
-        {loading ? (
-          <div className="flex justify-center items-center mt-20">
-            <Loader2 className="animate-spin w-8 h-8 text-green-600" />
-          </div>
-        ) : Object.keys(groupedResults).length === 0 ? (
-          <div className="flex flex-col justify-center items-center mt-20 text-gray-500">
-            <AlertCircle className="w-10 h-10 mb-3 text-gray-400" />
-            <p className="text-lg">No results yet</p>
-          </div>
-        ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {Object.entries(groupedResults).map(([name, tests], index) => {
-              const lastTest = tests[tests.length - 1];
-              return (
-                <div
-                  key={index}
-                  className="shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 bg-white rounded-2xl flex flex-col"
-                >
-                  <div className="p-6 flex-1 flex flex-col">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-lg font-semibold text-gray-800">
-                        {name}
-                      </h3>
-                      <BarChart2 className="text-green-500 w-5 h-5" />
+          {loading ? (
+            <div className="flex justify-center py-20">
+              <Loader2 className="animate-spin w-8 h-8 text-green-600" />
+            </div>
+          ) : Object.keys(groupedResults).length === 0 ? (
+            <div className="bg-white rounded-3xl p-10 text-center border border-dashed border-gray-300">
+              <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <History className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No results yet</h3>
+              <p className="text-gray-500 max-w-md mx-auto mb-6">
+                You haven't completed any assessments yet. Start your first test to see your health insights here.
+              </p>
+              <a href="/" className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors">
+                Start Assessment
+              </a>
+            </div>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {Object.entries(groupedResults).map(([name, tests], index) => {
+                const lastTest = tests[tests.length - 1];
+                return (
+                  <div
+                    key={index}
+                    className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg border border-gray-100 transition-all duration-300 flex flex-col"
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="font-bold text-gray-800 text-lg line-clamp-1" title={name}>{name}</h3>
+                      <div className="bg-green-50 text-green-700 text-xs font-bold px-2 py-1 rounded-lg uppercase tracking-wide">
+                        Latest
+                      </div>
                     </div>
 
-                    <div className="flex items-center text-sm text-gray-500 mb-3">
-                      <CalendarDays className="w-4 h-4 mr-1" />
-                      {formatDate(lastTest.timestamp || lastTest.date)}
+                    <div className="space-y-3 mb-6 flex-1">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-500 flex items-center gap-2">
+                          <CalendarDays className="w-4 h-4" /> Date
+                        </span>
+                        <span className="font-medium text-gray-900">{formatDate(lastTest.timestamp || lastTest.date)}</span>
+                      </div>
+
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-500 flex items-center gap-2">
+                          <BarChart2 className="w-4 h-4" /> Score
+                        </span>
+                        <span className="font-bold text-gray-900 bg-gray-50 px-2 py-0.5 rounded-md">
+                          {lastTest.overallScore || lastTest.totalScore || "N/A"}
+                        </span>
+                      </div>
+
+                      <div className="pt-3 border-t border-gray-50">
+                        <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Category</p>
+                        <p className="font-medium text-green-700 text-sm">
+                          {lastTest.assessment?.category || "Completed"}
+                        </p>
+                      </div>
                     </div>
-
-                    <p className="text-md font-medium text-gray-700 mb-4">
-                      Overall Score:{" "}
-                      <span className="text-green-600 font-bold">
-                        {lastTest.overallScore ||
-                          lastTest.totalScore ||
-                          "N/A"}
-                      </span>
-                    </p>
-
-                    <p className="text-sm text-gray-600 mb-2">
-                      Category:{" "}
-                      <span className="text-green-600 font-semibold">
-                        {lastTest.assessment?.category || "N/A"}
-                      </span>
-                    </p>
 
                     <button
-                      onClick={() =>
-                        setSelectedResult({ name, tests })
-                      }
-                      className="mt-auto w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl transition"
+                      onClick={() => setSelectedResult({ name, tests })}
+                      className="w-full py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 transition-all flex items-center justify-center gap-2 group-hover:bg-green-600 group-hover:text-white group-hover:border-green-600"
                     >
-                      View Details
+                      View History
+                      <ChevronRight className="w-4 h-4" />
                     </button>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </div>
+          )}
+        </section>
       </div>
 
-      {/* Sliding Drawer */}
+      {/* Details Drawer */}
       <AnimatePresence>
         {selectedResult && (
           <>
             <motion.div
-              className="fixed inset-0 bg-black/40 z-40"
+              className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedResult(null)}
             />
             <motion.div
-              className="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white shadow-2xl z-50 flex flex-col rounded-l-3xl"
+              className="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-white shadow-2xl z-50 flex flex-col"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 120, damping: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              <div className="flex items-center justify-between border-b p-5">
-                <h2 className="text-2xl font-bold text-gray-800">
-                  {selectedResult.name}
-                </h2>
+              <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800">{selectedResult.name}</h2>
+                  <p className="text-sm text-gray-500">History Timeline</p>
+                </div>
                 <button
                   onClick={() => setSelectedResult(null)}
-                  className="rounded-full p-2 hover:bg-gray-100"
+                  className="p-2 hover:bg-gray-200 rounded-full transition-colors"
                 >
-                  <X className="w-5 h-5 text-gray-600" />
+                  <X className="w-6 h-6 text-gray-500" />
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                {selectedResult.tests.map((t, i) => (
-                  <div
-                    key={i}
-                    className="border border-gray-100 rounded-lg p-4"
-                  >
-                    <p className="text-sm text-gray-500 mb-1">
-                      {formatDate(t.timestamp || t.date)}
-                    </p>
-                    <p className="text-gray-800 font-medium">
-                      Score:{" "}
-                      <span className="text-green-600 font-semibold">
-                        {t.overallScore || t.totalScore || "N/A"}
-                      </span>
-                    </p>
-                    <p className="text-gray-600">
-                      Category:{" "}
-                      <span className="text-green-600 font-semibold">
-                        {t.assessment?.category || "N/A"}
-                      </span>
-                    </p>
-                  </div>
-                ))}
+              <div className="flex-1 overflow-y-auto p-6">
+                <div className="relative border-l-2 border-gray-100 ml-3 space-y-8">
+                  {selectedResult.tests.map((t, i) => (
+                    <div key={i} className="relative pl-8">
+                      {/* Timeline Dot */}
+                      <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full border-4 border-white bg-green-500 shadow-sm"></div>
+
+                      <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-sm font-medium text-gray-400">
+                            {formatDate(t.timestamp || t.date)}
+                          </span>
+                          {i === selectedResult.tests.length - 1 && (
+                            <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Latest</span>
+                          )}
+                        </div>
+
+                        <div className="mb-3">
+                          <span className="text-3xl font-bold text-gray-900">
+                            {t.overallScore || t.totalScore || "N/A"}
+                          </span>
+                          <span className="text-sm text-gray-500 ml-2">Score</span>
+                        </div>
+
+                        {t.assessment?.category && (
+                          <div className="bg-gray-50 rounded-lg p-3">
+                            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Result Category</p>
+                            <p className="font-medium text-gray-800">{t.assessment.category}</p>
+                          </div>
+                        )}
+
+                        {t.assessment?.notes && (
+                          <div className="mt-3 text-sm text-gray-600 italic border-l-2 border-gray-200 pl-3">
+                            "{t.assessment.notes}"
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="border-t p-5">
+              <div className="p-6 border-t border-gray-100 bg-gray-50">
                 <button
                   onClick={() => setSelectedResult(null)}
-                  className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl transition"
+                  className="w-full bg-white border border-gray-300 text-gray-700 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-colors"
                 >
                   Close
                 </button>

@@ -27,37 +27,42 @@ import AuthSuccess from "./pages/AuthSuccess";
 import HearingTestIntro from "./pages/screens/HearingTestIntro";
 import HearingTest from "./pages/tests/HearingTest";
 
+import Footer from "./layout/Footer";
+
 const App = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/tests/balance-intro" element={<BalanceIntro />} />
-        <Route path="/tests/balance-test" element={<BalanceTest />} />
-        <Route path="/tests/chair-stand-intro" element={<ChairStandIntro />} />
-        <Route path="/tests/chair-stand-test" element={<ChairStandTest />} />
-        <Route path="/tests/memory-intro" element={<MemoryIntro />} />
-        <Route path="/tests/memory-test" element={<MemoryTest />} />
-        <Route path="/tests/memory-results" element={<MemoryResults />} />
-        <Route path="/tests/psqi-intro" element={<PSQIIntro />} />
-        <Route path="/tests/psqi-test" element={<PSQITest />} />
-        <Route path="/tests/psqi-results" element={<PSQIResults />} />
-        <Route path="/tests/pss-intro" element={<PSSIntro />} />
-        <Route path="/tests/pss-test" element={<PSSTest />} />
-        <Route path="/tests/sf36-intro" element={<SF36Intro />} />
-        <Route path="/tests/sf36-test" element={<SF36Test />} />
-        <Route path="/tests/selfreaction-intro" element={<SelfReactionIntro />} />
-        <Route path="/tests/selfreaction-test" element={<SelfReactionTest />} />
-        <Route path="/tests/reactiontime" element={<ReactionTimeTestPage />} />
-        <Route path="/tests/hearing-intro" element={<HearingTestIntro />} />
-        <Route path="/tests/hearing-test" element={<HearingTest />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/auth-success" element={<AuthSuccess />} />
-        <Route path="*" element={<ComingSoonPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-      </Routes>
+      <div className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/tests/balance-intro" element={<BalanceIntro />} />
+          <Route path="/tests/balance-test" element={<BalanceTest />} />
+          <Route path="/tests/chair-stand-intro" element={<ChairStandIntro />} />
+          <Route path="/tests/chair-stand-test" element={<ChairStandTest />} />
+          <Route path="/tests/memory-intro" element={<MemoryIntro />} />
+          <Route path="/tests/memory-test" element={<MemoryTest />} />
+          <Route path="/tests/memory-results" element={<MemoryResults />} />
+          <Route path="/tests/psqi-intro" element={<PSQIIntro />} />
+          <Route path="/tests/psqi-test" element={<PSQITest />} />
+          <Route path="/tests/psqi-results" element={<PSQIResults />} />
+          <Route path="/tests/pss-intro" element={<PSSIntro />} />
+          <Route path="/tests/pss-test" element={<PSSTest />} />
+          <Route path="/tests/sf36-intro" element={<SF36Intro />} />
+          <Route path="/tests/sf36-test" element={<SF36Test />} />
+          <Route path="/tests/selfreaction-intro" element={<SelfReactionIntro />} />
+          <Route path="/tests/selfreaction-test" element={<SelfReactionTest />} />
+          <Route path="/tests/reactiontime" element={<ReactionTimeTestPage />} />
+          <Route path="/tests/hearing-intro" element={<HearingTestIntro />} />
+          <Route path="/tests/hearing-test" element={<HearingTest />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/auth-success" element={<AuthSuccess />} />
+          <Route path="*" element={<ComingSoonPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+        </Routes>
+      </div>
+      <Footer />
     </div>
   );
 };

@@ -14,8 +14,8 @@ import { ChevronDown } from "lucide-react";
  * @param {string} props.dropdownClassName - CSS classes for the dropdown container
  * @returns {JSX.Element} Dropdown component with assessment options
  */
-const AssessmentDropdown = ({ 
-  assessments, 
+const AssessmentDropdown = ({
+  assessments,
   buttonText = "Start Assessment",
   buttonClassName = "",
   dropdownClassName = ""
@@ -69,8 +69,8 @@ const AssessmentDropdown = ({
         className={`bg-primary hover:bg-[#34C759] text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center ${buttonClassName}`}
       >
         {buttonText}
-        <ChevronDown 
-          className={`ml-2 w-5 h-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+        <ChevronDown
+          className={`ml-2 w-5 h-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
 
@@ -83,9 +83,9 @@ const AssessmentDropdown = ({
               Choose an Assessment
             </h3>
           </div>
-          
+
           {/* Assessment Items */}
-          <div className="max-h-64 overflow-y-auto py-2 space-y-2">
+          <div className="max-h-96 overflow-y-auto py-2 space-y-2">
             {availableAssessments.map((assessment) => (
               <Link
                 key={assessment.id}
@@ -100,7 +100,7 @@ const AssessmentDropdown = ({
               </Link>
             ))}
           </div>
-          
+
           {/* Dropdown Footer */}
           <div className="px-4 py-2 border-t border-neutral-100 bg-neutral-50 rounded-b-lg">
             <p className="text-xs text-neutral-500 font-sans">
