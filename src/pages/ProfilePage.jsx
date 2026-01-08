@@ -18,18 +18,25 @@ import {
   TrendingUp,
   History
 } from "lucide-react";
-import HealthChart from "../components/HealthChart";
+
+
+import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { fetchPersonalDetails } from "../store/slices/userSlice";
 
 const ProfilePage = () => {
+  const { user, personalDetails } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedResult, setSelectedResult] = useState(null);
 
-  // fetch test results
+  // fetch test results and personal details
   useEffect(() => {
+    dispatch(fetchPersonalDetails());
     const fetchResults = async () => {
       try {
-        const res = await axios.get("/api/frailty-tests/results");
+        const res = await axios.get(`/api/frailty-tests/results`, { withCredentials: true });
 
         let data = res.data;
         if (data && !Array.isArray(data) && Array.isArray(data.results)) {
@@ -63,6 +70,8 @@ const ProfilePage = () => {
       day: "numeric",
     });
   };
+
+
 
   // ===== derived header stats =====
   const totalTests = results.length;
@@ -103,7 +112,7 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen bg-gray-50/50 pb-20 font-sans">
       {/* Top Header Section */}
-      <div className="relative bg-gradient-to-br from-green-700 via-emerald-600 to-teal-700 text-white pb-32 pt-10 px-6 rounded-b-[3rem] shadow-xl overflow-hidden">
+      <div className="relative bg-gradient-to-br from-green-700 via-emerald-600 to-teal-700 text-white pb-32 pt-40 px-6 rounded-b-[3rem] shadow-xl overflow-hidden">
         {/* Decorative background elements */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
           <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
@@ -119,7 +128,7 @@ const ProfilePage = () => {
               </div>
               <div>
                 <p className="text-green-100 font-medium mb-1">Welcome back,</p>
-                <h1 className="text-3xl md:text-4xl font-bold tracking-tight">User Profile</h1>
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight">{user?.name || "User Profile"}</h1>
               </div>
             </div>
 
@@ -156,15 +165,40 @@ const ProfilePage = () => {
       <div className="max-w-7xl mx-auto px-6 -mt-24 relative z-10 space-y-12">
 
         {/* Health Trends Chart Section */}
-        <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+
+
+        {/* User Stats / Details Section */}
+        {personalDetails && (
+          <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-6">
               <span className="w-1 h-6 bg-green-500 rounded-full block"></span>
-              Health Insights
+              Your Details
             </h2>
-          </div>
-          <HealthChart />
-        </section>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Age</p>
+                <p className="font-semibold text-gray-900 text-lg">{personalDetails.age || '-'}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Gender</p>
+                <p className="font-semibold text-gray-900 text-lg capitalize">{personalDetails.gender || '-'}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Height</p>
+                <p className="font-semibold text-gray-900 text-lg">{personalDetails.height} {personalDetails.unitHeight}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Weight</p>
+                <p className="font-semibold text-gray-900 text-lg">{personalDetails.weight} {personalDetails.unitWeight}</p>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-gray-100 flex justify-end">
+              <Link to="/personal-details" className="text-sm font-semibold text-green-600 hover:text-green-700">
+                Edit Details &rarr;
+              </Link>
+            </div>
+          </section>
+        )}
 
         {/* Available Tests Section */}
         <section>
@@ -215,9 +249,9 @@ const ProfilePage = () => {
               <p className="text-gray-500 max-w-md mx-auto mb-6">
                 You haven't completed any assessments yet. Start your first test to see your health insights here.
               </p>
-              <a href="/" className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors">
+              <Link to="/tests" className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors">
                 Start Assessment
-              </a>
+              </Link>
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

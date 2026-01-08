@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useBalancePose from '../../hooks/useBalancePose';
-import WebcamView from '../../components/webcam/WebcamView';
-import PermissionDenied from '../../components/webcam/PermissionDenied';
+import WebcamView from '../../components/webCam/WebcamView';
+import PermissionDenied from '../../components/webCam/PermissionDenied';
 import PoseCanvas from '../../components/pose/PoseCanvas';
 import { analyzeKeypoints } from '../../components/pose/PoseAnalyzer';
 import { computeBalanceScore } from '../../utils/balanceScoring';
@@ -10,7 +10,7 @@ import { computeBalanceScore } from '../../utils/balanceScoring';
 const BalanceTest = () => {
   const navigate = useNavigate();
   const videoRef = useRef(null);
-  
+
   // Test state
   const [currentTrial, setCurrentTrial] = useState(0);
   const [currentFoot, setCurrentFoot] = useState('left');
@@ -23,12 +23,12 @@ const BalanceTest = () => {
   const [testComplete, setTestComplete] = useState(false);
   const [finalScore, setFinalScore] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // Refs for pose analysis
   const isFootInAirRef = useRef(false);
   const startTimeRef = useRef(null);
   const timerIntervalRef = useRef(null);
-  
+
   // Pose detection hook
   const { keypoints, isLoading, error, detector } = useBalancePose(videoRef, (keypoints) => {
     if (isTrialActive && keypoints.length > 0) {
@@ -52,7 +52,7 @@ const BalanceTest = () => {
     if (!startTimeRef.current) {
       startTimeRef.current = Date.now();
       setIsTrialActive(true);
-      
+
       // Update timer every 100ms for smooth display
       timerIntervalRef.current = setInterval(() => {
         if (startTimeRef.current) {
@@ -66,7 +66,7 @@ const BalanceTest = () => {
   const stopTimer = useCallback(() => {
     if (startTimeRef.current) {
       const duration = (Date.now() - startTimeRef.current) / 1000;
-      
+
       // Record trial result
       const trialResult = {
         trial: currentTrial + 1,
@@ -74,19 +74,19 @@ const BalanceTest = () => {
         duration: Math.round(duration * 10) / 10,
         timestamp: new Date().toISOString()
       };
-      
+
       setTrials(prev => [...prev, trialResult]);
-      
+
       // Reset timer
       startTimeRef.current = null;
       setIsTrialActive(false);
       setTrialDuration(0);
-      
+
       if (timerIntervalRef.current) {
         clearInterval(timerIntervalRef.current);
         timerIntervalRef.current = null;
       }
-      
+
       // Start cooldown
       setShowCooldown(true);
       setCooldownCount(5);
@@ -104,7 +104,7 @@ const BalanceTest = () => {
       const timer = setTimeout(() => {
         setCooldownCount(prev => prev - 1);
       }, 1000);
-      
+
       return () => clearTimeout(timer);
     } else if (showCooldown && cooldownCount === 0) {
       setShowCooldown(false);
@@ -115,7 +115,7 @@ const BalanceTest = () => {
   // Move to next trial
   const nextTrial = () => {
     const nextTrialIndex = currentTrial + 1;
-    
+
     if (nextTrialIndex >= TOTAL_TRIALS) {
       // Test complete
       setTestComplete(true);
@@ -133,7 +133,7 @@ const BalanceTest = () => {
   // Submit results
   const submitResults = async () => {
     if (!finalScore) return;
-    
+
     setIsSubmitting(true);
     try {
       const payload = {
@@ -150,11 +150,12 @@ const BalanceTest = () => {
       };
 
       // Submit to backend
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || ""}/api/results`, {
+      const response = await fetch(`/api/frailty-tests/results`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
+        credentials: 'include', // Critical for session cookies
         body: JSON.stringify(payload)
       });
 
@@ -260,7 +261,7 @@ const BalanceTest = () => {
             >
               Back to Home
             </button>
-            
+
             <button
               onClick={submitResults}
               disabled={isSubmitting}
@@ -303,12 +304,12 @@ const BalanceTest = () => {
           <div className="lg:col-span-2">
             <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden" style={{ aspectRatio: '4/3' }}>
               <WebcamView ref={videoRef} />
-              <PoseCanvas 
-                videoRef={videoRef} 
+              <PoseCanvas
+                videoRef={videoRef}
                 keypoints={keypoints}
                 boundingBox={null}
               />
-              
+
               {/* Overlay for instructions */}
               {!isTrialActive && !showCooldown && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -319,14 +320,14 @@ const BalanceTest = () => {
                   </div>
                 </div>
               )}
-              
+
               {/* Timer overlay */}
               {isTrialActive && (
                 <div className="absolute top-4 right-4 bg-black bg-opacity-75 text-white px-4 py-2 rounded-lg">
                   <div className="text-2xl font-bold">{trialDuration}s</div>
                 </div>
               )}
-              
+
               {/* Cooldown overlay */}
               {showCooldown && (
                 <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center">
@@ -344,21 +345,21 @@ const BalanceTest = () => {
             {/* Current Status */}
             <div className="bg-white rounded-2xl shadow-xl p-6">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">Status</h3>
-              
+
               {wrongLeg && (
                 <div className="mb-4 p-3 bg-red-100 border border-red-300 rounded-lg">
                   <p className="text-red-700 font-medium">Wrong foot lifted!</p>
                   <p className="text-red-600 text-sm">Please lift your {currentFoot} foot</p>
                 </div>
               )}
-              
+
               {isTrialActive && (
                 <div className="mb-4 p-3 bg-green-100 border border-green-300 rounded-lg">
                   <p className="text-green-700 font-medium">Trial Active</p>
                   <p className="text-green-600 text-sm">Keep your {currentFoot} foot up!</p>
                 </div>
               )}
-              
+
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Current Trial:</span>
@@ -400,7 +401,7 @@ const BalanceTest = () => {
                 >
                   Back to Intro
                 </button>
-                
+
                 <button
                   onClick={() => navigate('/')}
                   className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"

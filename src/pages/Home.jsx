@@ -8,10 +8,10 @@ import {
   Shield,
   Award,
   Users,
-  BarChart3,
+  Sparkles,
   Ear,
   ChevronRight,
-  Sparkles
+  ArrowDown
 } from "lucide-react";
 import { motion } from "framer-motion";
 import PageSection from "../components/PageSection";
@@ -22,277 +22,213 @@ const Home = () => {
   const testCards = [
     {
       id: 1,
-      title: "Pittsburgh Sleep Quality Index",
-      description: "Comprehensive assessment of sleep quality and patterns",
-      duration: "5–10 min",
+      title: "Pittsburgh Sleep Quality",
+      description: "Analyze your sleep patterns and quality with this gold-standard assessment.",
+      duration: "5-10 min",
       status: "available",
       path: "/tests/psqi-intro",
       icon: Clock,
-      theme: "dark-green",
+      theme: "primary",
     },
     {
       id: 2,
       title: "Digit Memory Test",
-      description: "Assess your cognitive function and memory",
-      duration: "5–7 min",
+      description: "Challenge your working memory and cognitive retention capacity.",
+      duration: "5-7 min",
       status: "available",
       path: "/tests/memory-intro",
       icon: Brain,
-      theme: "dark-green",
+      theme: "primary",
     },
     {
       id: 3,
-      title: "Reaction Time Test",
-      description: "Measure your cognitive processing speed and reflexes",
-      duration: "2–3 min",
+      title: "Reaction Time",
+      description: "Measure your neural processing speed and motor response reflexes.",
+      duration: "2-3 min",
       status: "available",
       path: "/tests/reactiontime",
       icon: Timer,
-      theme: "dark-green",
+      theme: "primary",
     },
     {
       id: 4,
       title: "Perceived Stress Scale",
-      description: "Evaluate your perceived stress over the last month",
-      duration: "3–5 min",
+      description: "Evaluate your psychological stress levels and coping mechanisms.",
+      duration: "3-5 min",
       status: "available",
       path: "/tests/pss-intro",
       icon: Scale,
-      theme: "dark-green",
+      theme: "primary",
     },
     {
       id: 5,
       title: "Self Reaction Test",
-      description: "Self-reported assessment of cognitive reactivity",
-      duration: "3–5 min",
+      description: "A self-reported assessment of your cognitive reactivity.",
+      duration: "3-5 min",
       status: "available",
       path: "/tests/selfreaction-test",
       icon: Activity,
-      theme: "dark-green",
+      theme: "primary",
     },
     {
       id: 6,
-      title: "Balance Test",
-      description:
-        "Assess your postural stability and fall risk using AI pose detection",
-      duration: "3–4 min",
+      title: "Balance Assessment",
+      description: "AI-powered postural stability analysis to detect fall risks.",
+      duration: "3-4 min",
       status: "available",
       path: "/tests/balance-intro",
       icon: Scale,
-      theme: "dark-green",
+      theme: "primary",
     },
     {
       id: 7,
-      title: "General Health Inventory (SF-36)",
-      description: "36-item survey measuring overall health and functioning",
-      duration: "7–12 min",
+      title: "Health Inventory (SF-36)",
+      description: "Comprehensive 36-item survey for overall health and functioning.",
+      duration: "7-12 min",
       status: "available",
       path: "/tests/sf36-intro",
       icon: Heart,
-      theme: "dark-green",
+      theme: "primary",
     },
     {
       id: 8,
-      title: "Hearing Test Suite",
-      description: "Comprehensive hearing assessment with calibrated tests",
-      duration: "10–15 min",
+      title: "Hearing Suite",
+      description: "Professional grade audiometry and hearing frequency analysis.",
+      duration: "10-15 min",
       status: "available",
       path: "/tests/hearing-intro",
       icon: Ear,
-      theme: "dark-green",
+      theme: "primary",
     },
   ];
 
-  // Animation variants
-  const fadeInUp = {
+  const variants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
-  };
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    container: {
+      hidden: { opacity: 0 },
+      visible: {
+        opacity: 1,
+        transition: {
+          staggerChildren: 0.1,
+          delayChildren: 0.2
+        }
       }
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-emerald-50/50 overflow-hidden">
+    <div className="min-h-screen bg-neutral-50 overflow-x-hidden">
+      {/* Background Ambience */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-10%] right-[-5%] w-[50vw] h-[50vw] bg-primary-100/40 rounded-full blur-[120px] mix-blend-multiply opacity-70 animate-float" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-accent-100/40 rounded-full blur-[100px] mix-blend-multiply opacity-70 animate-float" style={{ animationDelay: '-2s' }} />
+      </div>
+
       {/* Hero Section */}
-      <PageSection className="relative py-20 lg:py-32">
-        <div className="absolute inset-0 bg-gradient-to-r from-green-600/5 via-emerald-500/5 to-green-400/5 pointer-events-none"></div>
-
-        {/* Decorative blobs */}
-        <div className="absolute top-20 right-0 w-96 h-96 bg-green-300/20 rounded-full blur-3xl -z-10 animate-pulse"></div>
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-emerald-300/20 rounded-full blur-3xl -z-10"></div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <PageSection className="relative z-20 pt-24 pb-20 lg:pt-32 lg:pb-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
-            className="text-center max-w-4xl mx-auto"
             initial="hidden"
             animate="visible"
-            variants={staggerContainer}
+            variants={variants.container}
+            className="max-w-4xl mx-auto"
           >
-            <motion.div variants={fadeInUp} className="flex justify-center mb-8">
-              <div className="bg-white/80 backdrop-blur-sm border border-green-200 px-4 py-2 text-sm font-medium rounded-full flex items-center shadow-sm text-green-800">
-                <Shield className="w-4 h-4 mr-2 text-green-600" />
-                Scientifically Validated Assessments
-              </div>
+            <motion.div variants={variants} className="flex justify-center mb-8">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md border border-white/40 shadow-sm text-sm font-semibold text-primary-700">
+                <Shield className="w-4 h-4" />
+                Valid Clinical Assessments
+              </span>
             </motion.div>
 
-            <motion.h1 variants={fadeInUp} className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight font-montserrat tracking-tight">
-              Comprehensive
-              <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600">
-                Frailty Tester
-              </span>
+            <motion.h1 variants={variants} className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 tracking-tight leading-[1.1] font-montserrat">
+              Advanced <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400">Health Insights</span>
+              <br /> Made Accessible.
             </motion.h1>
 
-            <motion.p variants={fadeInUp} className="text-xl md:text-2xl text-gray-600 mb-12 leading-relaxed max-w-3xl mx-auto font-sans">
-              Unlock personalized insights into your physical and cognitive health with our suite of professional-grade assessments.
+            <motion.p variants={variants} className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+              Unlock a deeper understanding of your physical and cognitive wellbeing with our professional-grade, AI-enhanced assessment suite.
             </motion.p>
 
-            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-              <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
-                <AssessmentDropdown
-                  assessments={testCards}
-                  buttonText="Start Assessment"
-                  buttonClassName="relative bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
-                />
-              </div>
-              <button className="px-8 py-4 text-lg font-semibold text-gray-700 hover:text-green-700 hover:bg-green-50 rounded-xl transition-all duration-300 flex items-center gap-2 group">
-                Learn More
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
-              {[
-                { icon: Users, value: "93%", label: "Made Positive Changes" },
-                { icon: Award, value: "87%", label: "Health Improvements" },
-                { icon: Sparkles, value: "95%", label: "More Motivated" }
-              ].map((stat, idx) => (
-                <div key={idx} className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex justify-center mb-3">
-                    <div className="p-3 bg-green-100 rounded-xl text-green-600">
-                      <stat.icon className="w-6 h-6" />
-                    </div>
-                  </div>
-                  <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
-                  <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
-                </div>
-              ))}
-            </motion.div>
-          </motion.div>
-        </div>
-      </PageSection>
-
-      {/* Test Cards Section */}
-      <PageSection className="py-24 bg-white relative">
-        <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-gray-50/50 to-white"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6 font-montserrat">
-                Choose Your Assessment
-              </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto font-sans leading-relaxed">
-                Select from our comprehensive suite of validated tests to build your complete health profile.
-              </p>
-            </motion.div>
-          </div>
-
-          <motion.div
-            className="w-full max-w-7xl mx-auto flex flex-wrap justify-center gap-6"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            variants={staggerContainer}
-          >
-            {(() => {
-              const sortedTestCards = [...testCards].sort((a, b) => {
-                if (a.status === "available" && b.status !== "available") return -1;
-                if (a.status !== "available" && b.status === "available") return 1;
-                return 0;
-              });
-
-              return sortedTestCards.map((test) => (
-                <motion.div key={test.id} variants={fadeInUp}>
-                  <AssessmentCard
-                    id={test.id}
-                    title={test.title}
-                    description={test.description}
-                    status={test.status}
-                    path={test.path}
-                    duration={test.duration}
-                    theme={test.theme}
-                    icon={test.icon}
-                  />
-                </motion.div>
-              ));
-            })()}
-          </motion.div>
-        </div>
-      </PageSection>
-
-      {/* Call-to-Action Section */}
-      <PageSection className="py-24 bg-gradient-to-br from-green-900 via-emerald-900 to-teal-900 relative overflow-hidden">
-        {/* Abstract shapes */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-green-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
-
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 font-montserrat">
-              Complete Your Health Profile Today
-            </h2>
-
-            <p className="text-xl text-green-100 mb-10 leading-relaxed font-sans max-w-2xl mx-auto opacity-90">
-              Take all available assessments to get a comprehensive view of your physical and cognitive health. Our
-              scientifically validated tests provide actionable insights for your wellness journey.
-            </p>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
+            <motion.div variants={variants} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
               <AssessmentDropdown
                 assessments={testCards}
-                buttonText="Start Full Assessment"
-                buttonClassName="bg-white text-green-900 hover:bg-green-50 px-8 py-4 rounded-xl font-bold shadow-lg transition-all transform hover:-translate-y-1"
+                buttonText="Start Free Assessment"
+                buttonClassName="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white rounded-xl font-semibold shadow-lg shadow-primary-500/30 transition-all hover:-translate-y-1"
               />
-              <button className="px-8 py-4 text-lg font-semibold text-white border border-white/30 hover:bg-white/10 rounded-xl transition-all duration-300 backdrop-blur-sm">
-                View Sample Report
+              <button className="px-8 py-4 bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 rounded-xl font-semibold transition-all hover:border-gray-300">
+                How It Works
               </button>
-            </div>
+            </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 border-t border-white/10 pt-10">
+            {/* Stats Row */}
+            <motion.div
+              variants={variants}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            >
               {[
-                { icon: Shield, text: "Scientifically Validated" },
-                { icon: Clock, text: "Quick & Easy" },
-                { icon: Award, text: "Personalized Results" }
-              ].map((item, idx) => (
-                <div key={idx} className="flex flex-col items-center gap-3 text-green-100">
-                  <div className="p-3 bg-white/10 rounded-full">
-                    <item.icon className="w-6 h-6" />
+                { icon: Users, value: "10k+", label: "Active Users" },
+                { icon: Award, value: "95%", label: "Accuracy Rate" },
+                { icon: Activity, value: "8+", label: "Clinical Tests" }
+              ].map((stat, i) => (
+                <div key={i} className="glass px-6 py-6 rounded-2xl flex flex-col items-center">
+                  <div className="p-3 bg-primary-50 text-primary-600 rounded-xl mb-3">
+                    <stat.icon className="w-6 h-6" />
                   </div>
-                  <span className="font-medium">{item.text}</span>
+                  <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
+                  <div className="text-sm font-medium text-gray-500">{stat.label}</div>
                 </div>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
+        </div>
+      </PageSection>
+
+      {/* Assessment Grid */}
+      <PageSection className="relative z-10 py-24 bg-white/50 backdrop-blur-sm border-t border-white/60">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-montserrat">
+              Select an Assessment
+            </h2>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              Choose from our diverse range of tests covering memory, balance, hearing, and stress.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {testCards.map((test) => (
+              <motion.div
+                key={test.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="h-full"
+              >
+                <AssessmentCard {...test} />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </PageSection>
+
+      {/* CTA Footer */}
+      <PageSection className="relative py-24 overflow-hidden">
+        <div className="absolute inset-0 bg-primary-900" />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-500/20 rounded-full blur-[100px] translate-x-1/3 -translate-y-1/3" />
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center text-white">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 font-montserrat">
+            Ready to take control?
+          </h2>
+          <p className="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">
+            Join thousands of users who are actively monitoring and improving their health with FrailtyTester.
+          </p>
+          <button className="px-10 py-5 bg-white text-primary-900 rounded-2xl font-bold text-lg hover:bg-primary-50 transition-colors shadow-2xl shadow-primary-900/50">
+            Get Started Now
+          </button>
         </div>
       </PageSection>
     </div>

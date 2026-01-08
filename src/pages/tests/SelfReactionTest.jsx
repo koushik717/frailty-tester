@@ -89,9 +89,10 @@ const SelfReactionTest = () => {
       }
 
       try {
-        await fetch('http://localhost:3000/api/frailty-tests/results', {
+        await fetch('/api/frailty-tests/results', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include', // Critical for session cookies
           body: JSON.stringify({
             testName: 'Self Reaction Test',
             overallScore: score,
@@ -137,19 +138,17 @@ const SelfReactionTest = () => {
           {questions.map((question, questionIndex) => (
             <div
               key={questionIndex}
-              className={`bg-white shadow-md rounded-lg p-6 ${
-                questionIndex % 2 === 1 ? 'bg-gray-50' : ''
-              }`}
+              className={`bg-white shadow-md rounded-lg p-6 ${questionIndex % 2 === 1 ? 'bg-gray-50' : ''
+                }`}
             >
               <div className="flex flex-col lg:flex-row lg:items-center gap-4">
                 {/* Question Text */}
                 <div className="flex-1">
                   <p
-                    className={`text-gray-800 leading-relaxed ${
-                      highlightedQuestionIndex === questionIndex
+                    className={`text-gray-800 leading-relaxed ${highlightedQuestionIndex === questionIndex
                         ? 'font-semibold text-green-700'
                         : ''
-                    }`}
+                      }`}
                   >
                     {question}
                   </p>
@@ -163,11 +162,10 @@ const SelfReactionTest = () => {
                       <button
                         key={categoryIndex}
                         onClick={() => handleAnswerChange(questionIndex, category.name)}
-                        className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${
-                          isSelected
+                        className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${isSelected
                             ? 'border-green-500 bg-green-500'
                             : 'border-gray-300 hover:border-gray-400'
-                        }`}
+                          }`}
                       >
                         {isSelected && (
                           <div className="w-4 h-4 rounded-full bg-white mx-auto mt-1" />

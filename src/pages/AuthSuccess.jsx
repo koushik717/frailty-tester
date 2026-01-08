@@ -14,7 +14,11 @@ const AuthSuccess = () => {
             try {
                 const user = JSON.parse(decodeURIComponent(userParam));
                 dispatch(loginUser(user));
-                navigate('/profile');
+                if (user.hasPersonalDetails) {
+                    navigate('/profile');
+                } else {
+                    navigate('/personal-details');
+                }
             } catch (err) {
                 console.error('Error parsing user data:', err);
                 navigate('/login');

@@ -34,8 +34,24 @@ const getResultsFile = async () => {
 router.get('/results', async (req, res) => {
   try {
     const resultsFile = await getResultsFile();
-    // frontend expects an array
-    res.json(resultsFile.testResults);
+    let results = resultsFile.testResults;
+
+    // Filter by user if logged in
+    const currentUser = req.user || req.session.user;
+
+    if (currentUser && currentUser.id) {
+      results = results.filter(r => r.userId === currentUser.id);
+    } else {
+      // If not logged in, maybe return empty or session based?
+      // For now return empty to avoid seeing others' data
+      results = [];
+    }
+
+    console.log('[DEBUG-GET] req.session:', req.session);
+    console.log('[DEBUG-GET] req.user:', req.user);
+    console.log(`[DEBUG-GET] Returning ${results.length} results for user.`);
+
+    res.json(results);
   } catch (error) {
     console.error('Error reading results:', error);
     res.status(500).json({ error: 'Error fetching results' });
@@ -43,7 +59,7 @@ router.get('/results', async (req, res) => {
 });
 
 // ========= helper to build a normalized result object =========
-const buildResultFromBody = (body) => {
+const buildResultFromBody = (body, req) => {
   const {
     testName,
     testKey,
@@ -111,6 +127,7 @@ const buildResultFromBody = (body) => {
       expectedRange: assessment.expectedRange || '',
       recommendedExercises: assessment.recommendedExercises || [],
     },
+    userId: (req.user && req.user.id) || (req.session.user && req.session.user.id) || null,
   };
 };
 
@@ -119,7 +136,11 @@ router.post('/results', async (req, res) => {
   try {
     const resultsFile = await getResultsFile();
 
-    const newResult = buildResultFromBody(req.body);
+    console.log('[DEBUG-POST] req.session:', req.session);
+    console.log('[DEBUG-POST] req.user:', req.user);
+    console.log('[DEBUG-POST] req.body:', JSON.stringify(req.body, null, 2));
+
+    const newResult = buildResultFromBody(req.body, req);
 
     resultsFile.testResults.push(newResult);
     await fs.writeFile(resultsPath, JSON.stringify(resultsFile, null, 2));
@@ -144,7 +165,7 @@ router.put('/results/:resultId', async (req, res) => {
     // merge existing + new data
     const updated = {
       ...resultsFile.testResults[resultId],
-      ...buildResultFromBody({ ...resultsFile.testResults[resultId], ...req.body }),
+      ...buildResultFromBody({ ...resultsFile.testResults[resultId], ...req.body }, req),
     };
 
     resultsFile.testResults[resultId] = updated;

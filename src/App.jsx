@@ -29,38 +29,178 @@ import HearingTest from "./pages/tests/HearingTest";
 
 import Footer from "./layout/Footer";
 
+import Pricing from "./pages/Pricing";
+import Billing from "./pages/Billing";
+import PersonalDetails from "./pages/PersonalDetails";
+import EmergencyContact from "./pages/EmergencyContact";
+import Terms from "./pages/Terms";
+import Dashboard from "./pages/Dashboard";
+import Subscription from "./pages/Subscription";
+import About from "./pages/About";
+import RequirePersonalDetails from "./components/RequirePersonalDetails";
+import RequireSubscription from "./components/RequireSubscription";
+import ErrorBoundary from "./components/ErrorBoundary";
+
 const App = () => {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-neutral-50 flex flex-col">
       <Header />
       <div className="flex-grow">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/tests/balance-intro" element={<BalanceIntro />} />
-          <Route path="/tests/balance-test" element={<BalanceTest />} />
-          <Route path="/tests/chair-stand-intro" element={<ChairStandIntro />} />
-          <Route path="/tests/chair-stand-test" element={<ChairStandTest />} />
-          <Route path="/tests/memory-intro" element={<MemoryIntro />} />
-          <Route path="/tests/memory-test" element={<MemoryTest />} />
-          <Route path="/tests/memory-results" element={<MemoryResults />} />
-          <Route path="/tests/psqi-intro" element={<PSQIIntro />} />
-          <Route path="/tests/psqi-test" element={<PSQITest />} />
-          <Route path="/tests/psqi-results" element={<PSQIResults />} />
-          <Route path="/tests/pss-intro" element={<PSSIntro />} />
-          <Route path="/tests/pss-test" element={<PSSTest />} />
-          <Route path="/tests/sf36-intro" element={<SF36Intro />} />
-          <Route path="/tests/sf36-test" element={<SF36Test />} />
-          <Route path="/tests/selfreaction-intro" element={<SelfReactionIntro />} />
-          <Route path="/tests/selfreaction-test" element={<SelfReactionTest />} />
-          <Route path="/tests/reactiontime" element={<ReactionTimeTestPage />} />
-          <Route path="/tests/hearing-intro" element={<HearingTestIntro />} />
-          <Route path="/tests/hearing-test" element={<HearingTest />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/auth-success" element={<AuthSuccess />} />
-          <Route path="*" element={<ComingSoonPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/" element={<Home />} />
+
+            {/* Protected Test Routes: Subscription -> Personal Details -> Test */}
+            <Route path="/tests/balance-intro" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <BalanceIntro />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+
+            <Route path="/tests/balance-test" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <BalanceTest />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+
+            <Route path="/tests/chair-stand-intro" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <ChairStandIntro />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+
+            <Route path="/tests/chair-stand-test" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <ChairStandTest />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/memory-intro" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <MemoryIntro />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/memory-test" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <MemoryTest />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/memory-results" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <MemoryResults />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/psqi-intro" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <PSQIIntro />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/psqi-test" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <PSQITest />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/psqi-results" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <PSQIResults />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/pss-intro" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <PSSIntro />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/pss-test" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <PSSTest />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/sf36-intro" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <SF36Intro />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/sf36-test" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <SF36Test />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/selfreaction-intro" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <SelfReactionIntro />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/selfreaction-test" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <SelfReactionTest />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/reactiontime" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <ReactionTimeTestPage />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/hearing-intro" element={
+              <RequireSubscription>
+                <RequirePersonalDetails>
+                  <HearingTestIntro />
+                </RequirePersonalDetails>
+              </RequireSubscription>
+            } />
+            <Route path="/tests/hearing-test" element={<RequirePersonalDetails><HearingTest /></RequirePersonalDetails>} />
+
+            {/* Auth & Onboarding Routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/auth-success" element={<AuthSuccess />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/billing" element={<Billing />} />
+            <Route path="/personal-details" element={<PersonalDetails />} />
+            <Route path="/emergency-contact" element={<EmergencyContact />} />
+            <Route path="/terms" element={<Terms />} />
+
+            {/* Dashboard & Profile */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/subscription" element={<Subscription />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/about" element={<About />} />
+
+            <Route path="*" element={<ComingSoonPage />} />
+          </Routes>
+        </ErrorBoundary>
       </div>
       <Footer />
     </div>

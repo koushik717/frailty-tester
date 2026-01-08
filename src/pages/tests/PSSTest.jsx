@@ -71,11 +71,12 @@ const PSSTest = () => {
         endedAt: ended
       };
 
-      const response = await fetch('http://localhost:3000/api/frailty-tests/pss', {
+      const response = await fetch(`/api/frailty-tests/pss`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
+        credentials: 'include', // Ensure cookies are sent (fetch API syntax)
         body: JSON.stringify(testData)
       });
 
@@ -84,7 +85,7 @@ const PSSTest = () => {
       }
 
       // ✅ Save result to Profile page results file (generic results route)
-      await axios.post("http://localhost:3000/api/frailty-tests/results", {
+      await axios.post(`/api/frailty-tests/results`, {
         test: "pss10",
         testName: "PSS-10 Stress Test",
         overallScore: result.total,
@@ -93,7 +94,7 @@ const PSSTest = () => {
           startedAt,
           endedAt: ended
         }
-      });
+      }, { withCredentials: true });
 
       console.log("✅ PSS result saved to profile results!");
       setSubmitted(true);

@@ -1,0 +1,4456 @@
+=========================================
+FILE: src/pages/AuthSuccess.jsx
+=========================================
+import React, { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../store/slices/userSlice';
+
+const AuthSuccess = () => {
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const userParam = searchParams.get('user');
+        if (userParam) {
+            try {
+                const user = JSON.parse(decodeURIComponent(userParam));
+                dispatch(loginUser(user));
+                navigate('/profile');
+            } catch (err) {
+                console.error('Error parsing user data:', err);
+                navigate('/login');
+            }
+        } else {
+            navigate('/login');
+        }
+    }, [searchParams, navigate, dispatch]);
+
+    return (
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="text-center">
+                <h2 className="text-2xl font-bold text-gray-900">Signing you in...</h2>
+                <p className="mt-2 text-gray-600">Please wait while we complete your authentication.</p>
+            </div>
+        </div>
+    );
+};
+
+export default AuthSuccess;
+
+
+=========================================
+FILE: src/pages/Home.jsx
+=========================================
+import {
+  Activity,
+  Brain,
+  Clock,
+  Heart,
+  Scale,
+  Timer,
+  Shield,
+  Award,
+  Users,
+  BarChart3,
+  Ear,
+  ChevronRight,
+  Sparkles
+} from "lucide-react";
+import { motion } from "framer-motion";
+import PageSection from "../components/PageSection";
+import AssessmentCard from "../components/AssessmentCard";
+import AssessmentDropdown from "../components/AssessmentDropdown";
+
+const Home = () => {
+  const testCards = [
+    {
+      id: 1,
+      title: "Pittsburgh Sleep Quality Index",
+      description: "Comprehensive assessment of sleep quality and patterns",
+      duration: "5–10 min",
+      status: "available",
+      path: "/tests/psqi-intro",
+      icon: Clock,
+      theme: "dark-green",
+    },
+    {
+      id: 2,
+      title: "Digit Memory Test",
+      description: "Assess your cognitive function and memory",
+      duration: "5–7 min",
+      status: "available",
+      path: "/tests/memory-intro",
+      icon: Brain,
+      theme: "dark-green",
+    },
+    {
+      id: 3,
+      title: "Reaction Time Test",
+      description: "Measure your cognitive processing speed and reflexes",
+      duration: "2–3 min",
+      status: "available",
+      path: "/tests/reactiontime",
+      icon: Timer,
+      theme: "dark-green",
+    },
+    {
+      id: 4,
+      title: "Perceived Stress Scale",
+      description: "Evaluate your perceived stress over the last month",
+      duration: "3–5 min",
+      status: "available",
+      path: "/tests/pss-intro",
+      icon: Scale,
+      theme: "dark-green",
+    },
+    {
+      id: 5,
+      title: "Self Reaction Test",
+      description: "Self-reported assessment of cognitive reactivity",
+      duration: "3–5 min",
+      status: "available",
+      path: "/tests/selfreaction-test",
+      icon: Activity,
+      theme: "dark-green",
+    },
+    {
+      id: 6,
+      title: "Balance Test",
+      description:
+        "Assess your postural stability and fall risk using AI pose detection",
+      duration: "3–4 min",
+      status: "available",
+      path: "/tests/balance-intro",
+      icon: Scale,
+      theme: "dark-green",
+    },
+    {
+      id: 7,
+      title: "General Health Inventory (SF-36)",
+      description: "36-item survey measuring overall health and functioning",
+      duration: "7–12 min",
+      status: "available",
+      path: "/tests/sf36-intro",
+      icon: Heart,
+      theme: "dark-green",
+    },
+    {
+      id: 8,
+      title: "Hearing Test Suite",
+      description: "Comprehensive hearing assessment with calibrated tests",
+      duration: "10–15 min",
+      status: "available",
+      path: "/tests/hearing-intro",
+      icon: Ear,
+      theme: "dark-green",
+    },
+  ];
+
+  // Animation variants
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-emerald-50/50 overflow-hidden">
+      {/* Hero Section */}
+      <PageSection className="relative py-20 lg:py-32">
+        <div className="absolute inset-0 bg-gradient-to-r from-green-600/5 via-emerald-500/5 to-green-400/5 pointer-events-none"></div>
+
+        {/* Decorative blobs */}
+        <div className="absolute top-20 right-0 w-96 h-96 bg-green-300/20 rounded-full blur-3xl -z-10 animate-pulse"></div>
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-emerald-300/20 rounded-full blur-3xl -z-10"></div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="text-center max-w-4xl mx-auto"
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+          >
+            <motion.div variants={fadeInUp} className="flex justify-center mb-8">
+              <div className="bg-white/80 backdrop-blur-sm border border-green-200 px-4 py-2 text-sm font-medium rounded-full flex items-center shadow-sm text-green-800">
+                <Shield className="w-4 h-4 mr-2 text-green-600" />
+                Scientifically Validated Assessments
+              </div>
+            </motion.div>
+
+            <motion.h1 variants={fadeInUp} className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight font-montserrat tracking-tight">
+              Comprehensive
+              <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600">
+                Frailty Tester
+              </span>
+            </motion.h1>
+
+            <motion.p variants={fadeInUp} className="text-xl md:text-2xl text-gray-600 mb-12 leading-relaxed max-w-3xl mx-auto font-sans">
+              Unlock personalized insights into your physical and cognitive health with our suite of professional-grade assessments.
+            </motion.p>
+
+            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
+                <AssessmentDropdown
+                  assessments={testCards}
+                  buttonText="Start Assessment"
+                  buttonClassName="relative bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center gap-2"
+                />
+              </div>
+              <button className="px-8 py-4 text-lg font-semibold text-gray-700 hover:text-green-700 hover:bg-green-50 rounded-xl transition-all duration-300 flex items-center gap-2 group">
+                Learn More
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
+              {[
+                { icon: Users, value: "93%", label: "Made Positive Changes" },
+                { icon: Award, value: "87%", label: "Health Improvements" },
+                { icon: Sparkles, value: "95%", label: "More Motivated" }
+              ].map((stat, idx) => (
+                <div key={idx} className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/50 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex justify-center mb-3">
+                    <div className="p-3 bg-green-100 rounded-xl text-green-600">
+                      <stat.icon className="w-6 h-6" />
+                    </div>
+                  </div>
+                  <div className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</div>
+                  <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
+      </PageSection>
+
+      {/* Test Cards Section */}
+      <PageSection className="py-24 bg-white relative">
+        <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-gray-50/50 to-white"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6 font-montserrat">
+                Choose Your Assessment
+              </h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto font-sans leading-relaxed">
+                Select from our comprehensive suite of validated tests to build your complete health profile.
+              </p>
+            </motion.div>
+          </div>
+
+          <motion.div
+            className="w-full max-w-7xl mx-auto flex flex-wrap justify-center gap-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={staggerContainer}
+          >
+            {(() => {
+              const sortedTestCards = [...testCards].sort((a, b) => {
+                if (a.status === "available" && b.status !== "available") return -1;
+                if (a.status !== "available" && b.status === "available") return 1;
+                return 0;
+              });
+
+              return sortedTestCards.map((test) => (
+                <motion.div key={test.id} variants={fadeInUp}>
+                  <AssessmentCard
+                    id={test.id}
+                    title={test.title}
+                    description={test.description}
+                    status={test.status}
+                    path={test.path}
+                    duration={test.duration}
+                    theme={test.theme}
+                    icon={test.icon}
+                  />
+                </motion.div>
+              ));
+            })()}
+          </motion.div>
+        </div>
+      </PageSection>
+
+      {/* Call-to-Action Section */}
+      <PageSection className="py-24 bg-gradient-to-br from-green-900 via-emerald-900 to-teal-900 relative overflow-hidden">
+        {/* Abstract shapes */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-green-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
+
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 font-montserrat">
+              Complete Your Health Profile Today
+            </h2>
+
+            <p className="text-xl text-green-100 mb-10 leading-relaxed font-sans max-w-2xl mx-auto opacity-90">
+              Take all available assessments to get a comprehensive view of your physical and cognitive health. Our
+              scientifically validated tests provide actionable insights for your wellness journey.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
+              <AssessmentDropdown
+                assessments={testCards}
+                buttonText="Start Full Assessment"
+                buttonClassName="bg-white text-green-900 hover:bg-green-50 px-8 py-4 rounded-xl font-bold shadow-lg transition-all transform hover:-translate-y-1"
+              />
+              <button className="px-8 py-4 text-lg font-semibold text-white border border-white/30 hover:bg-white/10 rounded-xl transition-all duration-300 backdrop-blur-sm">
+                View Sample Report
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 border-t border-white/10 pt-10">
+              {[
+                { icon: Shield, text: "Scientifically Validated" },
+                { icon: Clock, text: "Quick & Easy" },
+                { icon: Award, text: "Personalized Results" }
+              ].map((item, idx) => (
+                <div key={idx} className="flex flex-col items-center gap-3 text-green-100">
+                  <div className="p-3 bg-white/10 rounded-full">
+                    <item.icon className="w-6 h-6" />
+                  </div>
+                  <span className="font-medium">{item.text}</span>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </PageSection>
+    </div>
+  );
+};
+
+export default Home;
+
+
+=========================================
+FILE: src/pages/Login.jsx
+=========================================
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Mail, Lock, ArrowRight } from 'lucide-react';
+import MetyButton from '../components/MetyButton';
+import { loginUser } from '../store/slices/userSlice';
+
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      const response = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        console.log('Login successful:', data);
+        // Store user info in Redux
+        dispatch(loginUser(data.user));
+        navigate('/profile'); // Redirect to profile or home
+      } else {
+        setError(data.message || 'Login failed');
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An error occurred. Please try again.');
+    }
+  };
+
+  return (
+    <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-gray-100">
+        <div className="text-center">
+          <h2 className="mt-2 text-3xl font-bold text-gray-900 font-montserrat tracking-tight">
+            Welcome back
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Please enter your details to sign in.
+          </p>
+          {error && (
+            <div className="mt-4 p-3 bg-red-50 text-red-700 text-sm rounded-lg border border-red-200">
+              {error}
+            </div>
+          )}
+        </div>
+
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-5">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email address
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-colors duration-200 ease-in-out bg-gray-50 focus:bg-white"
+                  placeholder="you@example.com"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-colors duration-200 ease-in-out bg-gray-50 focus:bg-white"
+                  placeholder="••••••••"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded cursor-pointer"
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-600 cursor-pointer select-none">
+                Remember me
+              </label>
+            </div>
+
+            <div className="text-sm">
+              <a href="#" className="font-medium text-primary hover:text-primary-dark transition-colors">
+                Forgot password?
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <MetyButton
+              type="submit"
+              variant="primary"
+              className="w-full justify-center py-3 text-base font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+            >
+              Sign in <ArrowRight className="ml-2 h-5 w-5" />
+            </MetyButton>
+          </div>
+        </form>
+
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <a
+              href="http://localhost:3000/api/auth/google"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white hover:bg-gray-50 transition-colors duration-200"
+            >
+              <svg className="h-5 w-5" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                />
+              </svg>
+              <span className="text-sm font-medium text-gray-700">Sign in with Google</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">
+                Don't have an account?
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-6 text-center">
+            <Link to="/signup" className="font-medium text-primary hover:text-primary-dark transition-colors">
+              Create a free account
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
+
+
+=========================================
+FILE: src/pages/ProfilePage.jsx
+=========================================
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Loader2,
+  BarChart2,
+  CalendarDays,
+  AlertCircle,
+  X,
+  User as UserIcon,
+  ChevronRight,
+  Clock,
+  Activity,
+  Brain,
+  Scale,
+  Heart,
+  Ear,
+  TrendingUp,
+  History
+} from "lucide-react";
+import HealthChart from "../components/HealthChart";
+
+const ProfilePage = () => {
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedResult, setSelectedResult] = useState(null);
+
+  // fetch test results
+  useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        const res = await axios.get("/api/frailty-tests/results");
+
+        let data = res.data;
+        if (data && !Array.isArray(data) && Array.isArray(data.results)) {
+          data = data.results;
+        }
+        if (data && !Array.isArray(data) && Array.isArray(data.data)) {
+          data = data.data;
+        }
+        if (!Array.isArray(data)) {
+          console.warn("API did not return array. Got:", data);
+          data = [];
+        }
+
+        setResults(data);
+      } catch (err) {
+        console.error("Error fetching results:", err);
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchResults();
+  }, []);
+
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return "Not available";
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  // ===== derived header stats =====
+  const totalTests = results.length;
+  const lastTestDate =
+    totalTests > 0
+      ? formatDate(
+        results
+          .map((r) => r.timestamp || r.date)
+          .filter(Boolean)
+          .sort((a, b) => new Date(b) - new Date(a))[0]
+      )
+      : "No tests yet";
+
+  const headerCategory =
+    results.find(
+      (r) => r.assessment && r.assessment.category && r.assessment.category !== ""
+    )?.assessment?.category || "—";
+
+  // ✅ Group results by testName
+  const groupedResults = results.reduce((acc, test) => {
+    const name = test.testName || "Untitled Test";
+    if (!acc[name]) acc[name] = [];
+    acc[name].push(test);
+    return acc;
+  }, {});
+
+  const availableTests = [
+    { title: "Sleep Quality", icon: Clock, path: "/tests/psqi-intro", color: "text-blue-600", bg: "bg-blue-50" },
+    { title: "Memory Test", icon: Brain, path: "/tests/memory-intro", color: "text-purple-600", bg: "bg-purple-50" },
+    { title: "Reaction Time", icon: Activity, path: "/tests/reactiontime", color: "text-orange-600", bg: "bg-orange-50" },
+    { title: "Stress Scale", icon: Scale, path: "/tests/pss-intro", color: "text-red-600", bg: "bg-red-50" },
+    { title: "Self Reaction", icon: TrendingUp, path: "/tests/selfreaction-test", color: "text-indigo-600", bg: "bg-indigo-50" },
+    { title: "Balance Test", icon: Scale, path: "/tests/balance-intro", color: "text-teal-600", bg: "bg-teal-50" },
+    { title: "SF-36 Health", icon: Heart, path: "/tests/sf36-intro", color: "text-rose-600", bg: "bg-rose-50" },
+    { title: "Hearing Test", icon: Ear, path: "/tests/hearing-intro", color: "text-green-600", bg: "bg-green-50" },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50/50 pb-20 font-sans">
+      {/* Top Header Section */}
+      <div className="relative bg-gradient-to-br from-green-700 via-emerald-600 to-teal-700 text-white pb-32 pt-10 px-6 rounded-b-[3rem] shadow-xl overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-10 pointer-events-none">
+          <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white blur-3xl"></div>
+          <div className="absolute top-1/2 right-0 w-64 h-64 rounded-full bg-teal-300 blur-3xl"></div>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
+            {/* User Welcome */}
+            <div className="flex items-center gap-5">
+              <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center shadow-inner">
+                <UserIcon className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <p className="text-green-100 font-medium mb-1">Welcome back,</p>
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight">User Profile</h1>
+              </div>
+            </div>
+
+            {/* Quick Stats Cards */}
+            <div className="flex gap-4 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+              <div className="min-w-[140px] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col justify-between hover:bg-white/15 transition-colors cursor-default">
+                <div className="flex items-center gap-2 text-green-100 mb-2">
+                  <Activity className="w-4 h-4" />
+                  <span className="text-xs font-medium uppercase tracking-wider">Total Tests</span>
+                </div>
+                <p className="text-2xl font-bold">{totalTests}</p>
+              </div>
+
+              <div className="min-w-[140px] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col justify-between hover:bg-white/15 transition-colors cursor-default">
+                <div className="flex items-center gap-2 text-green-100 mb-2">
+                  <CalendarDays className="w-4 h-4" />
+                  <span className="text-xs font-medium uppercase tracking-wider">Last Activity</span>
+                </div>
+                <p className="text-lg font-semibold truncate">{lastTestDate}</p>
+              </div>
+
+              <div className="min-w-[140px] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 flex flex-col justify-between hover:bg-white/15 transition-colors cursor-default">
+                <div className="flex items-center gap-2 text-green-100 mb-2">
+                  <TrendingUp className="w-4 h-4" />
+                  <span className="text-xs font-medium uppercase tracking-wider">Status</span>
+                </div>
+                <p className="text-lg font-semibold truncate">{headerCategory}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 -mt-24 relative z-10 space-y-12">
+
+        {/* Health Trends Chart Section */}
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+              <span className="w-1 h-6 bg-green-500 rounded-full block"></span>
+              Health Insights
+            </h2>
+          </div>
+          <HealthChart />
+        </section>
+
+        {/* Available Tests Section */}
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+              <span className="w-1 h-6 bg-green-500 rounded-full block"></span>
+              Available Assessments
+            </h2>
+            <span className="text-sm text-gray-500 font-medium">{availableTests.length} tests available</span>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {availableTests.map((test, idx) => (
+              <a
+                key={idx}
+                href={test.path}
+                className="group bg-white p-5 rounded-2xl shadow-sm hover:shadow-md border border-gray-100 hover:border-green-200 transition-all duration-300 flex flex-col items-center text-center gap-3 relative overflow-hidden"
+              >
+                <div className={`w-12 h-12 rounded-full ${test.bg} flex items-center justify-center mb-1 group-hover:scale-110 transition-transform duration-300`}>
+                  <test.icon className={`w-6 h-6 ${test.color}`} />
+                </div>
+                <h3 className="font-semibold text-gray-800 text-sm">{test.title}</h3>
+                <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
+                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* Recent Results Section */}
+        <section>
+          <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2 mb-6">
+            <span className="w-1 h-6 bg-green-500 rounded-full block"></span>
+            Recent Results
+          </h2>
+
+          {loading ? (
+            <div className="flex justify-center py-20">
+              <Loader2 className="animate-spin w-8 h-8 text-green-600" />
+            </div>
+          ) : Object.keys(groupedResults).length === 0 ? (
+            <div className="bg-white rounded-3xl p-10 text-center border border-dashed border-gray-300">
+              <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <History className="w-8 h-8 text-gray-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">No results yet</h3>
+              <p className="text-gray-500 max-w-md mx-auto mb-6">
+                You haven't completed any assessments yet. Start your first test to see your health insights here.
+              </p>
+              <a href="/" className="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-medium rounded-xl hover:bg-green-700 transition-colors">
+                Start Assessment
+              </a>
+            </div>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {Object.entries(groupedResults).map(([name, tests], index) => {
+                const lastTest = tests[tests.length - 1];
+                return (
+                  <div
+                    key={index}
+                    className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg border border-gray-100 transition-all duration-300 flex flex-col"
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="font-bold text-gray-800 text-lg line-clamp-1" title={name}>{name}</h3>
+                      <div className="bg-green-50 text-green-700 text-xs font-bold px-2 py-1 rounded-lg uppercase tracking-wide">
+                        Latest
+                      </div>
+                    </div>
+
+                    <div className="space-y-3 mb-6 flex-1">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-500 flex items-center gap-2">
+                          <CalendarDays className="w-4 h-4" /> Date
+                        </span>
+                        <span className="font-medium text-gray-900">{formatDate(lastTest.timestamp || lastTest.date)}</span>
+                      </div>
+
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-500 flex items-center gap-2">
+                          <BarChart2 className="w-4 h-4" /> Score
+                        </span>
+                        <span className="font-bold text-gray-900 bg-gray-50 px-2 py-0.5 rounded-md">
+                          {lastTest.overallScore || lastTest.totalScore || "N/A"}
+                        </span>
+                      </div>
+
+                      <div className="pt-3 border-t border-gray-50">
+                        <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Category</p>
+                        <p className="font-medium text-green-700 text-sm">
+                          {lastTest.assessment?.category || "Completed"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => setSelectedResult({ name, tests })}
+                      className="w-full py-3 rounded-xl border border-gray-200 text-gray-600 font-semibold hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 transition-all flex items-center justify-center gap-2 group-hover:bg-green-600 group-hover:text-white group-hover:border-green-600"
+                    >
+                      View History
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      </div>
+
+      {/* Details Drawer */}
+      <AnimatePresence>
+        {selectedResult && (
+          <>
+            <motion.div
+              className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedResult(null)}
+            />
+            <motion.div
+              className="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-white shadow-2xl z-50 flex flex-col"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800">{selectedResult.name}</h2>
+                  <p className="text-sm text-gray-500">History Timeline</p>
+                </div>
+                <button
+                  onClick={() => setSelectedResult(null)}
+                  className="p-2 hover:bg-gray-200 rounded-full transition-colors"
+                >
+                  <X className="w-6 h-6 text-gray-500" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-6">
+                <div className="relative border-l-2 border-gray-100 ml-3 space-y-8">
+                  {selectedResult.tests.map((t, i) => (
+                    <div key={i} className="relative pl-8">
+                      {/* Timeline Dot */}
+                      <div className="absolute -left-[9px] top-0 w-4 h-4 rounded-full border-4 border-white bg-green-500 shadow-sm"></div>
+
+                      <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-sm font-medium text-gray-400">
+                            {formatDate(t.timestamp || t.date)}
+                          </span>
+                          {i === selectedResult.tests.length - 1 && (
+                            <span className="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Latest</span>
+                          )}
+                        </div>
+
+                        <div className="mb-3">
+                          <span className="text-3xl font-bold text-gray-900">
+                            {t.overallScore || t.totalScore || "N/A"}
+                          </span>
+                          <span className="text-sm text-gray-500 ml-2">Score</span>
+                        </div>
+
+                        {t.assessment?.category && (
+                          <div className="bg-gray-50 rounded-lg p-3">
+                            <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Result Category</p>
+                            <p className="font-medium text-gray-800">{t.assessment.category}</p>
+                          </div>
+                        )}
+
+                        {t.assessment?.notes && (
+                          <div className="mt-3 text-sm text-gray-600 italic border-l-2 border-gray-200 pl-3">
+                            "{t.assessment.notes}"
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="p-6 border-t border-gray-100 bg-gray-50">
+                <button
+                  onClick={() => setSelectedResult(null)}
+                  className="w-full bg-white border border-gray-300 text-gray-700 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+export default ProfilePage;
+
+
+=========================================
+FILE: src/pages/ReactionTimeTestPage.jsx
+=========================================
+import React, { useState, useEffect, useRef } from 'react';
+import useReactionTimeTest from '../hooks/useReactionTimeTest';
+import ReactionTimeTestUI from '../components/ReactionTimeTestUI';
+import TestIntroCard from '../components/TestIntroCard';
+import MetyNavbar from '../components/MetyNavbar';
+import MetyPageSection from '../components/MetyPageSection';
+import { FaBolt, FaClock, FaBrain } from 'react-icons/fa';
+import axios from 'axios';
+
+const introInstructions = [
+  {
+    icon: <FaBolt size={28} className="text-primary" aria-hidden="true" />, 
+    title: "Response Speed Assessment",
+    text: "Click as quickly as possible when the boy image appears on screen."
+  },
+  {
+    icon: <FaClock size={28} className="text-primary" aria-hidden="true" />, 
+    title: "Assessment Duration",
+    text: "This evaluation consists of multiple trials to ensure accurate measurement of your response times."
+  },
+  {
+    icon: <FaBrain size={28} className="text-primary" aria-hidden="true" />, 
+    title: "Cognitive Evaluation",
+    text: "This assessment helps evaluate your cognitive processing speed and attention capabilities."
+  }
+];
+
+const ReactionTimeTestPage = ({
+  userId = "default-user-id",
+  testConfig = {
+    totalTrials: 20,
+    practiceTrials: 3,
+    allowPractice: true
+  },
+  submittedToday = false,
+  allowPractice = true,
+  onSubmitResults = null,
+  onTestComplete = null,
+  onPracticeComplete = null,
+  apiConfig = {
+    baseUrl: 'http://localhost:8000',
+    endpoints: {
+      submit: '/api/frailty-tests/reaction-time',
+      checkSubmission: '/api/frailty-tests/check-submission'
+    }
+  },
+  text = {
+    title: "Reaction Time Test",
+    instructions: "You will see a boy image appear on screen. When the image appears, click the button as quickly as possible. Try to click the button as fast as possible when you see the boy.",
+    start: "Start",
+    practice: "Practice",
+    correct: "Correct",
+    incorrect: "Incorrect",
+    misses: "Misses",
+    accuracy: "Accuracy",
+    avgReactionTime: "Avg. Reaction Time",
+    score: "Score",
+    alreadySubmitted: "(Already submitted today)",
+    clickHere: "Click Here!",
+    pleaseClick: "Please click on the button below when you see the boy.",
+    trialProgress: "Trial",
+    of: "of"
+  },
+  stimulusImage = null,
+  customStyles = {},
+  theme = 'default',
+  showResults = true
+}) => {
+  const [testStarted, setTestStarted] = useState(false);
+  const [testResults, setTestResults] = useState(null);
+  const [localSubmittedToday, setLocalSubmittedToday] = useState(submittedToday);
+
+  const {
+    // Hook state
+    status,
+    countdownNum,
+    trialIndex,
+    totalTrials,
+    practiceTrials,
+    showCue,
+    earlyClick,
+    results,
+    
+    // Hook actions
+    start,
+    onClick,
+    reset,
+    summary
+  } = useReactionTimeTest({
+    ...testConfig,
+    allowPractice
+  });
+
+  // make sure we only save once per completed test
+  const hasSavedSummaryRef = useRef(false);
+
+  // When test reaches a "finished" status, save summary to backend
+  useEffect(() => {
+    const finishedStatuses = ["done", "finished", "results", "completed", "complete"];
+
+    if (!finishedStatuses.includes(status)) return;
+    if (hasSavedSummaryRef.current) return;
+
+    const summaryData = summary();
+    const isPractice = trialIndex < practiceTrials || summaryData?.isPractice;
+
+    if (onTestComplete) {
+      onTestComplete(summaryData);
+    }
+
+    const runSave = async () => {
+      // 1) Existing external submit (Mety API) if provided and not practice
+      if (!isPractice && onSubmitResults) {
+        const testData = {
+          userId,
+          testId: "reactiontime",
+          score: summaryData.avg,
+          metrics: summaryData,
+          metadata: {
+            testDate: new Date().toISOString(),
+            practice: false,
+            deviceInfo: "web",
+            screenDimensions: { width: window.innerWidth, height: window.innerHeight },
+            testConfig,
+            theme
+          }
+        };
+        onSubmitResults(testData);
+        setLocalSubmittedToday(true);
+      }
+
+      // 2) Save FrailtyTester summary to /api/frailty-tests/results for Profile page
+      if (!isPractice) {
+        const overallScore =
+          summaryData.avg ??
+          summaryData.averageReactionTime ??
+          summaryData.mean;
+
+        // avg is in seconds (e.g. 0.538 sec)
+        let category = "Average";
+        if (overallScore && overallScore < 0.4) category = "Fast";
+        else if (overallScore && overallScore > 0.8) category = "Slow";
+
+        try {
+          console.log("Saving Reaction Time summary to /api/frailty-tests/results", {
+            overallScore,
+            category,
+          });
+
+          await axios.post("/api/frailty-tests/results", {
+            testName: "Reaction Time Test",
+            testKey: "reaction_time",
+            overallScore,
+            assessment: {
+              category,
+              unit: "sec",
+              trialsCompleted:
+                summaryData.totalTrials || summaryData.trials || totalTrials
+            },
+            timestamp: new Date().toISOString(),
+            rawMetrics: summaryData
+          });
+
+          hasSavedSummaryRef.current = true;
+          console.log("✅ Reaction Time summary saved");
+        } catch (error) {
+          console.error("❌ Error saving Reaction Time summary:", error);
+        }
+      }
+
+      if (isPractice && onPracticeComplete) {
+        onPracticeComplete(summaryData);
+      }
+    };
+
+    runSave();
+  }, [
+    status,
+    trialIndex,
+    practiceTrials,
+    summary,
+    onTestComplete,
+    onSubmitResults,
+    onPracticeComplete,
+    userId,
+    testConfig,
+    theme,
+    totalTrials
+  ]);
+
+  const handleStartTest = () => {
+    setTestStarted(true);
+    start({ practice: true });
+  };
+
+  const handleStartPracticeTest = () => {
+    start({ practice: false });
+  };
+
+  const handleResetTest = () => {
+    reset();
+    setTestResults(null);
+    hasSavedSummaryRef.current = false;
+  };
+
+  if (!testStarted) {
+    return (
+      <>
+        <MetyNavbar 
+          brandLogo="/mety_technology_logo.png"
+          navItems={[
+            { label: "Home", path: "/", color: "#20545c" },
+            { label: "My Youthspan", path: "/myyouthspan", color: "#20545c" },
+            { label: "Careers", path: "/careers", color: "#20545c" },
+            { label: "Contact", path: "/contact", color: "#20545c" }
+          ]}
+          fixed={true}
+        />
+        <MetyPageSection
+          id="cognitive-assessment"
+          background="white"
+          centered={true}
+          maxWidth="4xl"
+          padding="py-16"
+        >
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-brandHeading font-bold text-brand-primary mb-4">
+              Cognitive Function Assessment
+            </h1>
+            <p className="text-xl font-brandBody text-brand-neutral max-w-3xl mx-auto leading-relaxed">
+              Evaluate your cognitive processing speed and attention capabilities through our scientifically designed reaction time assessment.
+            </p>
+          </div>
+          
+          <TestIntroCard
+            title="Cognitive Function Assessment"
+            instructions={introInstructions}
+            buttonText="Begin Assessment"
+            onClick={handleStartTest}
+          />
+        </MetyPageSection>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <MetyNavbar 
+        brandLogo="/mety_technology_logo.png"
+        navItems={[
+          { label: "Home", path: "/", color: "#20545c" },
+          { label: "My Youthspan", path: "/myyouthspan", color: "#20545c" },
+          { label: "Careers", path: "/careers", color: "#20545c" },
+          { label: "Contact", path: "/contact", color: "#20545c" }
+        ]}
+        fixed={true}
+      />
+      <MetyPageSection
+        id="reaction-time-test"
+        background="gray-50"
+        centered={true}
+        maxWidth="6xl"
+        padding="py-16"
+      >
+        <ReactionTimeTestUI
+          // Hook state
+          status={status}
+          countdownNum={countdownNum}
+          trialIndex={trialIndex}
+          totalTrials={totalTrials}
+          practiceTrials={practiceTrials}
+          showCue={showCue}
+          earlyClick={earlyClick}
+          results={results}
+          
+          // Hook actions
+          start={start}
+          onClick={onClick}
+          reset={handleResetTest}
+          summary={summary}
+          
+          text={text}
+          stimulusImage={stimulusImage}
+          customStyles={customStyles}
+          theme={theme}
+        />
+      </MetyPageSection>
+    </>
+  );
+};
+
+export default ReactionTimeTestPage;
+
+
+=========================================
+FILE: src/pages/Signup.jsx
+=========================================
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Mail, Lock, User, ArrowRight } from 'lucide-react';
+import MetyButton from '../components/MetyButton';
+import { loginUser } from '../store/slices/userSlice';
+
+const Signup = () => {
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
+
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        if (formData.password !== formData.confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:3000/api/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    password: formData.password
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                console.log('Signup successful:', data);
+                navigate('/login'); // Redirect to login page
+            } else {
+                setError(data.message || 'Signup failed');
+            }
+        } catch (err) {
+            console.error('Signup error:', err);
+            setError('An error occurred. Please try again.');
+        }
+    };
+
+    return (
+        <div className="min-h-[calc(100vh-6rem)] flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8 py-12">
+            <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-gray-100">
+                <div className="text-center">
+                    <h2 className="mt-2 text-3xl font-bold text-gray-900 font-montserrat tracking-tight">
+                        Create an account
+                    </h2>
+                    <p className="mt-2 text-sm text-gray-600">
+                        Join FrailtyTester to start tracking your health.
+                    </p>
+                    {error && (
+                        <div className="mt-4 p-3 bg-red-50 text-red-700 text-sm rounded-lg border border-red-200">
+                            {error}
+                        </div>
+                    )}
+                </div>
+
+                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                    <div className="space-y-5">
+                        <div>
+                            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                                Full Name
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <User className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    autoComplete="name"
+                                    required
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-colors duration-200 ease-in-out bg-gray-50 focus:bg-white"
+                                    placeholder="John Doe"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                                Email address
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Mail className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    autoComplete="email"
+                                    required
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-colors duration-200 ease-in-out bg-gray-50 focus:bg-white"
+                                    placeholder="you@example.com"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                                Password
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Lock className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    autoComplete="new-password"
+                                    required
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-colors duration-200 ease-in-out bg-gray-50 focus:bg-white"
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                                Confirm Password
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Lock className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    type="password"
+                                    autoComplete="new-password"
+                                    required
+                                    value={formData.confirmPassword}
+                                    onChange={handleChange}
+                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm transition-colors duration-200 ease-in-out bg-gray-50 focus:bg-white"
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <MetyButton
+                            type="submit"
+                            variant="primary"
+                            className="w-full justify-center py-3 text-base font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                        >
+                            Sign up <ArrowRight className="ml-2 h-5 w-5" />
+                        </MetyButton>
+                    </div>
+                </form>
+
+                <div className="mt-6">
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-200" />
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-white text-gray-500">
+                                Or continue with
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="mt-6">
+                        <a
+                            href="http://localhost:3000/api/auth/google"
+                            className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white hover:bg-gray-50 transition-colors duration-200"
+                        >
+                            <svg className="h-5 w-5" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                            </svg>
+                            <span className="text-sm font-medium text-gray-700">Sign up with Google</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div className="mt-6">
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-200" />
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-white text-gray-500">
+                                Already have an account?
+                            </span>
+                        </div>
+                    </div>
+
+                    <div className="mt-6 text-center">
+                        <Link to="/login" className="font-medium text-primary hover:text-primary-dark transition-colors">
+                            Sign in to your account
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Signup;
+
+
+=========================================
+FILE: src/pages/tests/BalanceTest.jsx
+=========================================
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useBalancePose from '../../hooks/useBalancePose';
+import WebcamView from '../../components/webcam/WebcamView';
+import PermissionDenied from '../../components/webcam/PermissionDenied';
+import PoseCanvas from '../../components/pose/PoseCanvas';
+import { analyzeKeypoints } from '../../components/pose/PoseAnalyzer';
+import { computeBalanceScore } from '../../utils/balanceScoring';
+
+const BalanceTest = () => {
+  const navigate = useNavigate();
+  const videoRef = useRef(null);
+  
+  // Test state
+  const [currentTrial, setCurrentTrial] = useState(0);
+  const [currentFoot, setCurrentFoot] = useState('left');
+  const [trialDuration, setTrialDuration] = useState(0);
+  const [isTrialActive, setIsTrialActive] = useState(false);
+  const [trials, setTrials] = useState([]);
+  const [showCooldown, setShowCooldown] = useState(false);
+  const [cooldownCount, setCooldownCount] = useState(5);
+  const [wrongLeg, setWrongLeg] = useState(false);
+  const [testComplete, setTestComplete] = useState(false);
+  const [finalScore, setFinalScore] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Refs for pose analysis
+  const isFootInAirRef = useRef(false);
+  const startTimeRef = useRef(null);
+  const timerIntervalRef = useRef(null);
+  
+  // Pose detection hook
+  const { keypoints, isLoading, error, detector } = useBalancePose(videoRef, (keypoints) => {
+    if (isTrialActive && keypoints.length > 0) {
+      analyzeKeypoints(keypoints, {
+        isFootInAirRef,
+        startTimer,
+        stopTimer,
+        currentFoot,
+        setWrongLeg,
+        onFootDrop: handleFootDrop
+      });
+    }
+  });
+
+  // Trial configuration
+  const TOTAL_TRIALS = 6;
+  const TRIALS_PER_FOOT = 3;
+
+  // Timer functions
+  const startTimer = useCallback(() => {
+    if (!startTimeRef.current) {
+      startTimeRef.current = Date.now();
+      setIsTrialActive(true);
+      
+      // Update timer every 100ms for smooth display
+      timerIntervalRef.current = setInterval(() => {
+        if (startTimeRef.current) {
+          const elapsed = (Date.now() - startTimeRef.current) / 1000;
+          setTrialDuration(Math.round(elapsed * 10) / 10);
+        }
+      }, 100);
+    }
+  }, []);
+
+  const stopTimer = useCallback(() => {
+    if (startTimeRef.current) {
+      const duration = (Date.now() - startTimeRef.current) / 1000;
+      
+      // Record trial result
+      const trialResult = {
+        trial: currentTrial + 1,
+        foot: currentFoot,
+        duration: Math.round(duration * 10) / 10,
+        timestamp: new Date().toISOString()
+      };
+      
+      setTrials(prev => [...prev, trialResult]);
+      
+      // Reset timer
+      startTimeRef.current = null;
+      setIsTrialActive(false);
+      setTrialDuration(0);
+      
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+      }
+      
+      // Start cooldown
+      setShowCooldown(true);
+      setCooldownCount(5);
+    }
+  }, [currentTrial, currentFoot]);
+
+  // Handle foot drop (called from pose analyzer)
+  const handleFootDrop = useCallback(() => {
+    stopTimer();
+  }, [stopTimer]);
+
+  // Cooldown countdown
+  useEffect(() => {
+    if (showCooldown && cooldownCount > 0) {
+      const timer = setTimeout(() => {
+        setCooldownCount(prev => prev - 1);
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    } else if (showCooldown && cooldownCount === 0) {
+      setShowCooldown(false);
+      nextTrial();
+    }
+  }, [showCooldown, cooldownCount]);
+
+  // Move to next trial
+  const nextTrial = () => {
+    const nextTrialIndex = currentTrial + 1;
+    
+    if (nextTrialIndex >= TOTAL_TRIALS) {
+      // Test complete
+      setTestComplete(true);
+      const score = computeBalanceScore(trials);
+      setFinalScore(score);
+    } else {
+      // Switch foot every 3 trials
+      const newFoot = Math.floor(nextTrialIndex / TRIALS_PER_FOOT) % 2 === 0 ? 'left' : 'right';
+      setCurrentFoot(newFoot);
+      setCurrentTrial(nextTrialIndex);
+      setWrongLeg(false);
+    }
+  };
+
+  // Submit results
+  const submitResults = async () => {
+    if (!finalScore) return;
+    
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        testType: 'balance',
+        timestamp: new Date().toISOString(),
+        trials: trials,
+        score: finalScore,
+        metadata: {
+          totalTrials: finalScore.totalTrials,
+          averageTime: finalScore.averageTime,
+          bestTime: finalScore.bestTime,
+          assessment: finalScore.assessment
+        }
+      };
+
+      // Submit to backend
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || ""}/api/results`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        console.log('Results submitted successfully');
+        navigate('/');
+      } else {
+        console.error('Failed to submit results');
+      }
+    } catch (error) {
+      console.error('Error submitting results:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (timerIntervalRef.current) {
+        clearInterval(timerIntervalRef.current);
+      }
+    };
+  }, []);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-xl text-gray-700">Loading pose detection model...</p>
+          <p className="text-gray-500 mt-2">This may take a few moments</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Model Loading Error</h1>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <button
+            onClick={() => navigate('/tests/balance-intro')}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Back to Intro
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Test complete state
+  if (testComplete && finalScore) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-800 mb-4">Test Complete!</h1>
+            <p className="text-xl text-gray-600">Your balance test results</p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <div className="grid grid-cols-2 gap-6 mb-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-blue-600">{finalScore.averageTime}s</div>
+                <div className="text-gray-600">Average Time</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600">{finalScore.bestTime}s</div>
+                <div className="text-gray-600">Best Time</div>
+              </div>
+            </div>
+
+            {finalScore.assessment && (
+              <div className="text-center mb-6">
+                <div className="text-lg font-semibold text-gray-800 mb-2">Performance</div>
+                <div className="text-2xl font-bold text-blue-600">{finalScore.assessment.category}</div>
+                <div className="text-gray-600">Age Group: {finalScore.assessment.ageGroup}</div>
+                <div className="text-gray-600">Expected Range: {finalScore.assessment.expectedRange}</div>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              {trials.map((trial, index) => (
+                <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                  <span className="font-medium">Trial {trial.trial} ({trial.foot} foot)</span>
+                  <span className="text-lg font-semibold">{trial.duration}s</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={() => navigate('/')}
+              className="px-8 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-semibold"
+            >
+              Back to Home
+            </button>
+            
+            <button
+              onClick={submitResults}
+              disabled={isSubmitting}
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold disabled:opacity-50"
+            >
+              {isSubmitting ? 'Saving...' : 'Save Results'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Main test interface
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">Balance Test</h1>
+          <div className="flex justify-center items-center space-x-8 text-lg">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">{currentTrial + 1}</div>
+              <div className="text-gray-600">Trial</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">{TOTAL_TRIALS}</div>
+              <div className="text-gray-600">Total</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{currentFoot}</div>
+              <div className="text-gray-600">Foot</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Test Area */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Camera Feed */}
+          <div className="lg:col-span-2">
+            <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden" style={{ aspectRatio: '4/3' }}>
+              <WebcamView ref={videoRef} />
+              <PoseCanvas 
+                videoRef={videoRef} 
+                keypoints={keypoints}
+                boundingBox={null}
+              />
+              
+              {/* Overlay for instructions */}
+              {!isTrialActive && !showCooldown && (
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                  <div className="text-center text-white p-6">
+                    <h3 className="text-2xl font-bold mb-4">Lift your {currentFoot} foot</h3>
+                    <p className="text-lg">Stand on one leg and maintain balance</p>
+                    <p className="text-sm mt-2">The test will start automatically when you lift your foot</p>
+                  </div>
+                </div>
+              )}
+              
+              {/* Timer overlay */}
+              {isTrialActive && (
+                <div className="absolute top-4 right-4 bg-black bg-opacity-75 text-white px-4 py-2 rounded-lg">
+                  <div className="text-2xl font-bold">{trialDuration}s</div>
+                </div>
+              )}
+              
+              {/* Cooldown overlay */}
+              {showCooldown && (
+                <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center">
+                  <div className="text-center text-white">
+                    <div className="text-6xl font-bold mb-4">{cooldownCount}</div>
+                    <p className="text-xl">Next trial in...</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Status Panel */}
+          <div className="space-y-6">
+            {/* Current Status */}
+            <div className="bg-white rounded-2xl shadow-xl p-6">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">Status</h3>
+              
+              {wrongLeg && (
+                <div className="mb-4 p-3 bg-red-100 border border-red-300 rounded-lg">
+                  <p className="text-red-700 font-medium">Wrong foot lifted!</p>
+                  <p className="text-red-600 text-sm">Please lift your {currentFoot} foot</p>
+                </div>
+              )}
+              
+              {isTrialActive && (
+                <div className="mb-4 p-3 bg-green-100 border border-green-300 rounded-lg">
+                  <p className="text-green-700 font-medium">Trial Active</p>
+                  <p className="text-green-600 text-sm">Keep your {currentFoot} foot up!</p>
+                </div>
+              )}
+              
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Current Trial:</span>
+                  <span className="font-semibold">{currentTrial + 1} of {TOTAL_TRIALS}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Current Foot:</span>
+                  <span className="font-semibold capitalize">{currentFoot}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Model Status:</span>
+                  <span className="font-semibold text-green-600">Ready</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Trial Results */}
+            {trials.length > 0 && (
+              <div className="bg-white rounded-2xl shadow-xl p-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-4">Completed Trials</h3>
+                <div className="space-y-2">
+                  {trials.map((trial, index) => (
+                    <div key={index} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                      <span className="text-sm">Trial {trial.trial} ({trial.foot})</span>
+                      <span className="font-semibold">{trial.duration}s</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Controls */}
+            <div className="bg-white rounded-2xl shadow-xl p-6">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">Controls</h3>
+              <div className="space-y-3">
+                <button
+                  onClick={() => navigate('/tests/balance-intro')}
+                  className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                >
+                  Back to Intro
+                </button>
+                
+                <button
+                  onClick={() => navigate('/')}
+                  className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                >
+                  Exit Test
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BalanceTest;
+
+
+
+=========================================
+FILE: src/pages/tests/ChairStandTest.jsx
+=========================================
+import React, { useRef, useState, useEffect } from "react";
+import Webcam from "react-webcam";
+import SitStandScores from "../../assets/images/Sit-Stand-Scores.png";
+
+const AUDIO_PATH = "/src/assets/audio/";
+
+const ChairStandTest = () => {
+  const webcamRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const [recording, setRecording] = useState(false);
+  const [videoBlob, setVideoBlob] = useState(null);
+  const [time, setTime] = useState(30);
+  const timerRef = useRef(null);
+  const [error, setError] = useState("");
+  const [webcamAvailable, setWebcamAvailable] = useState(true);
+  const [uploadStatus, setUploadStatus] = useState("");
+  const [processingResult, setProcessingResult] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [testConcluded, setTestConcluded] = useState(false);
+
+  useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(() => setWebcamAvailable(true))
+      .catch(() => {
+        setWebcamAvailable(false);
+        setError("No webcam detected. Please connect a webcam to use this feature.");
+      });
+  }, []);
+
+  const playAudio = (filename) => {
+    const audio = new Audio(AUDIO_PATH + filename);
+    audio.play();
+  };
+
+  const startRecording = () => {
+    if (!webcamRef.current || !webcamRef.current.stream) {
+      setError("No webcam stream found. Please allow webcam access.");
+      return;
+    }
+    setRecording(true);
+    setVideoBlob(null);
+    setTime(30);
+    setError("");
+    setTestConcluded(false);
+    timerRef.current = setInterval(() => {
+      setTime((prevTime) => {
+        if (prevTime === 1) {
+          stopRecording();
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+    try {
+      const stream = webcamRef.current.stream;
+      const mediaRecorder = new window.MediaRecorder(stream, { mimeType: "video/webm" });
+      let recordedChunks = [];
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          recordedChunks.push(event.data);
+        }
+      };
+      mediaRecorder.onstop = () => {
+        clearInterval(timerRef.current);
+        const blob = new Blob(recordedChunks, { type: "video/webm" });
+        setVideoBlob(blob);
+      };
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.start();
+      playAudio("countdown.mp3");
+    } catch (error) {
+      setError("Error initializing recording. Please try again.");
+      console.error("Error initializing MediaRecorder:", error);
+    }
+  };
+
+  const stopRecording = () => {
+    setRecording(false);
+    clearInterval(timerRef.current);
+    if (mediaRecorderRef.current?.state !== "inactive") {
+      mediaRecorderRef.current.stop();
+    }
+    playAudio("test_started.mp3");
+  };
+
+  const downloadVideo = () => {
+    if (videoBlob) {
+      const url = URL.createObjectURL(videoBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "chair-stand-test.webm";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  };
+
+  // Placeholder for upload/processing logic
+  const uploadToServer = async () => {
+    if (!videoBlob) {
+      setUploadStatus("No video available to upload.");
+      return;
+    }
+    setUploadStatus("Uploading...");
+    setIsProcessing(true);
+    setTestConcluded(false);
+    // TODO: Implement backend upload/processing
+    setTimeout(() => {
+      setProcessingResult({ success: "Processing complete!", reps: Math.floor(Math.random() * 20) + 10 });
+      setUploadStatus("Processing complete!");
+      setIsProcessing(false);
+      setTestConcluded(true);
+    }, 2000);
+  };
+
+  return (
+    <div style={{ textAlign: "center", padding: "20px", maxWidth: "1000px", margin: "auto" }}>
+      <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "20px" }}>
+        Chair Stand Test
+      </h1>
+      {!webcamAvailable && <p style={{ color: "red", fontWeight: "bold" }}>{error}</p>}
+      {webcamAvailable && <Webcam ref={webcamRef} />}
+      <div>
+        {recording ? (
+          <>
+            <button onClick={stopRecording} style={{ margin: "10px", padding: "10px", backgroundColor: "red", color: "white", border: "none", borderRadius: "5px" }}>
+              Stop
+            </button>
+            <p>Time Remaining: <strong>{time} seconds</strong></p>
+          </>
+        ) : (
+          <button
+            onClick={startRecording}
+            disabled={!webcamAvailable}
+            style={{
+              margin: "10px",
+              padding: "10px",
+              backgroundColor: webcamAvailable ? "green" : "gray",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: webcamAvailable ? "pointer" : "not-allowed"
+            }}
+          >
+            Record
+          </button>
+        )}
+      </div>
+      {videoBlob && (
+        <div>
+          <h3>Review Your Recording:</h3>
+          <video src={URL.createObjectURL(videoBlob)} controls style={{ width: "100%", maxWidth: "500px" }} />
+          <br />
+          <button onClick={downloadVideo} style={{ margin: "10px", padding: "10px", backgroundColor: "black", color: "white", border: "none", borderRadius: "5px" }}>
+            Download
+          </button>
+          <button onClick={uploadToServer} style={{ margin: "10px", padding: "10px", backgroundColor: "blue", color: "white", border: "none", borderRadius: "5px" }}>
+            Upload
+          </button>
+        </div>
+      )}
+      {isProcessing && (
+        <div style={{ marginTop: "40px", textAlign: "center" }}>
+          <div className="loader_spin" />
+          <p>Analysis in progress. This shouldn't take more than a few minutes.</p>
+        </div>
+      )}
+      {uploadStatus && <p>{uploadStatus}</p>}
+      {testConcluded && processingResult && (
+        <div style={{ marginTop: "20px" }}>
+          {processingResult.success && <p>{processingResult.success}</p>}
+          {processingResult.reps && (
+            <p>
+              <strong>Chair Stand Count:</strong> {processingResult.reps}
+            </p>
+          )}
+          <img
+            src={SitStandScores}
+            alt="Below Average Scores Based on Age Group"
+            style={{ maxWidth: "100%", marginTop: "20px" }}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default ChairStandTest;
+
+=========================================
+FILE: src/pages/tests/HearingTest.jsx
+=========================================
+import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import axios from 'axios';
+
+const HearingTest = () => {
+    const navigate = useNavigate();
+    const iframeRef = useRef(null);
+
+    useEffect(() => {
+        const handleMessage = async (event) => {
+            // Verify origin if deployed, but for localhost/same-origin it's fine
+            // if (event.origin !== "http://localhost:5173") return;
+
+            if (event.data && event.data.type === 'HEARING_TEST_RESULT') {
+                console.log("Received hearing test result:", event.data);
+
+                try {
+                    const resultData = {
+                        testName: "Hearing Test Suite",
+                        testKey: "hearing-test",
+                        overallScore: `${event.data.score} dB HL`,
+                        assessment: {
+                            category: event.data.category,
+                            expectedRange: event.data.details?.expectedAge,
+                            notes: event.data.details?.explanation
+                        }
+                    };
+
+                    await axios.post('/api/frailty-tests/results', resultData);
+                    alert("Test results saved successfully!");
+                    navigate('/profile');
+                } catch (error) {
+                    console.error("Error saving hearing test results:", error);
+                    alert("Failed to save results. Please try again.");
+                }
+            }
+        };
+
+        window.addEventListener('message', handleMessage);
+        return () => window.removeEventListener('message', handleMessage);
+    }, [navigate]);
+
+    return (
+        <div className="w-full h-screen flex flex-col bg-gray-50">
+            <div className="bg-white shadow-sm p-4 flex items-center gap-4 z-10">
+                <button
+                    onClick={() => navigate('/')}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    aria-label="Go back"
+                >
+                    <ArrowLeft className="w-6 h-6 text-gray-600" />
+                </button>
+                <h1 className="text-xl font-semibold text-gray-800">Hearing Test Suite</h1>
+            </div>
+
+            <div className="flex-1 w-full relative">
+                <iframe
+                    ref={iframeRef}
+                    src="/hearing-test/index.html"
+                    title="Hearing Test Suite"
+                    className="w-full h-full border-0"
+                    allow="microphone; autoplay"
+                />
+            </div>
+        </div>
+    );
+};
+
+export default HearingTest;
+
+
+=========================================
+FILE: src/pages/tests/PSSTest.jsx
+=========================================
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Scale, CheckCircle, AlertCircle } from 'lucide-react';
+import MetyButton from '../../components/MetyButton';
+import { PSS_ITEMS, PSS_RESPONSE_OPTIONS } from '../../constants/pssItems';
+import { scorePSS, getCategoryDescription, getCategoryColor } from '../../utils/pssScoring';
+import axios from "axios";
+
+const PSSTest = () => {
+  const navigate = useNavigate();
+  const [responses, setResponses] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const [score, setScore] = useState(null);
+  const [startedAt, setStartedAt] = useState(null);
+  const [endedAt, setEndedAt] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    setStartedAt(new Date().toISOString());
+  }, []);
+
+  const handleResponseChange = (itemId, value) => {
+    setResponses(prev => ({
+      ...prev,
+      [itemId]: value
+    }));
+    setError('');
+  };
+
+  const isFormValid = () => {
+    return Object.keys(responses).length === 10 &&
+      Object.values(responses).every(value => value !== undefined && value !== null);
+  };
+
+  const getProgressPercentage = () => {
+    return Math.round((Object.keys(responses).length / 10) * 100);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!isFormValid()) {
+      setError('Please answer all 10 questions before submitting.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+      // Format responses for scoring
+      const formattedResponses = Object.entries(responses).map(([itemId, value]) => ({
+        itemId: parseInt(itemId),
+        value: parseInt(value)
+      }));
+
+      // Calculate score
+      const result = scorePSS(formattedResponses);
+      setScore(result);
+      const ended = new Date().toISOString();
+      setEndedAt(ended);
+
+      // Submit to backend PSS endpoint (existing behaviour)
+      const testData = {
+        test: "pss10",
+        responses: formattedResponses,
+        total: result.total,
+        category: result.category,
+        startedAt,
+        endedAt: ended
+      };
+
+      const response = await fetch('http://localhost:3000/api/frailty-tests/pss', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(testData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit test results');
+      }
+
+      // ✅ Save result to Profile page results file (generic results route)
+      await axios.post("http://localhost:3000/api/frailty-tests/results", {
+        test: "pss10",
+        testName: "PSS-10 Stress Test",
+        overallScore: result.total,
+        assessment: {
+          category: result.category,
+          startedAt,
+          endedAt: ended
+        }
+      });
+
+      console.log("✅ PSS result saved to profile results!");
+      setSubmitted(true);
+
+    } catch (err) {
+      console.error('Error submitting PSS test:', err);
+      setError('Failed to submit test results. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRetake = () => {
+    setResponses({});
+    setSubmitted(false);
+    setScore(null);
+    setStartedAt(new Date().toISOString());
+    setEndedAt(null);
+    setError('');
+  };
+
+  const handleGoHome = () => {
+    navigate('/');
+  };
+
+  if (submitted && score) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-white rounded-xl shadow-sm border border-neutral-light p-8 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-neutral-dark mb-6">
+              PSS Assessment Complete!
+            </h1>
+
+            <div className={`border rounded-lg p-6 mb-6 ${getCategoryColor(score.category)}`}>
+              <h2 className="text-2xl font-semibold mb-2">Your Stress Level</h2>
+              <div className="text-4xl font-bold mb-2">{score.total}/{score.maxScore}</div>
+              <p className="text-lg capitalize">{getCategoryDescription(score.category)}</p>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-6 mb-6 text-left">
+              <h3 className="text-lg font-semibold text-neutral-dark mb-3">Score Interpretation</h3>
+              <div className="space-y-2 text-sm text-neutral-medium">
+                <p><strong>0-13:</strong> Low perceived stress - You generally feel in control and able to cope with life's demands.</p>
+                <p><strong>14-26:</strong> Moderate perceived stress - You experience some stress but generally feel able to manage it.</p>
+                <p><strong>27-40:</strong> High perceived stress - You may be experiencing significant stress and could benefit from stress management strategies.</p>
+              </div>
+            </div>
+
+            <div className="space-x-4">
+              <MetyButton onClick={handleRetake} variant="secondary" size="lg">
+                Retake Test
+              </MetyButton>
+              <MetyButton onClick={handleGoHome} variant="primary" size="lg">
+                Return Home
+              </MetyButton>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="bg-white rounded-xl shadow-sm border border-neutral-light p-8">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+              <Scale className="w-8 h-8 text-blue-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-neutral-dark mb-2">
+              Perceived Stress Scale (PSS-10)
+            </h1>
+            <p className="text-lg text-neutral-medium">
+              Please answer each question based on how often you felt or thought a certain way during the last month.
+            </p>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-neutral-dark">Progress</span>
+              <span className="text-sm text-neutral-medium">
+                {Object.keys(responses).length}/10 questions answered
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${getProgressPercentage()}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="flex items-center space-x-2">
+                <AlertCircle className="w-5 h-5 text-red-600" />
+                <span className="text-red-800">{error}</span>
+              </div>
+            </div>
+          )}
+
+          {/* Test Form */}
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {PSS_ITEMS.map((item) => (
+              <div key={item.id} className="border border-gray-200 rounded-lg p-6">
+                <div className="mb-4">
+                  <h3 className="text-lg font-medium text-neutral-dark mb-2">
+                    Question {item.id}
+                  </h3>
+                  <p className="text-neutral-medium">{item.text}</p>
+                  {item.reverseScored && (
+                    <p className="text-sm text-blue-600 mt-1">
+                      <em>Note: This item is reverse-scored</em>
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-3">
+                  {PSS_RESPONSE_OPTIONS.map((option) => (
+                    <label key={option.value} className="flex items-center space-x-3 cursor-pointer">
+                      <input
+                        type="radio"
+                        name={`question-${item.id}`}
+                        value={option.value}
+                        checked={responses[item.id] === option.value}
+                        onChange={() => handleResponseChange(item.id, option.value)}
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                      />
+                      <span className="text-neutral-dark">{option.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            {/* Submit Button */}
+            <div className="text-center pt-6">
+              <MetyButton
+                type="submit"
+                variant="primary"
+                size="lg"
+                disabled={!isFormValid() || isSubmitting}
+                className="px-8 py-3 text-lg"
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Assessment'}
+              </MetyButton>
+
+              {!isFormValid() && (
+                <p className="text-sm text-neutral-medium mt-2">
+                  Please answer all questions to continue
+                </p>
+              )}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PSSTest;
+
+
+=========================================
+FILE: src/pages/tests/SelfReactionTest.jsx
+=========================================
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+const SelfReactionTest = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const mode = location.state?.mode || 'test';
+
+  const [highlightedQuestionIndex, setHighlightedQuestionIndex] = useState(null);
+  const [submittedToday, setSubmittedToday] = useState(false);
+  const [selectedValues, setSelectedValues] = useState(Array(10).fill(''));
+  const [showScore, setShowScore] = useState(false);
+  const [totalScore, setTotalScore] = useState(0);
+
+  const questions = [
+    '1. I can easily remember what has been said or done in the past 24 hours.',
+    '2. I can easily remember information for a short period of time (e.g., a phone number).',
+    '3. I can easily hold information in my head while working with it (perform mental arithmetic, take notes while listening in class).',
+    '4. I can easily recall information that I learn.',
+    '5. When I read, I remember the important facts.',
+    '6. I am easily able to recall events, things I have done or places I have been, in detail.',
+    '7. I can easily recognize someone\'s face that I have seen before.',
+    '8. It is easy for me to remember movies I have seen.',
+    '9. I use specific memory strategies, such as saying things over and over or making mental pictures.',
+    '10. It is easy for me to remember where I put things.',
+  ];
+
+  const categories = [
+    { name: 'Never', value: 3 },
+    { name: 'Sometimes', value: 2 },
+    { name: 'Often', value: 1 },
+    { name: 'Always', value: 0 },
+  ];
+
+  useEffect(() => {
+    // In a real implementation, you would check if the user has already submitted today
+    setSubmittedToday(false);
+  }, []);
+
+  const handleAnswerChange = (questionIndex, categoryName) => {
+    const updatedValues = [...selectedValues];
+    updatedValues[questionIndex] = categoryName;
+    setSelectedValues(updatedValues);
+    setHighlightedQuestionIndex(questionIndex);
+  };
+
+  const calculateTotalScore = () => {
+    let score = 0;
+    let unansweredQ = false;
+
+    selectedValues.forEach((selectedValue) => {
+      const category = categories.find((cat) => cat.name === selectedValue);
+      if (category) {
+        score += category.value;
+      } else {
+        unansweredQ = true;
+      }
+    });
+
+    if (unansweredQ) {
+      return -1;
+    } else {
+      return score;
+    }
+  };
+
+  const handleSubmit = async () => {
+    const score = calculateTotalScore();
+
+    if (score === -1) {
+      alert('Please answer all questions before submitting.');
+      return;
+    }
+
+    setTotalScore(score);
+    setShowScore(true);
+
+    if (mode === 'test') {
+      console.log('Test submitted with score:', score);
+
+      // Map score -> simple category text for the profile page
+      let category;
+      if (score <= 10) {
+        category = 'Excellent';
+      } else if (score <= 20) {
+        category = 'Good';
+      } else {
+        category = 'May benefit from strategies';
+      }
+
+      try {
+        await fetch('http://localhost:3000/api/frailty-tests/results', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            testName: 'Self Reaction Test',
+            overallScore: score,
+            assessment: { category },
+          }),
+        });
+      } catch (err) {
+        console.error('Failed to save Self Reaction result:', err);
+      }
+    }
+  };
+
+  const handleBackToHome = () => {
+    navigate('/');
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
+        {/* Fixed Header */}
+        <div className="bg-white shadow-lg rounded-lg p-6 mb-6 sticky top-4 z-10">
+          <h1 className="text-3xl font-bold text-gray-900 mb-3 text-center">
+            Self Reaction Test
+          </h1>
+          <p className="text-gray-600 text-center mb-4">
+            Read the items below and click on the answer choice that best describes how true this statement is for you.
+          </p>
+
+          {/* Category Headers */}
+          <div className="grid grid-cols-4 gap-4 mb-4">
+            {categories.map((category, categoryIndex) => (
+              <div key={categoryIndex} className="text-center">
+                <span className="text-sm font-medium text-gray-700">
+                  {category.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Questions */}
+        <div className="space-y-4">
+          {questions.map((question, questionIndex) => (
+            <div
+              key={questionIndex}
+              className={`bg-white shadow-md rounded-lg p-6 ${
+                questionIndex % 2 === 1 ? 'bg-gray-50' : ''
+              }`}
+            >
+              <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                {/* Question Text */}
+                <div className="flex-1">
+                  <p
+                    className={`text-gray-800 leading-relaxed ${
+                      highlightedQuestionIndex === questionIndex
+                        ? 'font-semibold text-green-700'
+                        : ''
+                    }`}
+                  >
+                    {question}
+                  </p>
+                </div>
+
+                {/* Answer Options */}
+                <div className="flex justify-center lg:justify-end gap-6">
+                  {categories.map((category, categoryIndex) => {
+                    const isSelected = selectedValues[questionIndex] === category.name;
+                    return (
+                      <button
+                        key={categoryIndex}
+                        onClick={() => handleAnswerChange(questionIndex, category.name)}
+                        className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${
+                          isSelected
+                            ? 'border-green-500 bg-green-500'
+                            : 'border-gray-300 hover:border-gray-400'
+                        }`}
+                      >
+                        {isSelected && (
+                          <div className="w-4 h-4 rounded-full bg-white mx-auto mt-1" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Submit Section */}
+        <div className="bg-white shadow-lg rounded-lg p-6 mt-8 text-center">
+          {(!showScore && !submittedToday) && (
+            <button
+              onClick={handleSubmit}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors"
+            >
+              Submit Test
+            </button>
+          )}
+
+          {(showScore || submittedToday) && (
+            <div className="space-y-4">
+              <div className="text-lg font-medium text-gray-700">
+                {submittedToday ? 'Already Submitted Today' : `Total Score: ${totalScore} / 30`}
+              </div>
+              <div className="text-sm text-gray-600">
+                {totalScore <= 10 && 'Excellent memory self-perception'}
+                {totalScore > 10 && totalScore <= 20 && 'Good memory self-perception'}
+                {totalScore > 20 && 'May benefit from memory strategies'}
+              </div>
+            </div>
+          )}
+
+          {/* Navigation */}
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <button
+              onClick={handleBackToHome}
+              className="text-gray-600 hover:text-gray-800 font-medium"
+            >
+              ← Back to Home
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SelfReactionTest;
+
+
+=========================================
+FILE: src/pages/tests/SF36Test.jsx
+=========================================
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Heart, CheckCircle, ArrowLeft, ArrowRight, BarChart3 } from 'lucide-react';
+import MetyButton from '../../components/MetyButton';
+import { SF36_ITEMS, SF36_SECTION_ORDER, SF36_DOMAINS } from '../../constants/sf36Items';
+import { scoreSF36, getDomainInfo, getScoreInterpretation } from '../../utils/sf36Scoring';
+
+console.log("Backend URL →", import.meta.env.VITE_API_BASE_URL);
+
+const SF36Test = () => {
+  const navigate = useNavigate();
+
+  // Map question id -> 1..36 numbering
+  const idToNumber = useMemo(() => new Map(SF36_ITEMS.map((it, idx) => [it.id, idx + 1])), []);
+
+  const [responsesById, setResponsesById] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const [score, setScore] = useState(null);
+  const [startedAt, setStartedAt] = useState(null);
+  const [endedAt, setEndedAt] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
+
+  useEffect(() => {
+    setStartedAt(new Date().toISOString());
+    console.debug("[sf36] unique ids", new Set(SF36_ITEMS.map(i => i.id)).size); // should be 36
+  }, []);
+
+  // Group questions by domain
+  const itemsByDomain = useMemo(() => {
+    const map = SF36_SECTION_ORDER.map(key => [key, []]);
+    const buckets = Object.fromEntries(map);
+    for (const q of SF36_ITEMS) {
+      buckets[q.domain].push(q);
+    }
+    return buckets;
+  }, []);
+
+  // Update responses
+  const setAnswer = (qid, value) => setResponsesById(prev => ({ ...prev, [qid]: value }));
+
+  const isCurrentPageValid = () => {
+    const currentDomain = SF36_SECTION_ORDER[currentPage];
+    const currentItems = itemsByDomain[currentDomain];
+    return currentItems.every(q => responsesById[q.id] != null);
+  };
+
+  const isFormValid = () => Object.keys(responsesById).length === 36;
+
+  const getProgressPercentage = () =>
+    Math.round((Object.keys(responsesById).length / 36) * 100);
+
+  const handleNext = () => {
+    if (isCurrentPageValid()) {
+      if (currentPage < SF36_SECTION_ORDER.length - 1) {
+        setCurrentPage(currentPage + 1);
+      }
+    } else {
+      setError('Please answer all questions on this page before continuing.');
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 0) setCurrentPage(currentPage - 1);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    console.log("Answered:", Object.keys(responsesById).length);
+    if (!isFormValid()) {
+      setError('Please answer all 36 questions before submitting.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+      const orderedResponses = SF36_ITEMS.map(it => ({
+        itemId: it.id,
+        value: responsesById[it.id] ?? null
+      }));
+
+      console.debug("[sf36] submit ids:", orderedResponses.map(r => r.itemId));
+      console.debug("Sample responses:", Object.values(responsesById).slice(0, 5));
+
+      const result = scoreSF36(orderedResponses);
+      setScore(result);
+
+      const endTime = new Date().toISOString();
+      setEndedAt(endTime);
+
+      // ---- 1) Save to dedicated SF-36 backend endpoint (existing behavior) ----
+      const testData = {
+        test: "sf36",
+        responses: orderedResponses,
+        domainScores: {
+          PF: result.PF,
+          RP: result.RP,
+          BP: result.BP,
+          GH: result.GH,
+          VT: result.VT,
+          SF: result.SF,
+          RE: result.RE,
+          MH: result.MH
+        },
+        startedAt,
+        endedAt: endTime
+      };
+
+      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
+      const response = await fetch(`${apiBase}/api/frailty-tests/sf36`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(testData)
+      });
+
+      if (!response.ok) throw new Error('Failed to submit test results');
+
+      // ---- 2) ALSO save a summary entry for the Profile page ----
+      try {
+        await fetch(`${apiBase}/api/frailty-tests/results`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            test: "sf36",
+            testName: "SF-36 Health Survey",
+            overallScore: result.overall,
+            domainScores: {
+              PF: result.PF,
+              RP: result.RP,
+              BP: result.BP,
+              GH: result.GH,
+              VT: result.VT,
+              SF: result.SF,
+              RE: result.RE,
+              MH: result.MH
+            },
+            assessment: {
+              category: getScoreInterpretation(result.overall)
+            },
+            startedAt,
+            endedAt: endTime
+          })
+        });
+      } catch (err2) {
+        console.error("Failed to save SF-36 to profile results:", err2);
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error('Error submitting SF-36 test:', err);
+      setError('Failed to submit test results. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRetake = () => {
+    setResponsesById({});
+    setSubmitted(false);
+    setScore(null);
+    setStartedAt(new Date().toISOString());
+    setEndedAt(null);
+    setError('');
+    setCurrentPage(0);
+  };
+
+  const handleGoHome = () => navigate('/');
+
+  // --- RESULT VIEW ---
+  if (submitted && score) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-white rounded-xl shadow-sm border border-neutral-light p-8 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+              <CheckCircle className="w-8 h-8 text-green-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-neutral-dark mb-6">
+              SF-36 Assessment Complete!
+            </h1>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+              <h2 className="text-2xl font-semibold text-blue-800 mb-2">Your Overall Score</h2>
+              <div className="text-4xl font-bold text-blue-600 mb-2">{score.overall}/100</div>
+              <p className="text-blue-700">Average across all health domains</p>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-6 mb-6 text-left">
+              <h3 className="text-lg font-semibold text-neutral-dark mb-4">Domain Scores</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                {Object.entries(score)
+                  .filter(([key]) => key !== 'overall' && key !== 'rawScores')
+                  .map(([domain, scoreValue]) => (
+                    <div key={domain} className="flex justify-between items-center p-3 bg-white rounded border">
+                      <div>
+                        <span className="font-medium text-neutral-dark">{getDomainInfo(domain).name}</span>
+                        <p className="text-sm text-neutral-medium">{getDomainInfo(domain).description}</p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xl font-bold text-blue-600">{scoreValue}/100</div>
+                        <div className="text-sm text-neutral-medium">{getScoreInterpretation(scoreValue)}</div>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            <div className="space-x-4">
+              <MetyButton onClick={handleRetake} variant="secondary" size="lg">
+                Retake Test
+              </MetyButton>
+              <MetyButton onClick={handleGoHome} variant="primary" size="lg">
+                Return Home
+              </MetyButton>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- TEST VIEW ---
+  const currentDomain = SF36_SECTION_ORDER[currentPage];
+  const pageItems = itemsByDomain[currentDomain];
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="bg-white rounded-xl shadow-sm border border-neutral-light p-8">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+              <Heart className="w-8 h-8 text-blue-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-neutral-dark mb-2">
+              General Health Inventory (SF-36)
+            </h1>
+            <p className="text-lg text-neutral-medium">
+              Please answer each question based on how you have been feeling during the past 4 weeks.
+            </p>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-neutral-dark">Progress</span>
+              <span className="text-sm text-neutral-medium">
+                {Object.keys(responsesById).length}/36 questions answered
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div
+                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${getProgressPercentage()}%` }}
+              ></div>
+            </div>
+          </div>
+
+          {/* Section Info */}
+          <div className="mb-6 text-center">
+            <div className="inline-flex items-center space-x-2 bg-gray-100 rounded-lg px-4 py-2">
+              <BarChart3 className="w-4 h-4 text-gray-600" />
+              <span className="text-sm font-medium text-neutral-dark">
+                Section {currentPage + 1} of {SF36_SECTION_ORDER.length}: {SF36_DOMAINS[currentDomain].name}
+              </span>
+            </div>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <span className="text-red-800">{error}</span>
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-6">
+              {pageItems.map((q) => {
+                const qNumber = idToNumber.get(q.id) ?? "?";
+                const currentVal = responsesById[q.id] ?? null;
+
+                return (
+                  <div key={q.id} className="border border-gray-200 rounded-lg p-6">
+                    <div className="mb-4">
+                      <h3 className="text-lg font-medium text-neutral-dark mb-2">
+                        Question {qNumber}
+                      </h3>
+                      <p className="text-neutral-medium">{q.text}</p>
+                    </div>
+
+                    <div className="space-y-3">
+                      {q.options.map((option) => (
+                        <label key={option.value} className="flex items-center space-x-3 cursor-pointer">
+                          <input
+                            type="radio"
+                            name={`q-${q.id}`}
+                            value={option.value}
+                            checked={currentVal === option.value}
+                            onChange={() => setAnswer(q.id, option.value)}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                          />
+                          <span className="text-neutral-dark">{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Navigation Buttons */}
+            <div className="flex justify-between items-center pt-6">
+              <MetyButton
+                type="button"
+                onClick={handlePrevious}
+                variant="secondary"
+                disabled={currentPage === 0}
+                className="flex items-center space-x-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Previous
+              </MetyButton>
+
+              {currentPage < SF36_SECTION_ORDER.length - 1 ? (
+                <MetyButton
+                  type="button"
+                  onClick={handleNext}
+                  variant="primary"
+                  disabled={!isCurrentPageValid()}
+                  className="flex items-center space-x-2"
+                >
+                  Next
+                  <ArrowRight className="w-4 h-4" />
+                </MetyButton>
+              ) : (
+                <MetyButton
+                  type="submit"
+                  variant="primary"
+                  disabled={!isFormValid() || isSubmitting}
+                  className="flex items-center space-x-2"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Assessment'}
+                </MetyButton>
+              )}
+            </div>
+
+            {!isFormValid() && currentPage === SF36_SECTION_ORDER.length - 1 && (
+              <p className="text-sm text-neutral-medium text-center">
+                Please answer all questions to continue
+              </p>
+            )}
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SF36Test;
+
+
+=========================================
+FILE: src/pages/screens/BalanceIntro.jsx
+=========================================
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const BalanceIntro = () => {
+  const navigate = useNavigate();
+  const [cameraPermission, setCameraPermission] = useState('checking');
+
+  useEffect(() => {
+    // Check camera permission on mount
+    const checkCameraPermission = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        stream.getTracks().forEach(track => track.stop()); // Stop the stream immediately
+        setCameraPermission('granted');
+      } catch (error) {
+        console.error('Camera permission error:', error);
+        setCameraPermission('denied');
+      }
+    };
+
+    checkCameraPermission();
+  }, []);
+
+  const handleStartTest = () => {
+    navigate('/tests/balance-test');
+  };
+
+  const handleBackToHome = () => {
+    navigate('/');
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">Balance Test</h1>
+          <p className="text-xl text-gray-600">Test your balance and stability</p>
+        </div>
+
+        {/* Main Content */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Instructions */}
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6">Test Instructions</h2>
+              
+              <div className="space-y-4 text-gray-700">
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
+                    1
+                  </div>
+                  <p>Stand in front of your camera, ensuring your full body is visible</p>
+                </div>
+                
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
+                    2
+                  </div>
+                  <p>You will be asked to lift one foot and maintain balance</p>
+                </div>
+                
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
+                    3
+                  </div>
+                  <p>Hold the position for as long as possible until you lose balance</p>
+                </div>
+                
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
+                    4
+                  </div>
+                  <p>The test includes 3 trials for each foot (6 total attempts)</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Requirements */}
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6">Requirements</h2>
+              
+              <div className="space-y-4 text-gray-700">
+                <div className="flex items-center space-x-3">
+                  <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span>Good lighting conditions</span>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span>Camera access permission</span>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span>Stable internet connection</span>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <span>Clear space around you</span>
+                </div>
+              </div>
+
+              {/* Camera Status */}
+              <div className="mt-6 p-4 rounded-lg bg-gray-50">
+                <h3 className="font-semibold text-gray-800 mb-2">Camera Status</h3>
+                {cameraPermission === 'checking' && (
+                  <p className="text-yellow-600">Checking camera access...</p>
+                )}
+                {cameraPermission === 'granted' && (
+                  <p className="text-green-600">✓ Camera access granted</p>
+                )}
+                {cameraPermission === 'denied' && (
+                  <p className="text-red-600">✗ Camera access denied. Please enable camera permissions.</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button
+            onClick={handleBackToHome}
+            className="px-8 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-semibold"
+          >
+            Back to Home
+          </button>
+          
+          <button
+            onClick={handleStartTest}
+            disabled={cameraPermission !== 'granted'}
+            className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
+              cameraPermission === 'granted'
+                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            Start Balance Test
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default BalanceIntro;
+
+
+
+=========================================
+FILE: src/pages/screens/BalanceTestIntro.jsx
+=========================================
+import React from "react";
+import { useDispatch } from "react-redux";
+import { nextStep } from "../../store/slices/stageSlice";
+import TestIntroCard from "../../components/TestIntroCard";
+import { FaCamera, FaClock, FaRegUser } from "react-icons/fa";
+
+const instructions = [
+  {
+    icon: <FaCamera size={28} className="text-primary" aria-hidden="true" />, 
+    title: "Camera Access Required",
+    text: "Please grant camera access when prompted to enable pose detection for accurate balance assessment."
+  },
+  {
+    icon: <FaClock size={28} className="text-primary" aria-hidden="true" />, 
+    title: "Assessment Duration",
+    text: "This balance evaluation will take approximately 3 minutes to complete."
+  },
+  {
+    icon: <FaRegUser size={28} className="text-primary" aria-hidden="true" />, 
+    title: "Optimal Positioning",
+    text: "Ensure you're in a well-lit, spacious area with your full body visible in the camera frame."
+  }
+];
+
+const BalanceTestIntro = () => {
+  const dispatch = useDispatch();
+  const handleBeginAssessment = () => {
+    dispatch(nextStep()); // Proceed to the actual balance test screen
+  };
+
+  return (
+    <TestIntroCard
+      title="Balance Assessment Introduction"
+      instructions={instructions}
+      buttonText="Begin Assessment"
+      onClick={handleBeginAssessment}
+    />
+  );
+};
+
+export default BalanceTestIntro;
+
+=========================================
+FILE: src/pages/screens/ChairStandIntro.jsx
+=========================================
+import React from "react";
+import TestIntroCard from "../../components/TestIntroCard";
+import { FaChair, FaClock, FaDumbbell } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+const instructions = [
+  {
+    icon: <FaChair size={28} className="text-primary" aria-hidden="true" />, 
+    title: "Assessment Overview",
+    text: "This evaluation measures lower body strength and functional mobility by counting sit-to-stand repetitions in 30 seconds."
+  },
+  {
+    icon: <FaClock size={28} className="text-primary" aria-hidden="true" />, 
+    title: "Duration",
+    text: "The assessment will last exactly 30 seconds with clear audio cues to guide your pace."
+  },
+  {
+    icon: <FaDumbbell size={28} className="text-primary" aria-hidden="true" />, 
+    title: "Safety Guidelines",
+    text: "Use a stable chair without arms, positioned against a wall for safety. Perform at your own comfortable pace."
+  }
+];
+
+const ChairStandIntro = () => {
+  const navigate = useNavigate();
+  
+  const handleBeginAssessment = () => {
+    navigate("/chair-stand-test");
+  };
+
+  return (
+    <TestIntroCard
+      title="Chair Stand Assessment Introduction"
+      instructions={instructions}
+      buttonText="Begin Assessment"
+      onClick={handleBeginAssessment}
+    />
+  );
+};
+
+export default ChairStandIntro;
+
+=========================================
+FILE: src/pages/screens/ComingSoonPage.jsx
+=========================================
+import React from "react";
+import { Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
+import PageSection from "../../components/PageSection";
+
+const ComingSoonPage = ({ testName }) => {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <PageSection className="text-center py-20">
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white rounded-xl shadow-sm border border-neutral-light p-12">
+            <div className="mb-8">
+              <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-amber-600 text-2xl">⏳</span>
+              </div>
+              <h1 className="text-3xl font-bold text-neutral-dark mb-4 font-montserrat">
+                {testName || "Test"} Coming Soon
+              </h1>
+              <p className="text-lg text-neutral-medium leading-relaxed font-sans">
+                This assessment is currently in development and will be available soon. 
+                We're working hard to bring you the most accurate and reliable health assessments.
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="bg-gray-50 rounded-lg p-4">
+                <h3 className="font-semibold text-neutral-dark mb-2 font-montserrat">
+                  What to expect:
+                </h3>
+                <ul className="text-neutral-medium text-left space-y-2 font-sans">
+                  <li>• Scientifically validated assessment methodology</li>
+                  <li>• Easy-to-use interface with clear instructions</li>
+                  <li>• Detailed results with actionable insights</li>
+                  <li>• Progress tracking over time</li>
+                </ul>
+              </div>
+              
+              <Link
+                to="/"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-lg font-medium text-white bg-primary hover:bg-[#34C759] transition-all duration-200"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Home
+              </Link>
+            </div>
+          </div>
+        </div>
+      </PageSection>
+    </div>
+  );
+};
+
+export default ComingSoonPage; 
+
+=========================================
+FILE: src/pages/screens/HearingTestIntro.jsx
+=========================================
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import TestIntroCard from '../../components/TestIntroCard';
+import { Volume2, Mic, Gauge, Radio, CheckCircle } from 'lucide-react';
+
+const HearingTestIntro = () => {
+    const navigate = useNavigate();
+
+    const instructions = [
+        {
+            icon: <Volume2 />,
+            title: "dB HL Test",
+            text: "Measures the minimum volume you can hear with smartphone calibration for accurate results.",
+        },
+        {
+            icon: <Mic />,
+            title: "DIN (Digits-in-Noise) Test",
+            text: "Assesses your ability to understand speech in noisy environments.",
+        },
+        {
+            icon: <Gauge />,
+            title: "TGD (Temporal Gap Detection) Test",
+            text: "Detects small silent gaps in noise. May indicate attention and processing speed deficits.",
+        },
+        {
+            icon: <Radio />,
+            title: "Frequency Range Test",
+            text: "Identifies the highest frequency (pitch) you can hear.",
+        },
+        {
+            icon: <CheckCircle />,
+            title: "Requirements",
+            text: "🎧 Headphones (strongly recommended) • 🔇 Quiet environment • ⏱️ 10-15 minutes",
+        },
+    ];
+
+    return (
+        <TestIntroCard
+            title="Hearing Test Suite"
+            instructions={instructions}
+            buttonText="Start Hearing Test"
+            onClick={() => navigate('/tests/hearing-test')}
+        />
+    );
+};
+
+export default HearingTestIntro;
+
+
+=========================================
+FILE: src/pages/screens/HistoryScreen.jsx
+=========================================
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { resetStage } from "../../store/slices/stageSlice";
+import { useGetAllResultsQuery, useDeleteResultMutation } from "../../services/resultAPI";
+import { setLoading, setError } from "../../store/slices/resultSlice";
+
+const ResultCard = ({ result, index, onDelete }) => (
+  <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+    <div className="flex justify-between">
+      <div className="space-y-2">
+        <h3 className="text-xl font-semibold">
+          {new Date(result.timestamp).toLocaleDateString()}
+        </h3>
+        <p className="text-gray-600">Age: {result.userAge} years</p>
+        <p className="text-gray-600">
+          Average Balance: {result.averageBalanceTime.toFixed(2)}s
+        </p>
+        <p className={`font-semibold ${
+          result.assessment.category === "Below Average" ? "text-red-500" :
+          result.assessment.category === "Average" ? "text-green-500" :
+          "text-blue-500"
+        }`}>
+          {result.assessment.category}
+        </p>
+      </div>
+      <button
+        onClick={() => onDelete(index)}
+        className="h-8 px-4 bg-red-500 text-white rounded-md hover:bg-red-600"
+      >
+        Delete
+      </button>
+    </div>
+
+    <div className="mt-4 pt-4 border-t">
+      <h4 className="font-semibold mb-2">Attempts:</h4>
+      <div className="grid grid-cols-3 gap-2">
+        {result.attempts.map((attempt, i) => (
+          <div key={i} className="bg-gray-50 p-2 rounded text-sm">
+            <p>{attempt.foot} foot</p>
+            <p className="font-semibold">{attempt.balanceScore.toFixed(2)}s</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+const HistoryScreen = () => {
+  const dispatch = useDispatch();
+  const { data: results, isLoading, error } = useGetAllResultsQuery();
+  const [deleteResult] = useDeleteResultMutation();
+
+  const handleDelete = async (index) => {
+    if (!window.confirm("Are you sure you want to delete this result?")) return;
+    
+    try {
+      dispatch(setLoading(true));
+      await deleteResult(index).unwrap();
+    } catch (err) {
+      dispatch(setError("Failed to delete result"));
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="text-xl font-semibold">Loading history...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="text-xl text-red-500">Error: {error.message}</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto p-6 max-w-4xl">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Test History</h1>
+        <button
+          onClick={() => dispatch(resetStage())}
+          className="px-6 py-2 bg-lightBlue text-white rounded-md hover:bg-darkBlue"
+        >
+          Back to Test
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        {results?.testResults?.length > 0 ? (
+          results.testResults.map((result, index) => (
+            <ResultCard
+              key={index}
+              result={result}
+              index={index}
+              onDelete={handleDelete}
+            />
+          ))
+        ) : (
+          <div className="text-center text-gray-500 py-8">
+            No test results available
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default HistoryScreen;
+
+=========================================
+FILE: src/pages/screens/PositioningScreen.jsx
+=========================================
+import React, { useRef, useState, useEffect } from "react";
+import usePoseDetection from "../../hooks/usePoseDetection";
+import WebcamComponent from "../../components/webCam/Webcam";
+import PoseCanvas from "../../components/poseDetection/PoseCanvas";
+import MovePositioning from "../../components/poseDetection/MovePositioning";
+import * as tf from "@tensorflow/tfjs";
+
+/**
+ * Screen for positioning the user before starting the balance test.
+ * Detects keypoints and provides feedback on movement.
+ * @returns {JSX.Element} Positioning screen component.
+ */
+const PositioningScreen = () => {
+  const videoRef = useRef(null);
+  const [isModelReady, setIsModelReady] = useState(false);
+  const { keypoints } = usePoseDetection(videoRef);
+
+  useEffect(() => {
+    const loadModel = async () => {
+      await tf.ready();
+      setIsModelReady(true);
+    };
+    loadModel();
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center justify-center w-full h-screen p-6">
+      <div className="mb-6 max-w-lg text-center">
+        <h1 className="text-2xl font-bold mb-2">Position Yourself for the Test</h1>
+        <p className="text-lg">
+          Stand in front of the camera and adjust your position until the system detects you correctly.
+          Move forward or backward as instructed. Once positioned correctly, hold your stance for 5 seconds 
+          to proceed to the balance test.
+        </p>
+      </div>
+
+      {!isModelReady ? (
+        <p className="text-xl font-semibold text-gray-500">Loading Pose Detection...</p>
+      ) : (
+        <>
+          {/* Centered Video Container */}
+          <div className="flex items-center justify-center w-full">
+            <div className="relative w-[925px] h-[670px] bg-white shadow-lg rounded-lg overflow-hidden border border-gray-300">
+              <WebcamComponent ref={videoRef} />
+              <PoseCanvas keypoints={keypoints} videoRef={videoRef} />
+            </div>
+          </div>
+
+          <MovePositioning keypoints={keypoints} />
+        </>
+      )}
+    </div>
+  );
+};
+
+export default PositioningScreen;
+
+
+=========================================
+FILE: src/pages/screens/PSSIntro.jsx
+=========================================
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Scale, Clock, Shield, AlertTriangle } from 'lucide-react';
+import MetyButton from '../../components/MetyButton';
+
+const PSSIntro = () => {
+  const navigate = useNavigate();
+
+  const handleStartTest = () => {
+    navigate('/tests/pss-test');
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="bg-white rounded-xl shadow-sm border border-neutral-light p-8">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+              <Scale className="w-8 h-8 text-blue-600" />
+            </div>
+            <h1 className="font-montserrat text-4xl font-bold text-neutral-dark mb-4">
+              Perceived Stress Scale (PSS-10)
+            </h1>
+            <p className="text-lg text-neutral-medium max-w-3xl mx-auto">
+              A validated assessment of your perceived stress levels over the past month
+            </p>
+          </div>
+
+          <div className="space-y-6 text-left">
+            <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+              <h2 className="font-semibold text-blue-800 mb-2">About This Test</h2>
+              <p className="text-blue-700">
+                The Perceived Stress Scale (PSS-10) is a widely used psychological instrument that measures 
+                the degree to which situations in your life are appraised as stressful. It assesses how 
+                unpredictable, uncontrollable, and overloaded you find your life to be.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <Clock className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                <h3 className="font-semibold text-neutral-dark mb-1">Duration</h3>
+                <p className="text-sm text-neutral-medium">3-5 minutes</p>
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <Scale className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                <h3 className="font-semibold text-neutral-dark mb-1">Questions</h3>
+                <p className="text-sm text-neutral-medium">10 items</p>
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <AlertTriangle className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+                <h3 className="font-semibold text-neutral-dark mb-1">Scoring</h3>
+                <p className="text-sm text-neutral-medium">0-40 scale</p>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-semibold text-neutral-dark mb-4">What You'll Be Asked</h2>
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-1">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-neutral-dark">Stress Perception</h3>
+                    <p className="text-sm text-neutral-medium">How often you've felt stressed, nervous, or overwhelmed</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-1">
+                    2
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-neutral-dark">Control Assessment</h3>
+                    <p className="text-sm text-neutral-medium">Your sense of control over life events and situations</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-1">
+                    3
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-neutral-dark">Coping Ability</h3>
+                    <p className="text-sm text-neutral-medium">How well you feel you can handle life's challenges</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+              <h2 className="font-semibold text-yellow-800 mb-2">Important Notes</h2>
+              <ul className="text-yellow-700 space-y-1 text-sm">
+                <li>• Answer based on your experiences over the past month</li>
+                <li>• There are no right or wrong answers</li>
+                <li>• Be honest about your feelings and experiences</li>
+                <li>• You can stop the test at any time</li>
+              </ul>
+            </div>
+
+            <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded">
+              <div className="flex items-start space-x-3">
+                <Shield className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                <div>
+                  <h2 className="font-semibold text-green-800 mb-2">Privacy & Data Protection</h2>
+                  <p className="text-green-700 text-sm">
+                    Your responses are confidential and will only be used for assessment purposes. 
+                    All data is stored securely and in accordance with privacy regulations.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-8">
+            <MetyButton
+              onClick={handleStartTest}
+              variant="primary"
+              size="lg"
+              className="px-8 py-3 text-lg"
+            >
+              Start PSS Assessment
+            </MetyButton>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PSSIntro;
+
+
+
+=========================================
+FILE: src/pages/screens/ResultsScreen.jsx
+=========================================
+import { useState, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { resetStage } from "../../store/slices/stageSlice";
+import { resetTest } from "../../store/slices/testSlice";
+import { viewHistory } from "../../store/slices/stageSlice";
+import { setCurrentResult } from "../../store/slices/resultSlice";
+import { assessBalance } from "../../utils/assessmentResult";
+import { useGetExercisesByCategoryQuery } from "../../services/exercisesAPI";
+import { useSaveResultMutation } from "../../services/resultAPI";
+
+const TestResultsTable = ({ results }) => (
+    <table>
+        <thead>
+            <tr className="bg-gray-300">
+                <th className="text-xl px-6 py-3">Attempt</th>
+                <th className="text-xl px-6 py-3">Length</th>
+            </tr>
+        </thead>
+        <tbody>
+            {results.map((result, index) => (
+                <tr key={index} className="odd:bg-white even:bg-gray-50 border-b border-gray-200">
+                    <td className="capitalize">
+                        {result.foot} Foot {result.attempt}
+                    </td>
+                    <td className="capitalize">
+                        {result.balanceScore.toFixed(2)} seconds
+                    </td>
+                </tr>
+            ))}
+        </tbody>
+    </table>
+);
+
+const NormsTable = () => (
+    <table>
+        <tbody className="bg-gray-300">
+            <tr>
+                <th className="text-xl px-6 py-3">Age (years)</th>
+                <th className="text-xl px-6 py-3">Expected Duration</th>
+            </tr>
+            {[
+                { age: "20-40", duration: "30-40" },
+                { age: "40-50", duration: "25-35" },
+                { age: "50-60", duration: "20-30" },
+                { age: "60+", duration: "15-25" }
+            ].map(({ age, duration }, index) => (
+                <tr key={index} className="odd:bg-white even:bg-gray-50 border-b border-gray-200">
+                    <td>{age}</td>
+                    <td>{duration} seconds</td>
+                </tr>
+            ))}
+        </tbody>
+    </table>
+);
+
+const AgeInput = ({ age, setAge, handleEvaluate }) => (
+    <div className="mt-4">
+        <h3 className="text-xl font-semibold mb-2">Enter Your Age to Analyze Results:</h3>
+        <input
+            type="number"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+            placeholder="Enter your age"
+            className="px-4 py-2 border rounded-md text-xl"
+        />
+        <button
+            onClick={handleEvaluate}
+            className="ml-4 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+        >
+            Analyze Results
+        </button>
+    </div>
+);
+
+const ExerciseSuggestions = ({ exercises, isLoading }) => {
+    if (isLoading) {
+        return <div>Loading exercise suggestions...</div>;
+    }
+
+    if (!exercises?.length) {
+        return <div>No exercise suggestions available.</div>;
+    }
+
+    return (
+        <div className="mt-6 text-left max-w-xl text-xl backdrop-blur-sm backdrop-brightness-110">
+            <h3 className="font-bold mb-3">Recommended Balance Exercises:</h3>
+            <ul className="font-semibold pl-5 space-y-2 text-left">
+                {exercises.map((exercise, index) => (
+                    <li key={index}>
+                        <span className="font-bold">{exercise.name}:</span> {exercise.description}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
+
+const ResultsScreen = () => {
+    const results = useSelector((state) => state.test.testResults);
+    const dispatch = useDispatch();
+    const [age, setAge] = useState("");
+    const [feedback, setFeedback] = useState("");
+    const [showExercises, setShowExercises] = useState(false);
+    const [ageGroup, setAgeGroup] = useState(null);
+    const [performanceCategory, setPerformanceCategory] = useState(null);
+    const [resultSaved, setResultSaved] = useState(false);
+
+    const [saveResult] = useSaveResultMutation();
+    
+    // Add RTK Query hook
+    const { data: exercises, isLoading } = useGetExercisesByCategoryQuery(
+        ageGroup && performanceCategory ? `${ageGroup}/${performanceCategory}` : null,
+        { skip: !ageGroup || !performanceCategory }
+    );
+
+    const averageBalance = useMemo(() => {
+        if (results.length === 0) return 0;
+        const total = results.reduce((sum, r) => sum + r.balanceScore, 0);
+        return (total / results.length).toFixed(2);
+    }, [results]);
+
+    const handleEvaluate = async () => {
+        if (isNaN(age) || age < 1) {
+            setFeedback("Please enter a valid age to evaluate your results.");
+            return;
+        }
+    
+        const assessment = assessBalance(parseInt(age), parseFloat(averageBalance));
+    
+        if (!assessment.isValid) {
+            setFeedback(assessment.message);
+            return;
+        }
+    
+        setAgeGroup(assessment.ageGroup);
+        setPerformanceCategory(assessment.category);
+        setShowExercises(assessment.category === "Below Average");
+    
+        const feedbackMessages = {
+            "Below Average": `Your average balance time is ${averageBalance} seconds. Below Average - Consider practicing balance exercises.`,
+            "Average": `Your average balance time is ${averageBalance} seconds. Within Norms - You're within the expected range!`,
+            "Above Average": `Your average balance time is ${averageBalance} seconds. Exceeded Norms - You exceeded expectations!`
+        };
+    
+        // Automatically save results after evaluation
+        try {
+            const savedResult = await saveResult({
+                userAge: parseInt(age),
+                attempts: results,
+                averageBalanceTime: parseFloat(averageBalance),
+                assessment: {
+                    category: assessment.category,
+                    ageGroup: assessment.ageGroup
+                }
+            }).unwrap();
+
+            dispatch(setCurrentResult(savedResult));
+            setResultSaved(true);
+            setFeedback(`${feedbackMessages[assessment.category]}\nResults saved successfully!`);
+        } catch (error) {
+            setFeedback(`${feedbackMessages[assessment.category]}\nError saving results: ${error.message}`);
+        }
+    };
+
+    return (
+        <div className="flex flex-col items-center text-center p-6">
+            <table>
+                <tbody>
+                    <tr>
+                        <td className="text-xl px-2 py-1">
+                            <h2 className="text-xl font-bold mb-2">Test Results</h2>
+                            <TestResultsTable results={results} />
+                        </td>
+                        <td colSpan="10" className="px-2 py-1">
+                            <h2 className="text-xl font-bold mb-2">Norms per Age</h2>
+                            <NormsTable />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <AgeInput age={age} setAge={setAge} handleEvaluate={handleEvaluate} />
+
+            {feedback && (
+                <div className="mt-4 text-xl font-semibold">{feedback}</div>
+            )}
+
+            {showExercises && (
+                <ExerciseSuggestions 
+                    exercises={exercises} 
+                    isLoading={isLoading}
+                />
+            )}
+
+            <button
+                onClick={() => {
+                    dispatch(resetTest());
+                    dispatch(resetStage());
+                }}
+                className="mt-6 px-6 py-3 bg-lightBlue text-white rounded-md font-semibold hover:bg-darkBlue"
+            >
+                Restart Test
+            </button>
+            <button
+                onClick={() => dispatch(viewHistory())}
+                className="px-6 py-3 bg-lightBlue text-white rounded-md font-semibold hover:bg-darkBlue"
+                disabled={!resultSaved}
+            >
+                View History
+            </button>
+        </div>
+    );
+};
+
+export default ResultsScreen;
+
+
+=========================================
+FILE: src/pages/screens/SelfReactionIntro.jsx
+=========================================
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const SelfReactionIntro = () => {
+  const navigate = useNavigate();
+
+  const handlePractice = () => {
+    navigate('/tests/self-reaction-test', { state: { mode: 'practice' } });
+  };
+
+  const handleStartTest = () => {
+    navigate('/tests/self-reaction-test', { state: { mode: 'test' } });
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-white shadow-lg rounded-lg p-8">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Self Reaction Test
+            </h1>
+            <p className="text-xl text-gray-600">
+              Assess your cognitive reactivity and memory self-perception
+            </p>
+          </div>
+
+          {/* Instructions */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              How it works
+            </h2>
+            <div className="space-y-4 text-gray-700">
+              <p>
+                You will be presented with 10 statements about memory and cognitive abilities. 
+                For each statement, you'll rate how true it is for you on a scale from "Never" to "Always".
+              </p>
+              <p>
+                This self-assessment helps evaluate your perception of cognitive function and memory capacity. 
+                The test takes approximately 3-5 minutes to complete.
+              </p>
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mt-4">
+                <p className="text-blue-800">
+                  <strong>Tip:</strong> Be honest with your responses. There are no right or wrong answers - 
+                  this is about your personal experience and self-perception.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Test Modes */}
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Choose your mode
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Practice Mode */}
+              <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-green-800 mb-2">
+                  Practice Mode
+                </h3>
+                <p className="text-green-700 mb-4">
+                  Unlimited attempts to get familiar with the test. No scores recorded.
+                </p>
+                <button
+                  onClick={handlePractice}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                >
+                  Start Practice
+                </button>
+              </div>
+
+              {/* Test Mode */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-blue-800 mb-2">
+                  Test Mode
+                </h3>
+                <p className="text-blue-700 mb-4">
+                  Official test with scoring. Your results will be recorded.
+                </p>
+                <button
+                  onClick={handleStartTest}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors"
+                >
+                  Start Test
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <div className="text-center">
+            <button
+              onClick={() => navigate('/')}
+              className="text-gray-600 hover:text-gray-800 font-medium"
+            >
+              ← Back to Home
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SelfReactionIntro;
+
+
+=========================================
+FILE: src/pages/screens/SF36Intro.jsx
+=========================================
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Heart, Clock, BarChart3, Shield } from 'lucide-react';
+import MetyButton from '../../components/MetyButton';
+
+const SF36Intro = () => {
+  const navigate = useNavigate();
+
+  const handleStartTest = () => {
+    navigate('/tests/sf36-test');
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="bg-white rounded-xl shadow-sm border border-neutral-light p-8">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+              <Heart className="w-8 h-8 text-blue-600" />
+            </div>
+            <h1 className="font-montserrat text-4xl font-bold text-neutral-dark mb-4">
+              General Health Inventory (SF-36)
+            </h1>
+            <p className="text-lg text-neutral-medium max-w-3xl mx-auto">
+              A comprehensive assessment of your health-related quality of life across 8 key domains
+            </p>
+          </div>
+
+          <div className="space-y-6 text-left">
+            <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+              <h2 className="font-semibold text-blue-800 mb-2">About This Test</h2>
+              <p className="text-blue-700">
+                The SF-36 (Short Form 36) is a widely used, scientifically validated health survey that measures 
+                your health-related quality of life. It assesses eight key areas of health to provide a comprehensive 
+                understanding of your physical and mental well-being.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <Clock className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                <h3 className="font-semibold text-neutral-dark mb-1">Duration</h3>
+                <p className="text-sm text-neutral-medium">8-12 minutes</p>
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <BarChart3 className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                <h3 className="font-semibold text-neutral-dark mb-1">Questions</h3>
+                <p className="text-sm text-neutral-medium">36 items</p>
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <Heart className="w-8 h-8 text-red-600 mx-auto mb-2" />
+                <h3 className="font-semibold text-neutral-dark mb-1">Domains</h3>
+                <p className="text-sm text-neutral-medium">8 health areas</p>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-2xl font-semibold text-neutral-dark mb-4">Health Domains Assessed</h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-3">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-1">
+                      1
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-neutral-dark">Physical Functioning</h3>
+                      <p className="text-sm text-neutral-medium">Ability to perform physical activities</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-1">
+                      2
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-neutral-dark">Role Physical</h3>
+                      <p className="text-sm text-neutral-medium">Limitations in work due to physical health</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-1">
+                      3
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-neutral-dark">Bodily Pain</h3>
+                      <p className="text-sm text-neutral-medium">Pain and its interference with work</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-1">
+                      4
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-neutral-dark">General Health</h3>
+                      <p className="text-sm text-neutral-medium">Overall health perception</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-1">
+                      5
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-neutral-dark">Vitality</h3>
+                      <p className="text-sm text-neutral-medium">Energy and fatigue levels</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-1">
+                      6
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-neutral-dark">Social Functioning</h3>
+                      <p className="text-sm text-neutral-medium">Impact of health on social activities</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-1">
+                      7
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-neutral-dark">Role Emotional</h3>
+                      <p className="text-sm text-neutral-medium">Limitations due to emotional problems</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-1">
+                      8
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-neutral-dark">Mental Health</h3>
+                      <p className="text-sm text-neutral-medium">Psychological distress and well-being</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+              <h2 className="font-semibold text-yellow-800 mb-2">Important Notes</h2>
+              <ul className="text-yellow-700 space-y-1 text-sm">
+                <li>• Answer based on your experiences during the past 4 weeks</li>
+                <li>• There are no right or wrong answers</li>
+                <li>• Be honest about your health and how you've been feeling</li>
+                <li>• You can stop the test at any time</li>
+                <li>• The test will be divided into sections for easier completion</li>
+              </ul>
+            </div>
+
+            <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded">
+              <div className="flex items-start space-x-3">
+                <Shield className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                <div>
+                  <h2 className="font-semibold text-green-800 mb-2">Privacy & Data Protection</h2>
+                  <p className="text-green-700 text-sm">
+                    Your responses are confidential and will only be used for assessment purposes. 
+                    All data is stored securely and in accordance with privacy regulations.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-8">
+            <MetyButton
+              onClick={handleStartTest}
+              variant="primary"
+              size="lg"
+              className="px-8 py-3 text-lg"
+            >
+              Start SF-36 Assessment
+            </MetyButton>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SF36Intro;
+
+
+
+=========================================
+FILE: src/pages/screens/TestScreen.jsx
+=========================================
+/**
+ * @file TestScreen.jsx
+ * @description This component handles the main balance test flow. It detects the user's movements
+ *              via PoseAnalyzer, tracks balance duration, logs results, and transitions between attempts.
+ */
+
+import React, { useRef, useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { recordTestResult, nextAttempt, switchFoot } from "../../store/slices/testSlice";
+import { nextStep } from "../../store/slices/stageSlice";
+import usePoseDetection from "../../hooks/usePoseDetection";
+import WebcamComponent from "../../components/webCam/Webcam";
+import PoseCanvas from "../../components/poseDetection/PoseCanvas";
+import PoseAnalyzer from "../../components/poseDetection/PoseAnalyzer";
+
+/**
+ * Represents a screen that conducts the balance test for up to six attempts.
+ * Upon foot drop, initiates a 5-second cooldown before the next attempt.
+ * Once six attempts are finished, navigates to the results stage.
+ * 
+ * @class TestScreen
+ * @component
+ * @returns {JSX.Element} The rendered test screen component.
+ */
+const TestScreen = () => {
+  /** The Redux dispatcher for triggering actions. */
+  const dispatch = useDispatch();
+
+  /** A ref pointing to the webcam video element for pose detection. */
+  const videoRef = useRef(null);
+
+  /** Pose detection hook providing the current frame's detected keypoints. */
+  const { keypoints } = usePoseDetection(videoRef);
+
+  // -----------------------------------------------------------------------------------------
+  // Redux state selectors
+  // -----------------------------------------------------------------------------------------
+
+  /** The current attempt number, from 1 to 6. */
+  const attempt = useSelector((state) => state.test.currentAttempt);
+
+  /** The foot ("left" or "right") the user should be lifting for this attempt. */
+  const currentFoot = useSelector((state) => state.test.currentFoot);
+
+  /** Whether all six attempts have completed, indicating test completion. */
+  const isTestComplete = useSelector((state) => state.test.isTestComplete);
+
+  // -----------------------------------------------------------------------------------------
+  // Local references & states
+  // -----------------------------------------------------------------------------------------
+
+  /**
+   * Whether the foot is currently in the air (used by PoseAnalyzer).
+   * @type {React.MutableRefObject<boolean>}
+   */
+  const isFootInAirRef = useRef(false);
+
+  /**
+   * Tracks the time the foot was first lifted. Allows us to measure duration.
+   * @type {React.MutableRefObject<number|null>}
+   */
+  const startTimeRef = useRef(null);
+
+  /**
+   * Indicates if the user lifted the wrong leg.
+   * @type {[boolean, Function]}
+   */
+  const [wrongLeg, setWrongLeg] = useState(false);
+
+  /**
+   * Whether a 5-second cooldown is in progress after foot drop.
+   * @type {[boolean, Function]}
+   */
+  const [showCooldown, setShowCooldown] = useState(false);
+
+  /**
+   * The remaining countdown (in seconds) for the cooldown.
+   * @type {[number, Function]}
+   */
+  const [cooldownCount, setCooldownCount] = useState(5);
+
+  // -----------------------------------------------------------------------------------------
+  // Side effects
+  // -----------------------------------------------------------------------------------------
+
+  /**
+   * Navigates to the results screen if the test is flagged as complete.
+   */
+  useEffect(() => {
+    if (isTestComplete) {
+      dispatch(nextStep());
+    }
+  }, [isTestComplete, dispatch]);
+
+  /**
+   * Starts timing when the correct foot is first lifted.
+   * Called from PoseAnalyzer logic.
+   */
+  const startTimer = () => {
+    if (!startTimeRef.current) {
+      startTimeRef.current = Date.now();
+    }
+  };
+
+  /**
+   * Stops timing when a foot drop is confirmed. Dispatches the result.
+   * Called from PoseAnalyzer logic.
+   */
+  const ATTEMPTS_PER_FOOT = 3;
+  const TOTAL_ATTEMPTS = ATTEMPTS_PER_FOOT * 2;
+
+  const stopTimer = () => {
+    if (startTimeRef.current && !wrongLeg) {
+      const duration = (Date.now() - startTimeRef.current) / 1000;
+      dispatch(recordTestResult({ attempt, foot: currentFoot, balanceScore: duration }));
+      startTimeRef.current = null;
+
+      // Switch foot every ATTEMPTS_PER_FOOT attempts
+      if (attempt % ATTEMPTS_PER_FOOT === 0) {
+      // Switch foot after ATTEMPTS_PER_FOOT attempts (from left to right)
+        if (attempt === ATTEMPTS_PER_FOOT) {
+          dispatch(switchFoot());
+        }
+      }
+    }
+  };
+
+  /**
+   * Called by PoseAnalyzer if a foot drop is confirmed. Initiates a 5-second cooldown
+   * before moving on to the next attempt.
+   */
+  const handleFootDrop = () => {
+    // Only show cooldown and advance attempt if we haven't reached the end
+    if (attempt < TOTAL_ATTEMPTS) {
+      setShowCooldown(true);
+      setCooldownCount(3);
+    } else {
+      // If we've completed 6 attempts, mark test as complete
+      dispatch(nextStep());
+    }
+  };
+
+  /**
+   * Manages a 5-second countdown. When it reaches zero, we proceed to the next attempt.
+   */
+  useEffect(() => {
+    let intervalId;
+    if (showCooldown) {
+      intervalId = setInterval(() => {
+        setCooldownCount((prev) => {
+          if (prev <= 1) {
+            clearInterval(intervalId);
+            setShowCooldown(false);
+            // Advance to the next attempt
+            dispatch(nextAttempt());
+            return 5;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(intervalId);
+  }, [showCooldown, dispatch]);
+
+  /**
+   * Analyzes pose keypoints each frame to track foot position, with a grace period for foot drop.
+   */
+  useEffect(() => {
+    PoseAnalyzer.analyzeKeypoints(keypoints, {
+      isFootInAirRef,
+      startTimer,
+      stopTimer,
+      currentFoot,
+      setWrongLeg,
+      onFootDrop: handleFootDrop,
+    });
+  }, [keypoints, currentFoot]);
+
+  // If test complete, let the user know we’re loading results.
+  if (isTestComplete) {
+    return <p className="text-xl font-semibold">Loading Results...</p>;
+  }
+
+  // -----------------------------------------------------------------------------------------
+  // UI rendering
+  // -----------------------------------------------------------------------------------------
+
+  // Decide which status message to show in the UI
+  let statusMessage;
+  if (showCooldown) {
+    statusMessage = `Test #${attempt} complete! Next attempt in ${cooldownCount} seconds...`;
+  } else {
+    statusMessage = startTimeRef.current ? "Timing..." : "Waiting for foot lift...";
+  }
+
+  return (
+    <div className="flex flex-col items-center text-center p-6">
+      <h1 className="text-2xl font-bold mb-4">
+        Balance Test #{attempt} / 6 ({currentFoot === "left" ? "Left Foot" : "Right Foot"})
+      </h1>
+
+      {wrongLeg && <p className="text-red-500 font-bold">Wrong leg, try again!</p>}
+
+      {/**
+       * We place the status in a fixed-height container to avoid screen reflow 
+       * that might push the webcam up or down during text changes.
+       */}
+      <div
+        className="flex items-center justify-center"
+        style={{ minHeight: "40px", marginBottom: "1rem" }}
+      >
+        <p className="text-2xl font-semibold text-blue-600 text-center">
+          {statusMessage}
+        </p>
+      </div>
+
+      {/**
+       * The container for the webcam (940×675), 
+       * includes the PoseCanvas overlay for keypoint rendering.
+       */}
+      <div className="relative w-[940px] h-[675px] shadow-lg rounded-lg overflow-hidden border border-gray-300 bg-white">
+        <WebcamComponent ref={videoRef} />
+        <PoseCanvas videoRef={videoRef} keypoints={keypoints} />
+      </div>
+    </div>
+  );
+};
+
+export default TestScreen;
+
+

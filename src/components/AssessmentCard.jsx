@@ -5,128 +5,76 @@ import { CheckCircle, Clock, ArrowRight } from "lucide-react";
 /**
  * AssessmentCard Component
  * 
- * A reusable card component for displaying assessment information with theming and status indicators.
- * 
- * @param {Object} props - Component props
- * @param {number} props.id - Unique identifier for the assessment
- * @param {string} props.title - Assessment title
- * @param {string} props.description - Assessment description
- * @param {string} props.status - Assessment status ("available" or "coming-soon")
- * @param {string} props.path - Route path for the assessment
- * @param {string} props.duration - Estimated duration of the assessment
- * @param {string} props.theme - Theme color ("green", "dark-green", "yellow", or default)
- * @param {React.Component} props.icon - Lucide React icon component
- * @returns {JSX.Element} Assessment card with theming and interactive elements
+ * Re-designed high-fidelity glass card component.
  */
-const AssessmentCard = ({ 
+const AssessmentCard = ({
   id,
-  title, 
-  description, 
-  status, 
-  path, 
-  duration, 
-  theme, 
-  icon: IconComponent 
+  title,
+  description,
+  status,
+  path,
+  duration,
+  theme = "primary",
+  icon: IconComponent
 }) => {
-  const getThemeColors = (theme, status) => {
-    if (status === "coming-soon") {
-      return {
-        bg: "bg-amber-50",
-        border: "border-amber-200",
-        icon: "text-amber-600",
-        button: "bg-amber-100 text-amber-700 hover:bg-amber-200",
-      };
-    }
-
-    switch (theme) {
-      case "green":
-        return {
-          bg: "bg-green-50",
-          border: "border-green-200",
-          icon: "text-green-600",
-          button: "bg-green-600 text-white hover:bg-green-700",
-        };
-      case "dark-green":
-        return {
-          bg: "bg-emerald-50",
-          border: "border-emerald-200",
-          icon: "text-emerald-700",
-          button: "bg-emerald-700 text-white hover:bg-emerald-800",
-        };
-      case "yellow":
-        return {
-          bg: "bg-yellow-50",
-          border: "border-yellow-200",
-          icon: "text-yellow-600",
-          button: "bg-yellow-600 text-white hover:bg-yellow-700",
-        };
-      default:
-        return {
-          bg: "bg-gray-50",
-          border: "border-gray-200",
-          icon: "text-gray-600",
-          button: "bg-gray-600 text-white hover:bg-gray-700",
-        };
-    }
-  };
-
-  const colors = getThemeColors(theme, status);
+  const isAvailable = status === "available";
 
   return (
     <div
-      className={`group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border-2 ${colors.border} ${colors.bg} overflow-hidden rounded-xl bg-white flex flex-col items-center justify-between text-center min-h-[320px] w-full max-w-sm flex-shrink-0 sm:flex-[0_0_calc(50%-0.75rem)] lg:flex-[0_0_calc(33.333%-1rem)] xl:flex-[0_0_calc(25%-1.125rem)]`}
+      className={`group relative glass-card p-6 rounded-2xl w-full max-w-sm flex flex-col justify-between h-full min-h-[360px] overflow-hidden`}
     >
-      <div className="p-6 w-full flex flex-col items-center justify-between h-full">
-        <div className="w-full">
-          <div className="flex items-center justify-center mb-4">
-            <div className={`p-3 rounded-xl ${colors.bg} border ${colors.border}`}>
-              <IconComponent className={`w-6 h-6 ${colors.icon}`} />
-            </div>
-            {status === "available" && <CheckCircle className="w-5 h-5 text-green-500 ml-2" />}
+      {/* Decorative gradient blob behind icon */}
+      <div className="absolute -top-10 -right-10 w-32 h-32 bg-primary-100/50 rounded-full blur-2xl group-hover:bg-primary-200/50 transition-colors duration-500"></div>
+
+      <div className="relative z-10 w-full">
+        <div className="flex items-start justify-between mb-6">
+          <div className="p-3 rounded-2xl bg-white/50 border border-white/60 shadow-sm group-hover:scale-110 transition-transform duration-300">
+            <IconComponent className="w-7 h-7 text-primary-600" />
           </div>
-
-          <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-green-700 transition-colors font-montserrat">
-            {title}
-          </h3>
-
-          <p className="text-gray-600 text-sm mb-4 leading-relaxed font-sans">
-            {description}
-          </p>
-
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded flex items-center">
-              <Clock className="w-3 h-3 mr-1" />
-              {duration}
+          {isAvailable && (
+            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-100/80 border border-emerald-200 text-xs font-semibold text-emerald-700">
+              <CheckCircle className="w-3.5 h-3.5" />
+              <span>Ready</span>
             </div>
-            <div className={`text-xs px-2 py-1 rounded ${
-              status === "available" ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"
-            }`}>
-              {status === "available" ? "Available" : "Coming Soon"}
-            </div>
-          </div>
-        </div>
-
-        <div className="w-full mt-auto">
-          {status === "available" ? (
-            <Link
-              to={path}
-              className={`w-full rounded-lg font-semibold transition-all duration-300 ${colors.button} inline-flex items-center justify-center py-3 px-4`}
-            >
-              Start Test
-              <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
-          ) : (
-            <button
-              className={`w-full rounded-lg font-semibold transition-all duration-300 ${colors.button} py-3 px-4`}
-              disabled
-            >
-              Notify Me
-            </button>
           )}
         </div>
+
+        <h3 className="text-xl font-bold text-gray-900 mb-3 font-montserrat leading-tight group-hover:text-primary-700 transition-colors">
+          {title}
+        </h3>
+
+        <p className="text-gray-600 text-sm leading-relaxed font-sans mb-4 line-clamp-3">
+          {description}
+        </p>
+
+        <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
+          <div className="flex items-center gap-1.5 bg-gray-50/50 px-3 py-1.5 rounded-lg border border-gray-100">
+            <Clock className="w-4 h-4 text-primary-500" />
+            <span className="font-medium">{duration}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative z-10 mt-auto">
+        {isAvailable ? (
+          <Link
+            to={path}
+            className="w-full inline-flex items-center justify-center py-3.5 px-4 rounded-xl font-semibold text-white bg-primary-600 hover:bg-primary-700 shadow-lg hover:shadow-primary-500/30 transform hover:-translate-y-0.5 transition-all duration-300 group-hover:w-full"
+          >
+            Start Assessment
+            <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        ) : (
+          <button
+            className="w-full inline-flex items-center justify-center py-3.5 px-4 rounded-xl font-semibold text-gray-400 bg-gray-100 cursor-not-allowed border border-gray-200"
+            disabled
+          >
+            Coming Soon
+          </button>
+        )}
       </div>
     </div>
   );
 };
 
-export default AssessmentCard; 
+export default AssessmentCard;

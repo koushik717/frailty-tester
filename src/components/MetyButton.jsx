@@ -24,13 +24,13 @@ const MetyButton = ({
   const baseClasses = "inline-flex items-center justify-center font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variantClasses = {
-    primary: "bg-brand-primary hover:bg-brand-primary/90 text-white focus:ring-brand-primary",
-    secondary: "bg-brand-secondary hover:bg-brand-secondary/90 text-white focus:ring-brand-secondary",
-    accent: "bg-brand-accent hover:bg-brand-accent/90 text-brand-secondary focus:ring-brand-accent",
-    outline: "border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white focus:ring-brand-primary",
-    outlineSecondary: "border-2 border-brand-secondary text-brand-secondary hover:bg-brand-secondary hover:text-white focus:ring-brand-secondary",
-    light: "bg-white text-brand-secondary border border-brand-neutral/20 hover:bg-brand-neutral/5 focus:ring-brand-secondary",
-    link: "text-brand-primary hover:text-brand-primary/80 underline-offset-4 hover:underline focus:ring-brand-primary"
+    primary: "bg-primary hover:bg-primary-dark text-white focus:ring-primary",
+    secondary: "bg-neutral-800 hover:bg-neutral-900 text-white focus:ring-neutral-800",
+    accent: "bg-accent hover:bg-accent-dark text-white focus:ring-accent",
+    outline: "border-2 border-primary text-primary hover:bg-primary hover:text-white focus:ring-primary",
+    outlineSecondary: "border-2 border-neutral-600 text-neutral-600 hover:bg-neutral-600 hover:text-white focus:ring-neutral-600",
+    light: "bg-white text-neutral-800 border border-neutral-200 hover:bg-neutral-50 focus:ring-neutral-300",
+    link: "text-primary hover:text-primary-dark underline-offset-4 hover:underline focus:ring-primary"
   };
 
   const sizeClasses = {
@@ -62,11 +62,11 @@ const MetyButton = ({
  * METY Button XL Component
  * Replicates the Bootstrap btn-xl styling specifically
  */
-export const MetyButtonXL = ({ 
-  children, 
-  variant = "primary", 
+export const MetyButtonXL = ({
+  children,
+  variant = "primary",
   className = "",
-  ...buttonProps 
+  ...buttonProps
 }) => {
   return (
     <MetyButton
@@ -84,11 +84,11 @@ export const MetyButtonXL = ({
  * METY Social Button Component
  * Replicates the Bootstrap btn-social styling
  */
-export const MetySocialButton = ({ 
-  children, 
-  variant = "primary", 
+export const MetySocialButton = ({
+  children,
+  variant = "primary",
   className = "",
-  ...buttonProps 
+  ...buttonProps
 }) => {
   const socialClasses = classNames(
     "w-10 h-10 rounded-full p-0 flex items-center justify-center",

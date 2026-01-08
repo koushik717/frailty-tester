@@ -17,13 +17,19 @@ const db = new sqlite3.Database(dbPath, (err) => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       email TEXT NOT NULL UNIQUE,
-      password TEXT NOT NULL,
+      password TEXT,
+      personal_details TEXT, -- Stores JSON string
+      subscription_plan TEXT, -- 'Free Trial', 'Individual', etc.
+      subscription_status TEXT, -- 'Active', 'Inactive'
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`, (err) => {
             if (err) {
                 console.error('❌ Error creating users table:', err.message);
             } else {
                 console.log('✅ Users table ready.');
+                // Attempt to add columns for existing tables (will fail harmlessly if exists)
+                db.run("ALTER TABLE users ADD COLUMN subscription_plan TEXT", () => { });
+                db.run("ALTER TABLE users ADD COLUMN subscription_status TEXT", () => { });
             }
         });
     }
@@ -37,27 +43,48 @@ router.post('/signup', (req, res) => {
         return res.status(400).json({ success: false, message: 'All fields are required.' });
     }
 
-    // Check if user already exists
-    const checkSql = 'SELECT * FROM users WHERE email = ?';
-    db.get(checkSql, [email], (err, row) => {
+    // Check if user exists
+    db.get('SELECT email FROM users WHERE email = ?', [email], (err, row) => {
         if (err) {
             console.error('Database error:', err.message);
-            return res.status(500).json({ success: false, message: 'Server error.' });
+            return res.status(500).json({ success: false, message: 'Server error check.' });
         }
         if (row) {
-            return res.status(400).json({ success: false, message: 'User already exists.' });
+            return res.status(400).json({ success: false, message: 'Email already registered.' });
         }
 
         // Insert new user
-        // NOTE: In production, password should be hashed!
-        const insertSql = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
-        db.run(insertSql, [name, email, password], function (err) {
+        const sql = `INSERT INTO users (name, email, password, subscription_plan, subscription_status) VALUES (?, ?, ?, ?, ?)`;
+        const params = [name, email, password, 'None', 'Inactive'];
+
+        db.run(sql, params, function (err) {
             if (err) {
                 console.error('Insert error:', err.message);
-                return res.status(500).json({ success: false, message: 'Failed to register user.' });
+                return res.status(500).json({ success: false, message: 'Failed to create user.' });
             }
-            console.log(`✅ User registered: ${email}`);
-            res.json({ success: true, message: 'User registered successfully!' });
+
+            const userId = this.lastID;
+            console.log(`✅ User created: ${email}, ID: ${userId}`);
+
+            // Auto-login (Create Session)
+            req.session.user = { id: userId, name, email };
+            req.session.save((err) => {
+                if (err) {
+                    return res.status(500).json({ success: false, message: 'Session init failed.' });
+                }
+                res.status(201).json({
+                    success: true,
+                    message: 'User registered successfully!',
+                    user: {
+                        id: userId,
+                        name,
+                        email,
+                        hasPersonalDetails: false,
+                        subscription_plan: 'None',
+                        subscription_status: 'Inactive'
+                    }
+                });
+            });
         });
     });
 });
@@ -81,11 +108,33 @@ router.post('/login', (req, res) => {
         }
 
         console.log(`✅ User logged in: ${email}`);
-        // In production, return a JWT token here
-        res.json({
-            success: true,
-            message: 'Login successful!',
-            user: { id: row.id, name: row.name, email: row.email }
+
+        // Manual session set for local auth
+        req.session.user = { id: row.id, name: row.name, email: row.email };
+
+        // Explicitly save session before responding
+        req.session.save((err) => {
+            if (err) {
+                console.error('Session save error:', err);
+                return res.status(500).json({ success: false, message: 'Session save failed.' });
+            }
+
+            console.log('✅ Session saved successfully with user:', req.session.user);
+
+            const hasPersonalDetails = !!(row.personal_details && row.personal_details.trim() !== '' && row.personal_details !== '{}');
+
+            res.json({
+                success: true,
+                message: 'Login successful!',
+                user: {
+                    id: row.id,
+                    name: row.name,
+                    email: row.email,
+                    hasPersonalDetails,
+                    subscription_plan: row.subscription_plan || 'None',
+                    subscription_status: row.subscription_status || 'Inactive'
+                }
+            });
         });
     });
 });

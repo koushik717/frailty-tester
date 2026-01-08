@@ -10,14 +10,14 @@ const PSQITest = () => {
   const [highlightedLabel, setHighlightedLabel] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
-  
+
   const {
     // Sleep measures
     timeToBed, setTimeToBed,
     durationToBed, setDurationToBed,
     timeWakeUp, setTimeWakeUp,
     totalSleep, setTotalSleep,
-    
+
     // Question 5 responses
     cannotSleept30, setCannotSleept30,
     wakeNightOrMorning, setWakeNightOrMorning,
@@ -29,13 +29,13 @@ const PSQITest = () => {
     badDreams, setBadDreams,
     havePain, setHavePain,
     sleepOther, setSleepOther,
-    
+
     // Questions 6,7,8,9
     sleepQual, setSleepQual,
     medicine, setMedicine,
     stayAwake, setStayAwake,
     enthusiasm, setEnthusiasm,
-    
+
     // Question 10 responses
     partner, setPartner,
     snoring, setSnoring,
@@ -43,7 +43,7 @@ const PSQITest = () => {
     twitching, setTwitching,
     confusion, setConfusion,
     restlessness, setRestlessness,
-    
+
     // Functions
     calculateScore,
     isFormValid,
@@ -63,11 +63,11 @@ const PSQITest = () => {
       alert('Please fill in all required fields (bedtime, sleep duration, wake time, and total sleep hours).');
       return;
     }
-    
+
     const result = calculateScore();
     setScore(result);
     setSubmitted(true);
-    
+
     // Submit progress using the existing service (local storage, etc.)
     const testData = {
       testId: 'pitt',
@@ -77,7 +77,7 @@ const PSQITest = () => {
         timestamp: new Date().toISOString()
       }
     };
-    
+
     const submissionResult = submitProgress(testData);
     console.log('PSQI Test Result:', submissionResult);
 
@@ -97,7 +97,7 @@ const PSQITest = () => {
 
     try {
       console.log('🔄 Saving PSQI summary to /api/frailty-tests/results', payload);
-      await axios.post('/api/frailty-tests/results', payload);
+      await axios.post('/api/frailty-tests/results', payload, { withCredentials: true });
       console.log('✅ PSQI summary saved to global results');
     } catch (err) {
       console.error('❌ Error saving PSQI summary:', err);
@@ -149,7 +149,7 @@ const PSQITest = () => {
             <h1 className="text-3xl font-bold text-neutral-dark mb-4">Pittsburgh Sleep Quality Index</h1>
             <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
               <p className="text-blue-700">
-                <strong>Instructions:</strong> The following questions relate to your usual sleep habits during the past month only. 
+                <strong>Instructions:</strong> The following questions relate to your usual sleep habits during the past month only.
                 Your answers should indicate the most accurate reply for the majority of days and nights in the past month.
               </p>
             </div>
@@ -158,9 +158,8 @@ const PSQITest = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Question 1: Bedtime */}
             <div className="form-group">
-              <label className={`block text-sm font-medium mb-2 ${
-                highlightedLabel === '1' ? 'text-blue-600 font-semibold' : 'text-gray-700'
-              }`}>
+              <label className={`block text-sm font-medium mb-2 ${highlightedLabel === '1' ? 'text-blue-600 font-semibold' : 'text-gray-700'
+                }`}>
                 1. During the past month, what time have you usually gone to bed at night?
               </label>
               <input
@@ -176,9 +175,8 @@ const PSQITest = () => {
 
             {/* Question 2: Sleep Duration */}
             <div className="form-group bg-gray-50 p-4 rounded-lg">
-              <label className={`block text-sm font-medium mb-2 ${
-                highlightedLabel === '2' ? 'text-blue-600 font-semibold' : 'text-gray-700'
-              }`}>
+              <label className={`block text-sm font-medium mb-2 ${highlightedLabel === '2' ? 'text-blue-600 font-semibold' : 'text-gray-700'
+                }`}>
                 2. During the past month, how long (in minutes) has it usually taken you to fall asleep each night?
               </label>
               <input
@@ -196,9 +194,8 @@ const PSQITest = () => {
 
             {/* Question 3: Wake Time */}
             <div className="form-group">
-              <label className={`block text-sm font-medium mb-2 ${
-                highlightedLabel === '3' ? 'text-blue-600 font-semibold' : 'text-gray-700'
-              }`}>
+              <label className={`block text-sm font-medium mb-2 ${highlightedLabel === '3' ? 'text-blue-600 font-semibold' : 'text-gray-700'
+                }`}>
                 3. During the past month, what time have you usually gotten up in the morning?
               </label>
               <input
@@ -214,9 +211,8 @@ const PSQITest = () => {
 
             {/* Question 4: Total Sleep */}
             <div className="form-group bg-gray-50 p-4 rounded-lg">
-              <label className={`block text-sm font-medium mb-2 ${
-                highlightedLabel === '4' ? 'text-blue-600 font-semibold' : 'text-gray-700'
-              }`}>
+              <label className={`block text-sm font-medium mb-2 ${highlightedLabel === '4' ? 'text-blue-600 font-semibold' : 'text-gray-700'
+                }`}>
                 4. During the past month, how many hours of actual sleep did you get at night?
               </label>
               <input
@@ -239,12 +235,11 @@ const PSQITest = () => {
 
             {/* Question 5: Sleep Disturbances */}
             <div className="form-group">
-              <label className={`block text-sm font-medium mb-4 ${
-                highlightedLabel === '5' ? 'text-blue-600 font-semibold' : 'text-gray-700'
-              }`}>
+              <label className={`block text-sm font-medium mb-4 ${highlightedLabel === '5' ? 'text-blue-600 font-semibold' : 'text-gray-700'
+                }`}>
                 5. During the past month, how often have you had trouble sleeping because you...
               </label>
-              
+
               {/* 5a */}
               <div className="ml-4 mb-3">
                 <label className="block text-sm font-medium mb-2">a) Cannot get to sleep within 30 minutes</label>
@@ -398,9 +393,8 @@ const PSQITest = () => {
 
             {/* Question 6: Sleep Quality */}
             <div className="form-group bg-gray-50 p-4 rounded-lg">
-              <label className={`block text-sm font-medium mb-2 ${
-                highlightedLabel === '6' ? 'text-blue-600 font-semibold' : 'text-gray-700'
-              }`}>
+              <label className={`block text-sm font-medium mb-2 ${highlightedLabel === '6' ? 'text-blue-600 font-semibold' : 'text-gray-700'
+                }`}>
                 6. During the past month, how would you rate your sleep quality overall?
               </label>
               <select
@@ -419,9 +413,8 @@ const PSQITest = () => {
 
             {/* Question 7: Medicine Use */}
             <div className="form-group">
-              <label className={`block text-sm font-medium mb-2 ${
-                highlightedLabel === '7' ? 'text-blue-600 font-semibold' : 'text-gray-700'
-              }`}>
+              <label className={`block text-sm font-medium mb-2 ${highlightedLabel === '7' ? 'text-blue-600 font-semibold' : 'text-gray-700'
+                }`}>
                 7. During the past month, how often have you taken medicine to help you sleep (prescribed or "over the counter")?
               </label>
               <select
@@ -440,9 +433,8 @@ const PSQITest = () => {
 
             {/* Question 8: Stay Awake */}
             <div className="form-group bg-gray-50 p-4 rounded-lg">
-              <label className={`block text-sm font-medium mb-2 ${
-                highlightedLabel === '8' ? 'text-blue-600 font-semibold' : 'text-gray-700'
-              }`}>
+              <label className={`block text-sm font-medium mb-2 ${highlightedLabel === '8' ? 'text-blue-600 font-semibold' : 'text-gray-700'
+                }`}>
                 8. During the past month, how often have you had trouble staying awake while driving, eating meals, or engaging in social activity?
               </label>
               <select
@@ -461,9 +453,8 @@ const PSQITest = () => {
 
             {/* Question 9: Enthusiasm */}
             <div className="form-group">
-              <label className={`block text-sm font-medium mb-2 ${
-                highlightedLabel === '9' ? 'text-blue-600 font-semibold' : 'text-gray-700'
-              }`}>
+              <label className={`block text-sm font-medium mb-2 ${highlightedLabel === '9' ? 'text-blue-600 font-semibold' : 'text-gray-700'
+                }`}>
                 9. During the past month, how much of a problem has it been for you to keep up enough enthusiasm to get things done?
               </label>
               <select
@@ -482,9 +473,8 @@ const PSQITest = () => {
 
             {/* Question 10: Bed Partner */}
             <div className="form-group bg-gray-50 p-4 rounded-lg">
-              <label className={`block text-sm font-medium mb-2 ${
-                highlightedLabel === '10' ? 'text-blue-600 font-semibold' : 'text-gray-700'
-              }`}>
+              <label className={`block text-sm font-medium mb-2 ${highlightedLabel === '10' ? 'text-blue-600 font-semibold' : 'text-gray-700'
+                }`}>
                 10. Do you have a bed partner or room mate?
               </label>
               <select
@@ -506,7 +496,7 @@ const PSQITest = () => {
               <label className="block text-sm font-medium mb-4 text-blue-600">
                 If you have a room mate or bed partner, ask him/her how often in the past month you have had...
               </label>
-              
+
               {/* 11a */}
               <div className="ml-4 mb-3">
                 <label className="block text-sm font-medium mb-2">a) Loud snoring</label>

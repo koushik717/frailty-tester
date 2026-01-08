@@ -3,13 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useDigitMemoryTest } from '../../../hooks/useDigitMemoryTest';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+// Using relative paths through Vite proxy
 
 const MemoryTest = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const mode = location.state?.mode || 'test';
-  
+
   const {
     state,
     isPractice,
@@ -72,7 +72,7 @@ const MemoryTest = () => {
     };
 
     try {
-      await axios.post(`${API_BASE_URL}/api/frailty-tests/results`, payload);
+      await axios.post(`/api/frailty-tests/results`, payload, { withCredentials: true });
       console.log('Digit Memory summary saved to profile:', payload);
     } catch (err) {
       console.error('Error saving Digit Memory result to profile:', err);
@@ -91,7 +91,7 @@ const MemoryTest = () => {
   // Handle answer submission
   const handleSubmit = () => {
     const result = submitAnswer();
-    
+
     if (!result.valid) {
       setMessage(result.error);
       return;
@@ -106,8 +106,8 @@ const MemoryTest = () => {
         saveResultToProfile(resultsSummary);
 
         setTimeout(() => {
-          navigate('/tests/memory-results', { 
-            state: { results: resultsSummary } 
+          navigate('/tests/memory-results', {
+            state: { results: resultsSummary }
           });
         }, 2000);
       } else {
@@ -124,8 +124,8 @@ const MemoryTest = () => {
         saveResultToProfile(resultsSummary);
 
         setTimeout(() => {
-          navigate('/tests/memory-results', { 
-            state: { results: resultsSummary } 
+          navigate('/tests/memory-results', {
+            state: { results: resultsSummary }
           });
         }, 2000);
       } else {
@@ -148,8 +148,8 @@ const MemoryTest = () => {
     const resultsSummary = summary();
     saveResultToProfile(resultsSummary);
 
-    navigate('/tests/memory-results', { 
-      state: { results: resultsSummary } 
+    navigate('/tests/memory-results', {
+      state: { results: resultsSummary }
     });
   };
 
@@ -245,11 +245,10 @@ const MemoryTest = () => {
 
     return (
       <div className="text-center mb-6">
-        <p className={`text-lg font-medium ${
-          message.includes('Correct') ? 'text-green-600' : 
-          message.includes('Incorrect') ? 'text-red-600' : 
-          'text-blue-600'
-        }`}>
+        <p className={`text-lg font-medium ${message.includes('Correct') ? 'text-green-600' :
+            message.includes('Incorrect') ? 'text-red-600' :
+              'text-blue-600'
+          }`}>
           {message}
         </p>
       </div>
@@ -329,7 +328,7 @@ const MemoryTest = () => {
         {state === 'INSTRUCTIONS' && (
           <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
             <p className="text-blue-800">
-              <strong>Ready?</strong> The sequence will start automatically. 
+              <strong>Ready?</strong> The sequence will start automatically.
               Watch carefully and remember each digit!
             </p>
           </div>

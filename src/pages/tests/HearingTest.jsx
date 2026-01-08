@@ -27,7 +27,7 @@ const HearingTest = () => {
                         }
                     };
 
-                    await axios.post('/api/frailty-tests/results', resultData);
+                    await axios.post('/api/frailty-tests/results', resultData, { withCredentials: true });
                     alert("Test results saved successfully!");
                     navigate('/profile');
                 } catch (error) {

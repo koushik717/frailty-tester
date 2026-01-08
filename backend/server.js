@@ -10,18 +10,30 @@ const PORT = process.env.PORT || 3000;
 
 // --- Middleware ---
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'http://localhost:3000'],
   credentials: true
 }));
 app.use(express.json());
 
 // Session configuration
+// Session configuration
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your-secret-key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false } // Set to true in production with HTTPS
+  resave: true, // Changed to true for debugging
+  saveUninitialized: true, // Changed to true for debugging
+  cookie: {
+    secure: false, // false for localhost
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
 }));
+
+// Debug Middleware for Sessions
+app.use((req, res, next) => {
+  console.log(`[Session Debug] ${req.method} ${req.url} - Session ID: ${req.sessionID}`);
+  console.log(`[Session Debug] User:`, req.session.user);
+  next();
+});
 
 // Initialize Passport
 app.use(passport.initialize());
@@ -31,10 +43,14 @@ app.use(passport.session());
 const resultRoutes = require('./routes/resultRoutes');
 const authRoutes = require('./routes/authRoutes');
 const googleAuthRoutes = require('./routes/googleAuth');
+const facebookAuthRoutes = require('./routes/facebookAuth');
+const userRoutes = require('./routes/userRoutes');
 
 app.use('/api/frailty-tests', resultRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/auth', googleAuthRoutes);
+app.use('/api/auth', facebookAuthRoutes);
 
 // --- FRAILTY TEST API ENDPOINTS ---
 

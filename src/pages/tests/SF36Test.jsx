@@ -93,6 +93,7 @@ const SF36Test = () => {
       setEndedAt(endTime);
 
       // ---- 1) Save to dedicated SF-36 backend endpoint (existing behavior) ----
+      // ---- 1) Save to dedicated SF-36 backend endpoint (existing behavior) ----
       const testData = {
         test: "sf36",
         responses: orderedResponses,
@@ -110,11 +111,10 @@ const SF36Test = () => {
         endedAt: endTime
       };
 
-      const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
-
-      const response = await fetch(`${apiBase}/api/frailty-tests/sf36`, {
+      const response = await fetch(`/api/frailty-tests/sf36`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify(testData)
       });
 
@@ -122,9 +122,10 @@ const SF36Test = () => {
 
       // ---- 2) ALSO save a summary entry for the Profile page ----
       try {
-        await fetch(`${apiBase}/api/frailty-tests/results`, {
+        await fetch(`/api/frailty-tests/results`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: 'include',
           body: JSON.stringify({
             test: "sf36",
             testName: "SF-36 Health Survey",
